@@ -70,6 +70,7 @@ services:
       - APP_KEY=${APP_KEY:-}
       - APP_URL=${APP_URL:-http://localhost}
       - TZ=${TZ:-Asia/Jakarta}
+      - FLUX_PRO_TOKEN=${FLUX_PRO_TOKEN:-}
     depends_on:
       mariadb:
         condition: service_healthy

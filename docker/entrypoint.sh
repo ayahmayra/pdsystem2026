@@ -31,10 +31,28 @@ echo "Setting permissions..."
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Setup Composer auth for Flux Pro if token is provided
+if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
+    echo "Setting up Flux Pro authentication..."
+    mkdir -p /root/.composer
+    echo "{\"http-basic\": {\"composer.fluxui.dev\": {\"username\": \"token\", \"password\": \"$FLUX_PRO_TOKEN\"}}}" > /root/.composer/auth.json
+    chmod 600 /root/.composer/auth.json
+fi
+
 # Install/Update Composer dependencies if needed
 if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
     echo "Installing Composer dependencies..."
     composer install --no-interaction --prefer-dist --optimize-autoloader
+fi
+
+# Install Flux Pro if token is available and package is not installed
+if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
+    if ! composer show livewire/flux-pro 2>/dev/null; then
+        echo "Installing Flux Pro..."
+        composer require livewire/flux-pro:^2.2 --no-interaction --optimize-autoloader || echo "Failed to install Flux Pro, continuing..."
+    else
+        echo "Flux Pro is already installed."
+    fi
 fi
 
 # Generate application key if not set

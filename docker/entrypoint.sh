@@ -1,10 +1,11 @@
 #!/bin/bash
-set -e
+# Don't exit on error immediately - we'll handle errors explicitly
+set +e
 
 echo "Starting entrypoint script..."
 
 # Fix git ownership warning
-git config --global --add safe.directory /var/www/html || true
+git config --global --add safe.directory /var/www/html 2>/dev/null || true
 
 # Wait for database to be ready
 echo "Waiting for database..."
@@ -14,6 +15,9 @@ DB_USERNAME=${DB_USERNAME:-perjadin_user}
 DB_PASSWORD=${DB_PASSWORD:-perjadin_pass}
 DB_DATABASE=${DB_DATABASE:-perjadin_db}
 
+# Wait for database with timeout
+DB_WAIT_COUNT=0
+DB_MAX_WAIT=30
 until php -r "
 try {
     \$pdo = new PDO('mysql:host=${DB_HOST};port=${DB_PORT}', '${DB_USERNAME}', '${DB_PASSWORD}');
@@ -23,7 +27,12 @@ try {
 } catch (Exception \$e) {
     exit(1);
 }" 2>/dev/null; do
-  echo "Database is unavailable - sleeping..."
+  DB_WAIT_COUNT=$((DB_WAIT_COUNT + 1))
+  if [ $DB_WAIT_COUNT -ge $DB_MAX_WAIT ]; then
+    echo "ERROR: Database not available after $DB_MAX_WAIT attempts. Exiting."
+    exit 1
+  fi
+  echo "Database is unavailable - sleeping... (attempt $DB_WAIT_COUNT/$DB_MAX_WAIT)"
   sleep 2
 done
 
@@ -90,15 +99,25 @@ if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
 fi
 
 # Build assets if flux-pro is installed or if public/build doesn't exist
+set +e
 if [ "$FLUX_PRO_INSTALLED" = true ]; then
     echo "Building assets (Flux Pro is installed)..."
-    npm run build || echo "Warning: Asset build failed, continuing..."
+    npm run build
+    if [ $? -ne 0 ]; then
+        echo "Warning: Asset build failed, continuing..."
+    else
+        echo "Assets built successfully."
+    fi
 elif [ ! -d "public/build" ]; then
-    echo "Warning: Flux Pro not installed and assets not built. Build may fail."
+    echo "Warning: Flux Pro not installed and assets not built."
     echo "Please set FLUX_PRO_TOKEN in environment and restart container."
     # Try to build anyway (may fail if flux.css is missing)
-    npm run build || echo "Asset build failed - Flux Pro required for build"
+    npm run build 2>&1 | head -20
+    if [ $? -ne 0 ]; then
+        echo "Asset build failed - Flux Pro required for build. Continuing anyway..."
+    fi
 fi
+set -e
 
 # Generate application key if not set
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "" ]; then
@@ -108,22 +127,32 @@ fi
 
 # Cache configuration
 echo "Caching configuration..."
-php artisan config:cache || true
-php artisan route:cache || true
-php artisan view:cache || true
+set +e
+php artisan config:cache || echo "Config cache failed, continuing..."
+php artisan route:cache || echo "Route cache failed, continuing..."
+php artisan view:cache || echo "View cache failed, continuing..."
+set -e
 
 # Run migrations
 echo "Running migrations..."
-php artisan migrate --force || echo "Migrations failed or already run"
+set +e
+php artisan migrate --force
+if [ $? -ne 0 ]; then
+    echo "Migrations failed or already run, continuing..."
+fi
+set -e
 
 # Create storage link if not exists
 if [ ! -L "public/storage" ]; then
     echo "Creating storage link..."
-    php artisan storage:link || true
+    set +e
+    php artisan storage:link || echo "Storage link failed, continuing..."
+    set -e
 fi
 
 echo "Entrypoint script completed successfully!"
 
-# Execute the main command
+# Execute the main command (php-fpm)
+# This should never fail, but if it does, container will restart
 exec "$@"
 

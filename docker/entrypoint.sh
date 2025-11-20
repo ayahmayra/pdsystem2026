@@ -48,11 +48,11 @@ if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
     echo "Setting up Flux Pro authentication..."
     mkdir -p /root/.composer
     
-    # Also set in project directory (Composer checks both locations)
-    mkdir -p /var/www/html
-    PROJECT_AUTH="/var/www/html/auth.json"
+    # Method 1: Use composer config (recommended)
+    echo "Configuring Composer authentication using composer config..."
+    composer config --global http-basic.composer.fluxui.dev token "$FLUX_PRO_TOKEN"
     
-    # Create auth.json in both locations
+    # Method 2: Also create auth.json file (backup method)
     AUTH_JSON="{
     \"http-basic\": {
         \"composer.fluxui.dev\": {
@@ -63,17 +63,26 @@ if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
 }"
     
     echo "$AUTH_JSON" > /root/.composer/auth.json
-    echo "$AUTH_JSON" > "$PROJECT_AUTH"
-    
     chmod 600 /root/.composer/auth.json
-    chmod 600 "$PROJECT_AUTH"
     
-    echo "Auth.json created in /root/.composer/ and project root. Token length: ${#FLUX_PRO_TOKEN}"
+    # Also set in project directory
+    mkdir -p /var/www/html
+    echo "$AUTH_JSON" > /var/www/html/auth.json
+    chmod 600 /var/www/html/auth.json
     
-    # Verify auth.json format
-    if command -v php >/dev/null 2>&1; then
-        php -r "json_decode(file_get_contents('/root/.composer/auth.json')); echo json_last_error() === JSON_ERROR_NONE ? 'Auth.json is valid JSON' : 'Auth.json is INVALID JSON';" 2>/dev/null || echo "Could not validate auth.json"
+    echo "Auth configured via composer config and auth.json files. Token length: ${#FLUX_PRO_TOKEN}"
+    
+    # Verify authentication works
+    echo "Verifying authentication..."
+    set +e
+    TEST_AUTH=$(composer show -a livewire/flux-pro 2>&1 | head -5)
+    if echo "$TEST_AUTH" | grep -q "HTTP 401\|authentication\|401"; then
+        echo "⚠️  WARNING: Authentication test failed. Token may be invalid."
+        echo "Test output: $TEST_AUTH"
+    else
+        echo "✅ Authentication verified successfully."
     fi
+    set -e
 else
     echo "Warning: FLUX_PRO_TOKEN not set. Flux Pro will not be installed."
 fi
@@ -83,10 +92,18 @@ fi
 set +e
 if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
     echo "Installing Composer dependencies..."
-    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+    
+    # Try to install without flux-pro first (if it fails due to auth)
+    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev 2>&1 | tee /tmp/composer-install.log
+    
     COMPOSER_EXIT=$?
     if [ $COMPOSER_EXIT -ne 0 ]; then
-        echo "Warning: Composer install had errors. Some packages may be missing."
+        if grep -q "flux-pro\|fluxui.dev" /tmp/composer-install.log; then
+            echo "Warning: Composer install failed due to flux-pro authentication."
+            echo "Will try to install flux-pro separately after auth is configured."
+        else
+            echo "Warning: Composer install had errors. Some packages may be missing."
+        fi
     fi
 fi
 set -e

@@ -18,9 +18,9 @@ services:
       MYSQL_USER: ${DB_USERNAME:-perjadin_user}
       MYSQL_PASSWORD: ${DB_PASSWORD:-perjadin_pass}
       TZ: ${TZ:-Asia/Jakarta}
-      MYSQL_INNODB_BUFFER_POOL_SIZE=1G
-      MYSQL_INNODB_LOG_FILE_SIZE=256M
-      MYSQL_MAX_CONNECTIONS=500
+      MYSQL_INNODB_BUFFER_POOL_SIZE: 1G
+      MYSQL_INNODB_LOG_FILE_SIZE: 256M
+      MYSQL_MAX_CONNECTIONS: 500
     ports:
       - "${DB_PORT:-3306}:3306"
     volumes:

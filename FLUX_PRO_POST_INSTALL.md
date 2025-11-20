@@ -14,6 +14,7 @@ Pendekatan ini menginstall Flux Pro **setelah container berjalan**, bukan saat b
 2. **Saat Container Start**: Entrypoint script akan:
    - Setup auth.json jika `FLUX_PRO_TOKEN` tersedia
    - Install flux-pro jika belum terinstall
+   - **Aktifkan Flux Pro** dengan `php artisan flux:activate` (wajib setelah install)
 
 ## Setup
 
@@ -58,6 +59,9 @@ FLUX_PRO_TOKEN=your_token docker compose up -d
 # Cek apakah flux-pro terinstall
 docker compose exec php-fpm composer show livewire/flux-pro
 
+# Cek status aktivasi Flux Pro
+docker compose exec php-fpm php artisan flux:status
+
 # Cek logs entrypoint untuk melihat proses instalasi
 docker compose logs php-fpm | grep -i flux
 ```
@@ -82,6 +86,9 @@ echo '{"http-basic": {"composer.fluxui.dev": {"username": "token", "password": "
 
 # Install flux-pro
 composer require livewire/flux-pro:^2.2 --no-interaction
+
+# Aktifkan Flux Pro (WAJIB setelah install)
+php artisan flux:activate
 
 # Exit
 exit

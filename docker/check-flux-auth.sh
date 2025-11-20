@@ -45,13 +45,36 @@ echo ""
 if composer show livewire/flux-pro 2>/dev/null; then
     echo "✅ Flux Pro is installed"
     composer show livewire/flux-pro
+    
+    # Check if Flux Pro is activated
+    echo ""
+    echo "Checking Flux Pro activation status..."
+    if php artisan flux:status 2>/dev/null | grep -q "activated\|active"; then
+        echo "✅ Flux Pro is activated"
+    else
+        echo "⚠️  Flux Pro is installed but NOT activated"
+        echo "Activating Flux Pro..."
+        php artisan flux:activate --no-interaction
+        if [ $? -eq 0 ]; then
+            echo "✅ Flux Pro activated successfully!"
+        else
+            echo "❌ Failed to activate Flux Pro"
+        fi
+    fi
 else
     echo "❌ Flux Pro is NOT installed"
     echo ""
     echo "Attempting to install..."
-    composer require livewire/flux-pro:^2.2 --no-interaction --optimize-autoloader --no-dev
+    composer require livewire/flux-pro:^2.2 --no-interaction --optimize-autoloader --update-no-dev
     if [ $? -eq 0 ]; then
         echo "✅ Flux Pro installed successfully!"
+        echo "Activating Flux Pro..."
+        php artisan flux:activate --no-interaction
+        if [ $? -eq 0 ]; then
+            echo "✅ Flux Pro activated successfully!"
+        else
+            echo "⚠️  Flux Pro installed but activation failed"
+        fi
     else
         echo "❌ Failed to install Flux Pro"
         echo ""

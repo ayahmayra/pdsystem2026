@@ -108,52 +108,62 @@ if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
 fi
 set -e
 
-# Install Flux Pro if token is available and package is not installed
+# Install and activate Flux Pro using the correct method
 FLUX_PRO_INSTALLED=false
 if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
     set +e
-    if ! composer show livewire/flux-pro 2>/dev/null; then
-        echo "Installing Flux Pro..."
-        # composer require doesn't support --no-dev, use --update-no-dev instead
-        composer require livewire/flux-pro:^2.2 --no-interaction --optimize-autoloader --update-no-dev
-        if [ $? -eq 0 ]; then
-            echo "Flux Pro package installed successfully."
-            
-            # Activate Flux Pro (required after installation)
-            echo "Activating Flux Pro..."
-            php artisan flux:activate --no-interaction
-            if [ $? -eq 0 ]; then
-                FLUX_PRO_INSTALLED=true
-                echo "Flux Pro activated successfully."
-            else
-                echo "Warning: Flux Pro installed but activation failed. Continuing..."
-                FLUX_PRO_INSTALLED=true  # Still mark as installed, activation might not be critical
-            fi
-        else
-            echo "ERROR: Failed to install Flux Pro. Please check your token."
-            echo "Token preview: ${FLUX_PRO_TOKEN:0:10}... (first 10 chars)"
-            echo "Debug: Checking auth.json..."
-            if [ -f "/root/.composer/auth.json" ]; then
-                echo "Auth.json exists. Content (password hidden):"
-                cat /root/.composer/auth.json | sed 's/"password": "[^"]*"/"password": "***HIDDEN***"/'
-            else
-                echo "Auth.json NOT found!"
-            fi
+    
+    # Step 1: Install livewire/flux (free package, no auth needed)
+    if ! composer show livewire/flux 2>/dev/null; then
+        echo "Installing livewire/flux..."
+        composer require livewire/flux:^2.2 --no-interaction --optimize-autoloader --update-no-dev
+        if [ $? -ne 0 ]; then
+            echo "Warning: Failed to install livewire/flux, continuing..."
         fi
     else
-        echo "Flux Pro is already installed."
-        
-        # Check if Flux Pro is activated
-        if php artisan flux:status 2>/dev/null | grep -q "activated\|active"; then
-            echo "Flux Pro is already activated."
-        else
-            echo "Activating Flux Pro..."
-            php artisan flux:activate --no-interaction || echo "Warning: Activation failed, continuing..."
-        fi
-        
+        echo "livewire/flux is already installed."
+    fi
+    
+    # Step 2: Activate Flux Pro using flux:activate command
+    # This command will use the token interactively or from environment
+    echo "Activating Flux Pro..."
+    
+    # Try to activate with token via stdin (non-interactive)
+    echo "$FLUX_PRO_TOKEN" | php artisan flux:activate 2>&1
+    
+    # Check if activation was successful
+    if php artisan flux:status 2>/dev/null | grep -q "activated\|active\|pro"; then
         FLUX_PRO_INSTALLED=true
+        echo "✅ Flux Pro activated successfully."
+    else
+        # Try alternative: set token as environment variable and activate
+        echo "Trying alternative activation method..."
+        FLUX_TOKEN="$FLUX_PRO_TOKEN" php artisan flux:activate <<EOF
+$FLUX_PRO_TOKEN
+EOF
+        
+        if php artisan flux:status 2>/dev/null | grep -q "activated\|active\|pro"; then
+            FLUX_PRO_INSTALLED=true
+            echo "✅ Flux Pro activated successfully (alternative method)."
+        else
+            echo "⚠️  Warning: Flux Pro activation may have failed."
+            echo "Token preview: ${FLUX_PRO_TOKEN:0:10}... (first 10 chars)"
+            echo "You may need to activate manually: php artisan flux:activate"
+        fi
+    fi
+    
+    set -e
+else
+    # Install livewire/flux even without token (free version)
+    set +e
+    if ! composer show livewire/flux 2>/dev/null; then
+        echo "Installing livewire/flux (free version, no token needed)..."
+        composer require livewire/flux:^2.2 --no-interaction --optimize-autoloader --update-no-dev || echo "Warning: Failed to install livewire/flux"
     fi
     set -e
+    
+    echo "Warning: FLUX_PRO_TOKEN not set. Flux Pro will not be activated."
+    echo "Install livewire/flux (free) only. Set FLUX_PRO_TOKEN to activate Pro features."
 fi
 
 # Install npm dependencies if needed

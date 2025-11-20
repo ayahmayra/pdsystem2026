@@ -49,6 +49,13 @@ RUN sed -i 's/listen = \/run\/php\/php8.3-fpm.sock/listen = 9000/' /usr/local/et
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/zz-custom.conf
 
+# Setup Composer auth for Flux Pro (optional, use build arg)
+ARG FLUX_PRO_TOKEN
+RUN if [ -n "$FLUX_PRO_TOKEN" ]; then \
+        mkdir -p /root/.composer && \
+        echo "{\"http-basic\": {\"composer.fluxui.dev\": {\"username\": \"token\", \"password\": \"$FLUX_PRO_TOKEN\"}}}" > /root/.composer/auth.json; \
+    fi
+
 # Copy application files
 COPY . .
 

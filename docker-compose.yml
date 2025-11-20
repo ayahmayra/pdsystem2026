@@ -40,6 +40,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        FLUX_PRO_TOKEN: ${FLUX_PRO_TOKEN:-}
     container_name: pdsystem_php_fpm
     restart: unless-stopped
     working_dir: /var/www/html

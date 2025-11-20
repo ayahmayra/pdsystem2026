@@ -46,13 +46,26 @@ if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
 fi
 
 # Install Flux Pro if token is available and package is not installed
+FLUX_PRO_INSTALLED=false
 if [ -n "$FLUX_PRO_TOKEN" ] && [ "$FLUX_PRO_TOKEN" != "" ]; then
     if ! composer show livewire/flux-pro 2>/dev/null; then
         echo "Installing Flux Pro..."
-        composer require livewire/flux-pro:^2.2 --no-interaction --optimize-autoloader || echo "Failed to install Flux Pro, continuing..."
+        composer require livewire/flux-pro:^2.2 --no-interaction --optimize-autoloader && FLUX_PRO_INSTALLED=true || echo "Failed to install Flux Pro, continuing..."
     else
         echo "Flux Pro is already installed."
+        FLUX_PRO_INSTALLED=true
     fi
+fi
+
+# Build assets if flux-pro is installed or if public/build doesn't exist
+if [ "$FLUX_PRO_INSTALLED" = true ]; then
+    echo "Building assets (Flux Pro is installed)..."
+    npm run build || echo "Warning: Asset build failed, continuing..."
+elif [ ! -d "public/build" ]; then
+    echo "Warning: Flux Pro not installed and assets not built. Build may fail."
+    echo "Please set FLUX_PRO_TOKEN in environment and restart container."
+    # Try to build anyway (may fail if flux.css is missing)
+    npm run build || echo "Asset build failed - Flux Pro required for build"
 fi
 
 # Generate application key if not set

@@ -64,8 +64,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-di
     (echo "Warning: Composer install had errors (likely flux-pro auth). Continuing..." && \
      composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-reqs 2>/dev/null || true)
 
-# Install Node dependencies and build assets
-RUN npm install && npm run build
+# Install Node dependencies (assets will be built in entrypoint after flux-pro is installed)
+RUN npm install
 
 # Copy entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh

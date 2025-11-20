@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('trip_reports', function (Blueprint $table) {
+            $table->id();
+            $table->string('doc_no')->unique();
+            $table->boolean('number_is_manual')->default(false);
+            $table->text('number_manual_reason')->nullable();
+            $table->foreignId('number_format_id')->nullable()->constrained('doc_number_formats')->nullOnDelete();
+            $table->foreignId('number_sequence_id')->nullable()->constrained('number_sequences')->nullOnDelete();
+            $table->foreignId('number_scope_unit_id')->nullable()->constrained('units')->nullOnDelete();
+            $table->foreignId('spt_id')->constrained('spt');
+            $table->string('report_no')->nullable();
+            $table->date('report_date')->nullable();
+            $table->string('place_from');
+            $table->string('place_to');
+            $table->date('depart_date');
+            $table->date('return_date');
+            $table->longText('activities');
+            $table->foreignId('created_by_user_id')->constrained('users');
+            $table->enum('status', ['DRAFT','SUBMITTED','APPROVED']);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('trip_reports');
+    }
+};

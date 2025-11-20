@@ -1,0 +1,148 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-zinc-50: var(--color-neutral-50);
+    --color-zinc-100: var(--color-neutral-100);
+    --color-zinc-200: var(--color-neutral-200);
+    --color-zinc-300: var(--color-neutral-300);
+    --color-zinc-400: var(--color-neutral-400);
+    --color-zinc-500: var(--color-neutral-500);
+    --color-zinc-600: var(--color-neutral-600);
+    --color-zinc-700: var(--color-neutral-700);
+    --color-zinc-800: var(--color-neutral-800);
+    --color-zinc-900: var(--color-neutral-900);
+    --color-zinc-950: var(--color-neutral-950);
+}
+@theme {
+    --color-accent: var(--color-red-500);
+    --color-accent-content: var(--color-red-600);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-red-500);
+        --color-accent-content: var(--color-red-400);
+        --color-accent-foreground: var(--color-white);
+    }
+}
+
+/* Disable dark mode globally */
+.dark {
+    /* Override all dark mode styles to use light mode */
+    --color-accent: var(--color-neutral-800);
+    --color-accent-content: var(--color-neutral-800);
+    --color-accent-foreground: var(--color-white);
+}
+
+/* Force light mode for all elements */
+* {
+    color-scheme: light !important;
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */
+
+/* Flux UI Dropdown positioning fixes for production consistency */
+/* These styles are now handled by Flux UI components */
+
+/* Collapsible Sidebar Toggle Button Styling */
+[data-flux-sidebar-collapse] {
+    background-color: white !important;
+    /* border: 1px solid #e5e7eb !important; */
+    /* border-radius: 6px !important; */
+    /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; */
+    transition: all 0.2s ease-in-out !important;
+}
+
+[data-flux-sidebar-collapse]:hover {
+    background-color: white !important;
+    /* border-color: #d1d5db !important; */
+    /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; */
+}
+
+[data-flux-sidebar-collapse]:focus {
+    background-color: white !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Sidebar Collapsed State Styling */
+[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item] {
+    justify-content: center !important;
+}
+
+[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item] > span:not([data-flux-icon]) {
+    display: none !important;
+}
+
+/* Tooltip styling for collapsed sidebar */
+[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item] {
+    position: relative;
+}
+
+/* Ensure tooltips are visible when sidebar is collapsed */
+[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1f2937;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-left: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+[data-flux-sidebar-collapsed-desktop] [data-flux-sidebar-item]:hover::before {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: #1f2937;
+    z-index: 1000;
+    margin-left: 3px;
+}
+
+/* Flux UI Sidebar - Let Flux UI handle mobile behavior */

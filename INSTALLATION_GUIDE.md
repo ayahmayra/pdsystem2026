@@ -181,15 +181,34 @@ mysql -u username -p perjadin_db < backup_file.sql
 
 ## Deployment ke Production
 
+Untuk deployment ke server production tanpa Docker, lihat panduan lengkap di **[PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md)**.
+
+Panduan tersebut mencakup:
+- Setup FrankenPHP
+- Konfigurasi Nginx/Apache
+- Setup SSL/HTTPS
+- Optimasi production
+- Backup dan maintenance
+
+### Quick Start Production
+
 1. **Backup database production**
 2. **Upload kode ke server**
-3. **Jalankan migration:**
+3. **Setup environment** (lihat PRODUCTION_DEPLOYMENT.md)
+4. **Jalankan migration:**
 ```bash
 php artisan migrate --force
 ```
-4. **Jalankan seeder jika diperlukan:**
+5. **Jalankan seeder jika diperlukan:**
 ```bash
 php artisan db:seed --force
+```
+6. **Optimize untuk production:**
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+composer install --no-dev --optimize-autoloader
 ```
 
 ## Catatan Penting

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('sppd', function (Blueprint $table) {
             // PPTK fields
             $table->unsignedBigInteger('pptk_user_id')->nullable()->after('signed_by_user_id');
-            $table->foreign('pptk_user_id')->references('id')->on('users')->onDelete('set null');
+            // $table->foreign('pptk_user_id')->references('id')->on('users')->onDelete('set null');
             
             // PPTK snapshot fields
             $table->string('pptk_user_name_snapshot')->nullable()->after('pptk_user_id');

@@ -14,7 +14,7 @@ class AssignDefaultRolesSeeder extends Seeder
     public function run(): void
     {
         // Assign super-admin role to first user (or specific user by email)
-        $superAdminUser = User::where('email', 'admin@example.com')->first();
+        $superAdminUser = User::where('email', 'admin@perjadin.test')->first();
         if ($superAdminUser) {
             $superAdminUser->assignRole('super-admin');
             $this->command->info('Super admin role assigned to: ' . $superAdminUser->email);

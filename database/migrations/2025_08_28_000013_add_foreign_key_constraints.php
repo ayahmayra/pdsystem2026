@@ -155,7 +155,7 @@ return new class extends Migration
             $table->foreign('number_scope_unit_id')->references('id')->on('units');
             $table->foreign('spt_id')->references('id')->on('spt');
             $table->foreign('signed_by_user_id')->references('id')->on('users')->nullOnDelete();
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('user_id')->references('id')->on('users');
         });
 
         // Add foreign key constraints for sppd_transport_modes table

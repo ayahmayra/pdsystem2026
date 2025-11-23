@@ -1,17 +1,28 @@
 <div class="space-y-6">
     <!-- Welcome Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg">
-        <div class="flex items-center justify-between">
+    <!-- Welcome Header -->
+    <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white shadow-lg">
+        <!-- Decorative Background Pattern -->
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-4 -ml-4 h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
+
+        <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-                <flux:heading size="xl" level="1">Selamat Datang {{ $currentUser->name }}!</flux:heading>
-                <flux:text class="mt-2 mb-6 text-base">Dashboard Sistem Perjalanan Dinas</flux:text>
-                <flux:text>{{ now()->format('l, d F Y') }}</flux:text>
-                
-               
+                <h1 class="text-3xl font-bold tracking-tight">Selamat Datang, {{ $currentUser->name }}! 👋</h1>
+                <p class="mt-2 text-blue-100 text-lg">Dashboard Sistem Perjalanan Dinas</p>
+                <div class="mt-4 flex items-center space-x-2 text-sm text-blue-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>{{ now()->format('l, d F Y') }}</span>
+                </div>
             </div>
-            <div class="text-right">
-                <div class="text-2xl font-semibold">{{ now()->format('H:i') }}</div>
-                <div class="text-blue-200 text-sm">{{ \App\Models\OrgSettings::getInstance()->short_name ?: 'PdSystem' }}</div>
+            
+            <div class="flex flex-col items-end">
+                <div class="text-4xl font-bold tracking-tighter">{{ now()->format('H:i') }}</div>
+                <div class="mt-1 flex items-center space-x-1 text-blue-200">
+                    <span class="font-medium">{{ \App\Models\OrgSettings::getInstance()->short_name ?: 'PdSystem' }}</span>
+                </div>
             </div>
         </div>
     </div>

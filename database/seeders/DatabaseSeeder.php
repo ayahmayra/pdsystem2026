@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Roles and Permissions (Must be first)
+            RolePermissionSeeder::class,
+
             // Existing seeders
             UnitsSeeder::class,
             PositionsSeeder::class,
@@ -62,6 +65,9 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             UserTravelGradeMapSeeder::class,
             EmployeesSeeder::class,
+
+            // Assign Roles (Must be last)
+            AssignDefaultRolesSeeder::class,
         ]);
     }
 }

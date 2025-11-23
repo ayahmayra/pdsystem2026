@@ -270,9 +270,14 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->unsignedBigInteger('head_user_id')->nullable();
             $table->string('head_title');
+            $table->string('logo_path')->nullable();
             $table->string('signature_path')->nullable();
             $table->string('stamp_path')->nullable();
             $table->json('settings')->nullable();
+            $table->string('ym_separator', 5)->default('/');
+            $table->string('qr_footer_text')->nullable();
+            $table->boolean('show_left_logo')->default(true);
+            $table->boolean('show_right_logo')->default(false);
             $table->boolean('singleton')->default(false);
             $table->timestamps();
         });

@@ -14,18 +14,24 @@ return new class extends Migration
     {
         // Check if column exists before attempting to modify table
         if (Schema::hasColumn('sppd', 'user_id')) {
-            // Get the actual foreign key name from database
-            $foreignKeys = DB::select("
-                SELECT CONSTRAINT_NAME 
-                FROM information_schema.KEY_COLUMN_USAGE 
-                WHERE TABLE_SCHEMA = DATABASE() 
-                AND TABLE_NAME = 'sppd' 
-                AND COLUMN_NAME = 'user_id' 
-                AND REFERENCED_TABLE_NAME IS NOT NULL
-            ");
+            $foreignKeys = [];
+            
+            // Only lookup foreign keys manually for non-SQLite databases
+            // SQLite handles column drops by recreating the table, so explicit FK drop isn't needed/supported the same way
+            if (DB::getDriverName() !== 'sqlite') {
+                // Get the actual foreign key name from database
+                $foreignKeys = DB::select("
+                    SELECT CONSTRAINT_NAME 
+                    FROM information_schema.KEY_COLUMN_USAGE 
+                    WHERE TABLE_SCHEMA = DATABASE() 
+                    AND TABLE_NAME = 'sppd' 
+                    AND COLUMN_NAME = 'user_id' 
+                    AND REFERENCED_TABLE_NAME IS NOT NULL
+                ");
+            }
             
             Schema::table('sppd', function (Blueprint $table) use ($foreignKeys) {
-                // Drop foreign key constraint if it exists
+                // Drop foreign key constraint if it exists (MySQL/MariaDB)
                 if (!empty($foreignKeys)) {
                     foreach ($foreignKeys as $fk) {
                         try {

@@ -14,15 +14,19 @@ return new class extends Migration
     {
         // Check if column exists before attempting to modify table
         if (Schema::hasColumn('sppd', 'pptk_user_id')) {
-            // Get the actual foreign key name from database
-            $foreignKeys = DB::select("
-                SELECT CONSTRAINT_NAME 
-                FROM information_schema.KEY_COLUMN_USAGE 
-                WHERE TABLE_SCHEMA = DATABASE() 
-                AND TABLE_NAME = 'sppd' 
-                AND COLUMN_NAME = 'pptk_user_id' 
-                AND REFERENCED_TABLE_NAME IS NOT NULL
-            ");
+            $foreignKeys = [];
+            
+            if (DB::getDriverName() !== 'sqlite') {
+                // Get the actual foreign key name from database
+                $foreignKeys = DB::select("
+                    SELECT CONSTRAINT_NAME 
+                    FROM information_schema.KEY_COLUMN_USAGE 
+                    WHERE TABLE_SCHEMA = DATABASE() 
+                    AND TABLE_NAME = 'sppd' 
+                    AND COLUMN_NAME = 'pptk_user_id' 
+                    AND REFERENCED_TABLE_NAME IS NOT NULL
+                ");
+            }
             
             Schema::table('sppd', function (Blueprint $table) use ($foreignKeys) {
                 // Drop foreign key constraint if it exists

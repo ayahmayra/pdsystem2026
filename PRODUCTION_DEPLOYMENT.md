@@ -728,6 +728,31 @@ cat /var/www/pdsystem2026/.env | grep DB_
 ```
 
 
+
+#### PHP Extension Issues
+
+**Call to undefined function mb_split() / mbstring**
+
+Jika mendapatkan error ini, install PHP mbstring extension:
+
+\`\`\`bash
+# Cek versi PHP yang digunakan
+php -v
+
+# Install mbstring untuk versi PHP Anda (ganti 8.x dengan versi Anda)
+sudo apt update
+sudo apt install php-mbstring -y
+# Atau untuk versi spesifik:
+# sudo apt install php8.2-mbstring -y
+
+# Restart PHP service
+sudo systemctl restart php8.2-fpm
+# Atau jika menggunakan FrankenPHP:
+sudo systemctl restart frankenphp
+
+# Verifikasi instalasi
+php -m | grep mbstring
+\`\`\`
 #### Git Issues
 
 **Fatal: detected dubious ownership in repository**

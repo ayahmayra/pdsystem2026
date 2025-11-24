@@ -727,6 +727,18 @@ mysql -u pdsystem_user -p pdsystem_production
 cat /var/www/pdsystem/.env | grep DB_
 ```
 
+
+#### Git Issues
+
+**Fatal: detected dubious ownership in repository**
+
+Jika mendapatkan error ini saat `git pull`, jalankan command berikut:
+
+```bash
+git config --global --add safe.directory /var/www/pdsystem
+# Atau jika nama folder berbeda:
+git config --global --add safe.directory /path/to/your/repo
+```
 ---
 
 ## 📝 Checklist Deployment

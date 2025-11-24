@@ -732,15 +732,18 @@ cat /var/www/pdsystem/.env | grep DB_
 
 **Fatal: detected dubious ownership in repository**
 
-Jika mendapatkan error ini saat `git pull`, jalankan command berikut:
+Masalah ini terjadi karena Anda menjalankan command git sebagai user (misal `root` via `sudo`) yang bukan pemilik folder repository.
 
+Solusi 1 (Recommended): Jalankan git sebagai user pemilik folder (misal `www-data`):
 ```bash
-git config --global --add safe.directory /var/www/pdsystem
-# Atau jika nama folder berbeda:
-git config --global --add safe.directory /path/to/your/repo
+sudo -u www-data git pull origin main
 ```
----
 
+Solusi 2: Tambahkan exception (Hati-hati dengan trailing slash!):
+```bash
+# Pastikan path SAMA PERSIS dengan yang ada di pesan error (tanpa akhiran /)
+git config --global --add safe.directory /var/www/pdsystem2026
+```
 ## 📝 Checklist Deployment
 
 - [ ] Server sudah disiapkan dengan semua dependencies

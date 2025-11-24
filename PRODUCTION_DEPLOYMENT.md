@@ -193,32 +193,32 @@ sudo systemctl restart mariadb
 
 ```bash
 # Buat direktori aplikasi
-sudo mkdir -p /var/www/pdsystem
-cd /var/www/pdsystem
+sudo mkdir -p /var/www/pdsystem2026
+cd /var/www/pdsystem2026
 
 # Clone repository (jika menggunakan Git)
 sudo git clone <repository-url> .
 
 # Atau upload kode menggunakan SCP/SFTP
-# scp -r /path/to/local/code user@server:/var/www/pdsystem
+# scp -r /path/to/local/code user@server:/var/www/pdsystem2026
 ```
 
 ### 2. Set Ownership dan Permissions
 
 ```bash
 # Set ownership ke user web server (biasanya www-data)
-sudo chown -R www-data:www-data /var/www/pdsystem
+sudo chown -R www-data:www-data /var/www/pdsystem2026
 
 # Set permissions
-sudo chmod -R 755 /var/www/pdsystem
-sudo chmod -R 775 /var/www/pdsystem/storage
-sudo chmod -R 775 /var/www/pdsystem/bootstrap/cache
+sudo chmod -R 755 /var/www/pdsystem2026
+sudo chmod -R 775 /var/www/pdsystem2026/storage
+sudo chmod -R 775 /var/www/pdsystem2026/bootstrap/cache
 ```
 
 ### 3. Install Dependencies
 
 ```bash
-cd /var/www/pdsystem
+cd /var/www/pdsystem2026
 
 # Install PHP dependencies
 composer install --no-dev --optimize-autoloader --no-interaction
@@ -356,7 +356,7 @@ server {
     listen 80;
     listen [::]:80;
     server_name yourdomain.com www.yourdomain.com;
-    root /var/www/pdsystem/public;
+    root /var/www/pdsystem2026/public;
 
     index index.php index.html;
 
@@ -441,9 +441,9 @@ Konfigurasi:
 <VirtualHost *:80>
     ServerName yourdomain.com
     ServerAlias www.yourdomain.com
-    DocumentRoot /var/www/pdsystem/public
+    DocumentRoot /var/www/pdsystem2026/public
 
-    <Directory /var/www/pdsystem/public>
+    <Directory /var/www/pdsystem2026/public>
         AllowOverride All
         Require all granted
     </Directory>
@@ -508,7 +508,7 @@ sudo nano /etc/supervisor/conf.d/pdsystem-queue.conf
 ```ini
 [program:pdsystem-queue]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/pdsystem/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+command=php /var/www/pdsystem2026/artisan queue:work --sleep=3 --tries=3 --max-time=3600
 autostart=true
 autorestart=true
 stopasgroup=true
@@ -516,7 +516,7 @@ killasgroup=true
 user=www-data
 numprocs=2
 redirect_stderr=true
-stdout_logfile=/var/www/pdsystem/storage/logs/queue.log
+stdout_logfile=/var/www/pdsystem2026/storage/logs/queue.log
 stopwaitsecs=3600
 ```
 
@@ -535,7 +535,7 @@ sudo nano /etc/logrotate.d/pdsystem
 ```
 
 ```
-/var/www/pdsystem/storage/logs/*.log {
+/var/www/pdsystem2026/storage/logs/*.log {
     daily
     missingok
     rotate 14
@@ -556,7 +556,7 @@ sudo crontab -e -u www-data
 Tambahkan:
 
 ```
-* * * * * cd /var/www/pdsystem && php artisan schedule:run >> /dev/null 2>&1
+* * * * * cd /var/www/pdsystem2026 && php artisan schedule:run >> /dev/null 2>&1
 ```
 
 ---
@@ -609,7 +609,7 @@ sudo nano /usr/local/bin/backup-pdsystem-files.sh
 #!/bin/bash
 BACKUP_DIR="/var/backups/pdsystem"
 DATE=$(date +%Y%m%d_%H%M%S)
-APP_DIR="/var/www/pdsystem"
+APP_DIR="/var/www/pdsystem2026"
 
 mkdir -p $BACKUP_DIR
 
@@ -629,7 +629,7 @@ sudo chmod +x /usr/local/bin/backup-pdsystem-files.sh
 ### 3. Update Aplikasi
 
 ```bash
-cd /var/www/pdsystem
+cd /var/www/pdsystem2026
 
 # Backup database dulu
 /usr/local/bin/backup-pdsystem-db.sh
@@ -663,7 +663,7 @@ sudo systemctl reload nginx  # atau apache2
 
 ```bash
 # Laravel logs
-tail -f /var/www/pdsystem/storage/logs/laravel.log
+tail -f /var/www/pdsystem2026/storage/logs/laravel.log
 
 # Nginx logs
 tail -f /var/log/nginx/error.log
@@ -697,24 +697,24 @@ sudo supervisorctl status
 #### Permission Issues
 
 ```bash
-sudo chown -R www-data:www-data /var/www/pdsystem
-sudo chmod -R 755 /var/www/pdsystem
-sudo chmod -R 775 /var/www/pdsystem/storage
-sudo chmod -R 775 /var/www/pdsystem/bootstrap/cache
+sudo chown -R www-data:www-data /var/www/pdsystem2026
+sudo chmod -R 755 /var/www/pdsystem2026
+sudo chmod -R 775 /var/www/pdsystem2026/storage
+sudo chmod -R 775 /var/www/pdsystem2026/bootstrap/cache
 ```
 
 #### 500 Error
 
 ```bash
 # Cek Laravel logs
-tail -50 /var/www/pdsystem/storage/logs/laravel.log
+tail -50 /var/www/pdsystem2026/storage/logs/laravel.log
 
 # Cek PHP errors
 tail -50 /var/log/php8.4-fpm.log  # atau frankenphp log
 
 # Cek permissions
-ls -la /var/www/pdsystem/storage
-ls -la /var/www/pdsystem/bootstrap/cache
+ls -la /var/www/pdsystem2026/storage
+ls -la /var/www/pdsystem2026/bootstrap/cache
 ```
 
 #### Database Connection Error
@@ -724,7 +724,7 @@ ls -la /var/www/pdsystem/bootstrap/cache
 mysql -u pdsystem_user -p pdsystem_production
 
 # Cek .env
-cat /var/www/pdsystem/.env | grep DB_
+cat /var/www/pdsystem2026/.env | grep DB_
 ```
 
 
@@ -742,7 +742,7 @@ sudo -u www-data git pull origin main
 Solusi 2: Tambahkan exception (Hati-hati dengan trailing slash!):
 ```bash
 # Pastikan path SAMA PERSIS dengan yang ada di pesan error (tanpa akhiran /)
-git config --global --add safe.directory /var/www/pdsystem2026
+git config --global --add safe.directory /var/www/pdsystem20262026
 ```
 ## 📝 Checklist Deployment
 
@@ -770,10 +770,10 @@ git config --global --add safe.directory /var/www/pdsystem2026
 
 Jika mengalami masalah:
 
-1. Cek logs: `tail -f /var/www/pdsystem/storage/logs/laravel.log`
+1. Cek logs: `tail -f /var/www/pdsystem2026/storage/logs/laravel.log`
 2. Cek status services: `sudo systemctl status frankenphp nginx mariadb`
-3. Cek permissions: `ls -la /var/www/pdsystem/storage`
-4. Cek konfigurasi: `cat /var/www/pdsystem/.env`
+3. Cek permissions: `ls -la /var/www/pdsystem2026/storage`
+4. Cek konfigurasi: `cat /var/www/pdsystem2026/.env`
 
 ---
 

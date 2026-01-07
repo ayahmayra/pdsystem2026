@@ -78,7 +78,7 @@
             <tr>
                 <td class="label">Yth.</td>
                 <td class="separator">:</td>
-                <td class="content">{{ $notaDinas->to_user_position_name_snapshot ?: $notaDinas->toUser?->position?->name ?? '-' }} {{ \DB::table('org_settings')->value('name') }}</td>
+                <td class="content">{{ $notaDinas->to_user_position_name_snapshot ?: $notaDinas->toUser?->position?->name ?? '-' }} {{ $notaDinas->to_user_unit_name_snapshot ?: $notaDinas->toUser?->unit?->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="label">Dari</td>

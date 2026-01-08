@@ -15,6 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \App\Http\Middleware\CheckPermission::class,
             'unit.scope' => \App\Http\Middleware\CheckUnitScope::class,
             'user.role' => \App\Http\Middleware\CheckUserRole::class,
+            'maintenance.check' => \App\Http\Middleware\CheckMaintenanceMode::class,
+        ]);
+        
+        // Add maintenance check to web middleware group
+        $middleware->web(append: [
+            \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -23,11 +23,14 @@ class OrgSettings extends Model
         'logo_path',
         'settings',
         'singleton',
+        'maintenance_mode',
+        'maintenance_message',
     ];
 
     protected $casts = [
         'settings' => 'array',
         'singleton' => 'boolean',
+        'maintenance_mode' => 'boolean',
     ];
 
     /**

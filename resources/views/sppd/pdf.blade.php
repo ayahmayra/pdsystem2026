@@ -16,7 +16,7 @@
         .header td { vertical-align: middle; padding: 0; }
         .logo { height: 18mm; max-width: 100%; }
         .header-text { text-align: center; }
-        .header-text h1 { font-size: 13pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.5pt; }
+        .header-text h1 { font-size: 13pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.3pt; white-space: nowrap; }
         .header-text h3 { font-size: 11pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.5pt; }
         .header-text .unit { font-size: 11pt; font-weight: 700; margin: 0 0 2pt 0; text-transform: uppercase; }
         .header-text p { font-size: 8pt; margin: 1pt 0; }

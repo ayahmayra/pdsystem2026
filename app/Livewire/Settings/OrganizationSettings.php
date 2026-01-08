@@ -42,6 +42,10 @@ class OrganizationSettings extends Component
     public $qr_footer_text = '';
     public $show_left_logo = true;
     public $show_right_logo = false;
+    
+    // Maintenance Mode
+    public $maintenance_mode = false;
+    public $maintenance_message = '';
 
     // Mutators for foreign key
     public function setHeadUserIdProperty($value)
@@ -77,6 +81,10 @@ class OrganizationSettings extends Component
         $this->qr_footer_text = $this->orgSettings->getSetting('qr_footer_text', 'Verifikasi keaslian dokumen via QR.');
         $this->show_left_logo = $this->orgSettings->getSetting('letterhead.show_left_logo', true);
         $this->show_right_logo = $this->orgSettings->getSetting('letterhead.show_right_logo', false);
+        
+        // Maintenance Mode
+        $this->maintenance_mode = $this->orgSettings->maintenance_mode ?? false;
+        $this->maintenance_message = $this->orgSettings->maintenance_message ?? 'Sistem sedang dalam perbaikan. Silakan coba lagi nanti.';
     }
 
     protected function rules()
@@ -99,6 +107,8 @@ class OrganizationSettings extends Component
             'qr_footer_text' => 'nullable|string|max:255',
             'show_left_logo' => 'boolean',
             'show_right_logo' => 'boolean',
+            'maintenance_mode' => 'boolean',
+            'maintenance_message' => 'nullable|string|max:500',
         ];
     }
 
@@ -155,6 +165,10 @@ class OrganizationSettings extends Component
 
             $validated['settings'] = $settings;
             $validated['singleton'] = true;
+            
+            // Add maintenance mode fields
+            $validated['maintenance_mode'] = $this->maintenance_mode;
+            $validated['maintenance_message'] = $this->maintenance_message;
 
             // Remove file inputs from validated data
             unset($validated['signature_file'], $validated['stamp_file'], $validated['logo_file'], $validated['show_left_logo'], $validated['show_right_logo']);

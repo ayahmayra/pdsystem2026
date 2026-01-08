@@ -65,7 +65,8 @@ class ReceiptController extends Controller
         ]);
         
         // Tampilkan preview PDF di browser menggunakan stream() dengan Attachment => false
-        $filename = 'Kwitansi_' . ($receipt->receipt_no ?: 'Manual') . '_' . date('Y-m-d') . '.pdf';
+        $receiptNo = $receipt->receipt_no ? str_replace(['/', '\\'], '-', $receipt->receipt_no) : 'Manual';
+        $filename = 'Kwitansi_' . $receiptNo . '_' . date('Y-m-d') . '.pdf';
         
         return $pdf->stream("$filename", ["Attachment" => false]);
     }
@@ -126,7 +127,8 @@ class ReceiptController extends Controller
         ]);
         
         // Download PDF dengan nama file yang sesuai
-        $filename = 'Kwitansi_' . ($receipt->receipt_no ?: 'Manual') . '_' . date('Y-m-d') . '.pdf';
+        $receiptNo = $receipt->receipt_no ? str_replace(['/', '\\'], '-', $receipt->receipt_no) : 'Manual';
+        $filename = 'Kwitansi_' . $receiptNo . '_' . date('Y-m-d') . '.pdf';
         
         return $pdf->download($filename);
     }

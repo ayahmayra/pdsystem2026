@@ -14,7 +14,7 @@
         .header td { vertical-align: middle; padding: 0; }
         .logo { height: 20mm; max-width: 100%; }
         .header-text { text-align: center; }
-        .header-text h1 { font-size: 14pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.5pt; }
+        .header-text h1 { font-size: 13pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.3pt; white-space: nowrap; }
         .header-text h3 { font-size: 12pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.5pt; }
         .header-text .unit { font-size: 12pt; font-weight: 700; margin: 0 0 2pt 0; text-transform: uppercase; }
         .header-text p { font-size: 9pt; margin: 1pt 0; }
@@ -55,7 +55,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <table style="border-bottom: 2px solid black;">
+            <table style="border-bottom: 4px solid black;">
                 <tr>
                     <td style="width: 22mm;">
                         <img src="{{ public_path('logobengkalis.png') }}" alt="Logo" class="logo">
@@ -65,6 +65,8 @@
                         <h1>{{ \DB::table('org_settings')->value('name') }}</h1>
                         <p>{{ \DB::table('org_settings')->value('address') }}</p>
                         <p>Telepon {{ \DB::table('org_settings')->value('phone') }} e-mail : {{ \DB::table('org_settings')->value('email') }}</p>
+                        <br>
+                    <div style="margin-bottom: 8px;"></div>
                     </td>
                     <td style="width: 22mm;"></td>
                 </tr>
@@ -117,7 +119,7 @@
             </tr>
         </table>
         
-        <div class="divider"></div>
+        <div class="divider" style="border-bottom: 1.5px solid #000; margin: 3mm 0 4mm 0;"></div>
         
         <!-- Isi Surat -->
         <div class="closing">
@@ -202,7 +204,7 @@
                             @endif
                             
                         </td>
-                        <td>{{ $p->user_position_desc_snapshot ?: ($p->user->position_desc ?: ($p->user->position?->name ?? '-')) }}</td>
+                        <td>{{ $p->user_position_desc_snapshot ?: ($p->user->position_desc ?: ($p->user->position?->name ?? '-')) }} {{ $p->user_unit_name_snapshot ?: $p->user->unit?->name ?? '-' }}</td>
                         <td></td>
                     </tr>
                 @empty

@@ -22,6 +22,17 @@
 
                                 <div class="bg-white p-4 rounded-lg shadow-sm">
                                     <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                        ✅ Perbaikan jabatan penanda tangan pada dokumen SPT
+                                    </h3>
+                                  
+                                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                        <li>Penyesuaian custom assignment title pada SPT, jika penanda tangan adalah bupati, gunakan custom assignment title "Bupati Bengkalis"</li>
+                                        
+                                    </ul>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-lg shadow-sm">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
                                         ✅ Perbaikan Nama unit dan Jabatan pada penanda tangan dokumen SPT, SPPD dan Kwitansi
                                     </h3>
                                     <p class="text-gray-700 mb-3">

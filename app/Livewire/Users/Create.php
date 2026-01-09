@@ -7,6 +7,7 @@ use App\Models\Unit;
 use App\Models\Position;
 use App\Models\Rank;
 use App\Models\TravelGrade;
+use App\Models\Instansi;
 use App\Helpers\PermissionHelper;
 use Spatie\Permission\Models\Role;
 use Livewire\Attributes\Layout;
@@ -27,6 +28,7 @@ class Create extends Component
     public $whatsapp = '';
     public $address = '';
     public $unit_id = '';
+    public $instansi_id = '';
     public $position_id = '';
     public $position_desc = '';
     public $rank_id = '';
@@ -45,6 +47,11 @@ class Create extends Component
     public function setUnitIdProperty($value)
     {
         $this->unit_id = $value === '' ? null : $value;
+    }
+
+    public function setInstansiIdProperty($value)
+    {
+        $this->instansi_id = $value === '' ? null : $value;
     }
 
     public function setPositionIdProperty($value)
@@ -98,6 +105,7 @@ class Create extends Component
             'whatsapp' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'unit_id' => 'nullable|exists:units,id',
+            'instansi_id' => 'nullable|exists:instansis,id',
             'position_id' => 'nullable|exists:positions,id',
             'position_desc' => 'nullable|string|max:255',
             'rank_id' => 'nullable|exists:ranks,id',
@@ -131,7 +139,7 @@ class Create extends Component
         $validated['password'] = bcrypt('password123'); // Default password
         
         // Convert empty strings to null for foreign key fields and date fields
-        $nullableFields = ['unit_id', 'position_id', 'rank_id', 'travel_grade_id', 'birth_date'];
+        $nullableFields = ['unit_id', 'instansi_id', 'position_id', 'rank_id', 'travel_grade_id', 'birth_date'];
         foreach ($nullableFields as $key) {
             if (isset($validated[$key]) && ($validated[$key] === '' || $validated[$key] === null)) {
                 $validated[$key] = null;
@@ -162,6 +170,7 @@ class Create extends Component
         }
         $units = $unitsQuery->get();
         
+        $instansis = Instansi::orderBy('name')->get();
         $positions = Position::with('echelon')
             ->leftJoin('echelons', 'positions.echelon_id', '=', 'echelons.id')
             ->orderByRaw('CASE WHEN echelons.code IS NULL THEN 2 ELSE 0 END') // Non eselon positions last
@@ -174,6 +183,6 @@ class Create extends Component
         $availableRoles = Role::where('name', '!=', 'super-admin')->orderBy('name')->get();
         $canManageRoles = PermissionHelper::canManageUserRoles();
 
-        return view('livewire.users.create', compact('units', 'positions', 'ranks', 'travelGrades', 'availableRoles', 'canManageRoles'));
+        return view('livewire.users.create', compact('units', 'instansis', 'positions', 'ranks', 'travelGrades', 'availableRoles', 'canManageRoles'));
     }
 }

@@ -151,6 +151,14 @@ Route::middleware(['auth', 'user.role'])->group(function () {
     Route::put('ranks/{rank}', [\App\Http\Controllers\RankController::class, 'update'])->name('ranks.update');
     Route::delete('ranks/{rank}', [\App\Http\Controllers\RankController::class, 'destroy'])->name('ranks.destroy');
 
+    // Instansi CRUD
+    Route::get('instansis', [\App\Http\Controllers\InstansiController::class, 'index'])->name('instansis.index');
+    Route::get('instansis/create', [\App\Http\Controllers\InstansiController::class, 'create'])->name('instansis.create');
+    Route::post('instansis', [\App\Http\Controllers\InstansiController::class, 'store'])->name('instansis.store');
+    Route::get('instansis/{instansi}/edit', [\App\Http\Controllers\InstansiController::class, 'edit'])->name('instansis.edit');
+    Route::put('instansis/{instansi}', [\App\Http\Controllers\InstansiController::class, 'update'])->name('instansis.update');
+    Route::delete('instansis/{instansi}', [\App\Http\Controllers\InstansiController::class, 'destroy'])->name('instansis.destroy');
+
     // Position CRUD
     Route::get('positions', [\App\Http\Controllers\PositionController::class, 'index'])->name('positions.index');
     Route::get('positions/create', [\App\Http\Controllers\PositionController::class, 'create'])->name('positions.create');

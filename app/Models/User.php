@@ -36,6 +36,7 @@ class User extends Authenticatable
         'whatsapp',
         'address',
         'unit_id',
+        'instansi_id',
         'position_id',
         'position_desc',
         'rank_id',
@@ -120,6 +121,14 @@ class User extends Authenticatable
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    /**
+     * Relationship with Instansi
+     */
+    public function instansi(): BelongsTo
+    {
+        return $this->belongsTo(Instansi::class);
     }
 
     /**
@@ -606,5 +615,20 @@ class User extends Authenticatable
         
         // Non-superadmin users can be modified by admin or superadmin
         return $currentUser->hasAnyRole(['admin', 'super-admin']);
+    }
+
+    /**
+     * Get the instansi name for this user
+     * If user has instansi_id, return the instansi name
+     * Otherwise, return the organization name from org_settings
+     */
+    public function getInstansiName(): string
+    {
+        if ($this->instansi_id && $this->instansi) {
+            return $this->instansi->name;
+        }
+        
+        // Fallback to org_settings name
+        return DB::table('org_settings')->value('name') ?? '';
     }
 }

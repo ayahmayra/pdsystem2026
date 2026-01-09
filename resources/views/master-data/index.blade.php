@@ -61,6 +61,31 @@
                         </div>
                         @endif
 
+                        <!-- Data Instansi - Only for Admin and Super Admin -->
+                        @if(\App\Helpers\PermissionHelper::can('master-data.view') && !auth()->user()->hasRole(['bendahara-pengeluaran', 'bendahara-pengeluaran-pembantu']))
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+                                        <a href="{{ route('instansis.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400">
+                                            Data Instansi
+                                        </a>
+                                    </h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        Kelola data instansi pegawai
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <!-- Data Sub Kegiatan -->
                         @if(\App\Helpers\PermissionHelper::can('master-data.view'))
                         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">

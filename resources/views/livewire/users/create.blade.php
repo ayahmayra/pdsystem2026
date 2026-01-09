@@ -134,6 +134,18 @@
                         </div>
 
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Instansi <span class="text-gray-400">(Opsional)</span></label>
+                            <select wire:model="instansi_id" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">Pilih instansi (kosongkan untuk menggunakan nama organisasi default)</option>
+                                @foreach($instansis as $instansi)
+                                    <option value="{{ $instansi->id }}">{{ $instansi->fullName() }}</option>
+                                @endforeach
+                            </select>
+                            @error('instansi_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Jika dikosongkan, maka instansi pegawai akan mengikuti nama organisasi pada pengaturan sistem</p>
+                        </div>
+
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jabatan</label>
                             <select wire:model="position_id" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                 <option value="">Pilih jabatan</option>

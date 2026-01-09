@@ -201,9 +201,12 @@
                 <div class="block" style="width: 300px;">
                     <div>Bengkalis, {{ $spt->spt_date ? \Carbon\Carbon::parse($spt->spt_date)->locale('id')->translatedFormat('d F Y') : '-' }}</div>
                     @php
-                        // Deteksi apakah assignment_title adalah custom atau auto
+                        // Jika assignment_title tidak custom, gunakan deskripsi jabatan dari pegawai terkait
                         $defaultTitle = $spt->signedByUser?->position_desc ?: ($spt->signedByUser?->position?->name ?? '');
                         $isCustomAssignment = !empty(trim($spt->assignment_title)) && trim($spt->assignment_title) !== trim($defaultTitle);
+
+                        // Dapatkan deskripsi jabatan untuk default, jika tidak custom assignment
+                        $jabatanDescription = $spt->signedByUser?->position_desc ?? '';
                     @endphp
                     
                     @if($isCustomAssignment)
@@ -221,7 +224,7 @@
                             <!-- Jika ada position_desc, tampilkan position_desc -> unit_name -> organisation name -->
                             <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}
                           
-                            <div>{{ \DB::table('org_settings')->value('name') }}</div>
+                            {{-- <div>{{ \DB::table('org_settings')->value('name') }}</div> --}}
                         @elseif($unitName)
                             <!-- Jika ada unit name, tampilkan dalam baris terpisah -->
                             <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
@@ -229,15 +232,26 @@
                             {{-- <div>{{ \DB::table('org_settings')->value('name') }}</div> --}}
                         @else
                             <!-- Jika tidak ada unit name, position langsung disambung dengan organisasi -->
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ \DB::table('org_settings')->value('name') }}</div>
+                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
                         @endif
                         <div>Kabupaten Bengkalis</div>             
                     @endif
                     
                     <br><br><br><br><br>
                     <div class="name">{{ $spt->getSignedByUserSnapshot()['gelar_depan'] ?? $spt->signedByUser?->gelar_depan ?? '-' }} {{ $spt->getSignedByUserSnapshot()['name'] ?? $spt->signedByUser?->name ?? '-' }} {{ $spt->getSignedByUserSnapshot()['gelar_belakang'] ?? $spt->signedByUser?->gelar_belakang ?? '-' }}</div>
-                    <div class="rank">{{ $spt->getSignedByUserSnapshot()['rank_name'] ?? $spt->signedByUser?->rank?->name ?? '-' }} ({{ $spt->getSignedByUserSnapshot()['rank_code'] ?? $spt->signedByUser?->rank?->code ?? '-' }})</div>
-                    <div class="nip">NIP. {{ $spt->getSignedByUserSnapshot()['nip'] ?? $spt->signedByUser?->nip ?? '-' }}</div>
+                    @php
+                        $rankName = $spt->getSignedByUserSnapshot()['rank_name'] ?? $spt->signedByUser?->rank?->name ?? null;
+                        $rankCode = $spt->getSignedByUserSnapshot()['rank_code'] ?? $spt->signedByUser?->rank?->code ?? null;
+                    @endphp
+                    @if($rankName && $rankCode)
+                        <div class="rank">{{ $rankName }} ({{ $rankCode }})</div>
+                    @endif
+                    @php
+                        $nip = $spt->getSignedByUserSnapshot()['nip'] ?? $spt->signedByUser?->nip ?? null;
+                    @endphp
+                    @if($nip)
+                        <div class="nip">NIP. {{ $nip }}</div>
+                    @endif
                 </div>
             </div>
         </div>

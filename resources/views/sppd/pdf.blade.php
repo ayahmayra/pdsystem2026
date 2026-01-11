@@ -142,7 +142,23 @@
             <tr>
                 <td class="number">1.</td>
                 <td class="label">Pengguna Anggaran</td>
-                <td class="content">{{ $sppd->spt?->notaDinas?->toUser?->position?->name ?? '-' }} {{ $sppd->spt?->notaDinas?->toUser?->unit?->name ?? ' ' }}{!! $sppd->spt?->notaDinas?->toUser?->unit?->name ? '<br>' : '' !!} {{ \DB::table('org_settings')->value('name') }}</td>
+                <td class="content">
+                    @php
+                        // Ambil data penandatangan dari snapshot atau relasi
+                        $signerPosition = $sppd->signed_by_user_position_name_snapshot ?: $sppd->signedByUser?->position?->name;
+                        $signerUnit = $sppd->signed_by_user_unit_name_snapshot ?: $sppd->signedByUser?->unit?->name;
+                        $signerInstansi = $sppd->signedByUser?->getInstansiName();
+                    @endphp
+                    
+                    {{ $signerPosition ?? '-' }}
+                    @if($signerUnit)
+                        {{ $signerUnit }}
+                    @endif
+                    @if($signerUnit || $signerPosition)
+                        <br>
+                    @endif
+                    {{ $signerInstansi }}
+                </td>
             </tr>
             <tr>
                 <td class="number">2.</td>

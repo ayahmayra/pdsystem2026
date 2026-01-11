@@ -51,6 +51,7 @@ class User extends Authenticatable
         'photo_path',
         'is_signer',
         'is_non_staff',
+        'budget_user_role',
     ];
 
     /**
@@ -113,6 +114,34 @@ class User extends Authenticatable
             $name .= ', ' . $this->gelar_belakang;
         }
         return $name;
+    }
+
+    /**
+     * Get the budget user role label in Indonesian
+     */
+    public function getBudgetUserRoleLabel(): ?string
+    {
+        return match($this->budget_user_role) {
+            'pengguna_anggaran' => 'Pengguna Anggaran',
+            'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
+            default => null,
+        };
+    }
+
+    /**
+     * Check if user is Pengguna Anggaran
+     */
+    public function isPenggunaAnggaran(): bool
+    {
+        return $this->budget_user_role === 'pengguna_anggaran';
+    }
+
+    /**
+     * Check if user is Kuasa Pengguna Anggaran
+     */
+    public function isKuasaPenggunaAnggaran(): bool
+    {
+        return $this->budget_user_role === 'kuasa_pengguna_anggaran';
     }
 
     /**

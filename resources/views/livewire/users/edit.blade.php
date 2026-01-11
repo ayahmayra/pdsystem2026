@@ -278,9 +278,28 @@
                             <label for="is_signer" class="text-sm font-medium text-gray-700 dark:text-gray-300">Pegawai dapat menandatangani dokumen</label>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <input type="checkbox" wire:model="is_non_staff" id="is_non_staff" 
+                            <input type="checkbox" wire:model="is_non_staff" id="is_non_staff"
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" />
                             <label for="is_non_staff" class="text-sm font-medium text-gray-700 dark:text-gray-300">Bukan staf organisasi (akan dikecualikan dari rekap pegawai)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget User Role -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Role Pengelolaan Anggaran</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pengguna/Kuasa Pengguna Anggaran <span class="text-gray-400">(Opsional)</span></label>
+                            <select wire:model="budget_user_role" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="">-- Tidak Ada Role Anggaran --</option>
+                                <option value="pengguna_anggaran">Pengguna Anggaran</option>
+                                <option value="kuasa_pengguna_anggaran">Kuasa Pengguna Anggaran</option>
+                            </select>
+                            @error('budget_user_role') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                Tentukan apakah pegawai ini adalah Pengguna Anggaran atau Kuasa Pengguna Anggaran. Kosongkan jika tidak memiliki role tersebut.
+                            </p>
                         </div>
                     </div>
                 </div>

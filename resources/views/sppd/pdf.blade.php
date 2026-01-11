@@ -141,7 +141,7 @@
         <table class="main-table">
             <tr>
                 <td class="number">1.</td>
-                <td class="label">Pejabat Pembuat Komitmen</td>
+                <td class="label">Pengguna Anggaran</td>
                 <td class="content">{{ $sppd->spt?->notaDinas?->toUser?->position?->name ?? '-' }} {{ $sppd->spt?->notaDinas?->toUser?->unit?->name ?? ' ' }}{!! $sppd->spt?->notaDinas?->toUser?->unit?->name ? '<br>' : '' !!} {{ \DB::table('org_settings')->value('name') }}</td>
             </tr>
             <tr>
@@ -153,7 +153,7 @@
                         $firstParticipant = $participants->first();
                     @endphp
                     @if($firstParticipant)
-                        <strong>Nama</strong> : {{ $firstParticipant['name'] ?? '-' }}<br>
+                        {{ $firstParticipant['name'] ?? '-' }}  /
                         <strong>NIP</strong> : {{ $firstParticipant['nip'] ?? '-' }}
                     @else
                         <strong>Nama</strong> : -<br>

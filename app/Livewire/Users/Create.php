@@ -41,6 +41,7 @@ class Create extends Component
     public $is_signer = false;
     public $is_non_staff = false;
     public $travel_grade_id = '';
+    public $budget_user_role = '';
     public $roles = [];
 
     // Mutators to handle empty strings for foreign key fields
@@ -72,6 +73,11 @@ class Create extends Component
     public function setBirthDateProperty($value)
     {
         $this->birth_date = ($value === '' || $value === null) ? null : $value;
+    }
+
+    public function setBudgetUserRoleProperty($value)
+    {
+        $this->budget_user_role = $value === '' ? null : $value;
     }
 
     public function mount()
@@ -118,6 +124,7 @@ class Create extends Component
             'is_signer' => 'boolean',
             'is_non_staff' => 'boolean',
             'travel_grade_id' => 'nullable|exists:travel_grades,id',
+            'budget_user_role' => 'nullable|in:pengguna_anggaran,kuasa_pengguna_anggaran',
             'roles' => 'array',
             'roles.*' => 'exists:roles,name',
         ];
@@ -139,7 +146,7 @@ class Create extends Component
         $validated['password'] = bcrypt('password123'); // Default password
         
         // Convert empty strings to null for foreign key fields and date fields
-        $nullableFields = ['unit_id', 'instansi_id', 'position_id', 'rank_id', 'travel_grade_id', 'birth_date'];
+        $nullableFields = ['unit_id', 'instansi_id', 'position_id', 'rank_id', 'travel_grade_id', 'birth_date', 'budget_user_role'];
         foreach ($nullableFields as $key) {
             if (isset($validated[$key]) && ($validated[$key] === '' || $validated[$key] === null)) {
                 $validated[$key] = null;

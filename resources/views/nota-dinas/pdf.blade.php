@@ -80,7 +80,22 @@
             <tr>
                 <td class="label">Yth.</td>
                 <td class="separator">:</td>
-                <td class="content">{{ $notaDinas->to_user_position_name_snapshot ?: $notaDinas->toUser?->position?->name ?? '-' }} {{ $notaDinas->to_user_unit_name_snapshot ?: $notaDinas->toUser?->unit?->name ?? '-' }}</td>
+                <td class="content">
+                    @php
+                        $toPositionDesc = $notaDinas->to_user_position_desc_snapshot ?: $notaDinas->toUser?->position_desc;
+                        $toPositionName = $notaDinas->to_user_position_name_snapshot ?: $notaDinas->toUser?->position?->name ?? '-';
+                        $toUnitName = $notaDinas->to_user_unit_name_snapshot ?: $notaDinas->toUser?->unit?->name;
+                        $toInstansiName = $notaDinas->toUser?->getInstansiName();
+                    @endphp
+                    
+                    @if($toPositionDesc)
+                        {{ $toPositionDesc }}
+                    @else
+                        {{ $toPositionName }}
+                        @if($toUnitName) {{ $toUnitName }} @endif
+                        @if($toInstansiName) {{ $toInstansiName }} @endif
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td class="label">Dari</td>

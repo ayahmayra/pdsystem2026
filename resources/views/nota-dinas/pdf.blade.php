@@ -239,18 +239,20 @@
                             $positionName = $notaDinas->from_user_position_name_snapshot ?: $notaDinas->fromUser?->position?->name ?? '-';
                             $unitName = $notaDinas->from_user_unit_name_snapshot ?: $notaDinas->fromUser?->unit?->name ?? '';
                             $positionDesc = $notaDinas->from_user_position_desc_snapshot ?: $notaDinas->fromUser?->position_desc ?? '';
+                            $instansiName = $notaDinas->fromUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                         @endphp
                         @if($positionDesc)
-                            <!-- Jika ada position_desc, tampilkan position_desc -> unit_name -> organisation name -->
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionDesc }}@if(strlen($positionDesc) > 12)<br>@endif {{ \DB::table('org_settings')->value('name') }}</div>
+                            <!-- Jika ada position_desc, tampilkan position_desc dengan instansi di baris baru -->
+                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionDesc }}</div>
+                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $instansiName }}</div>
                         @elseif($unitName)
-                            <!-- Jika ada unit name, tampilkan dalam baris terpisah -->
+                            <!-- Jika ada unit name, tampilkan position + unit dengan instansi di baris baru -->
                             <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionName }} {{ $unitName }}</div>
+                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $instansiName }}</div>
                         @else
-                            <!-- Jika tidak ada unit name, position langsung disambung dengan organisasi -->
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionName }} {{ \DB::table('org_settings')->value('name') }}</div>
-                        @endif
-                        <div style="max-width: 100%;">Kabupaten Bengkalis</div>             
+                            <!-- Jika tidak ada unit name, tampilkan position dengan instansi -->
+                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionName }} {{ $instansiName }}</div>
+                        @endif             
                     @endif
                     <br><br><br><br><br>
                     <div class="name" style="max-width: 100%; word-wrap: break-word;">{{ $notaDinas->from_user_gelar_depan_snapshot ?: $notaDinas->fromUser?->gelar_depan ?? '' }} {{ $notaDinas->from_user_name_snapshot ?: $notaDinas->fromUser?->name ?? '-' }} {{ $notaDinas->from_user_gelar_belakang_snapshot ?: $notaDinas->fromUser?->gelar_belakang ?? '' }}</div>

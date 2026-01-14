@@ -218,23 +218,21 @@
                             $signedByUserSnapshot = $spt->getSignedByUserSnapshot();
                             $positionName = $signedByUserSnapshot['position_name'] ?? $spt->signedByUser?->position?->name ?? '-';
                             $unitName = $signedByUserSnapshot['unit_name'] ?? $spt->signedByUser?->unit?->name ?? '';
-                        $positionDesc = $signedByUserSnapshot['position_desc'] ?? $spt->signedByUser?->position_desc ?? '';
+                            $positionDesc = $signedByUserSnapshot['position_desc'] ?? $spt->signedByUser?->position_desc ?? '';
+                            $instansiName = $spt->signedByUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                         @endphp
                         @if($positionDesc)
-                            <!-- Jika ada position_desc, tampilkan position_desc -> unit_name -> organisation name -->
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}
-                          
-                            {{-- <div>{{ \DB::table('org_settings')->value('name') }}</div> --}}
+                            <!-- Jika ada position_desc, tampilkan position_desc dengan instansi di baris baru -->
+                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}</div>
+                            <div style="word-wrap: break-word; white-space: normal;">{{ $instansiName }}</div>
                         @elseif($unitName)
-                            <!-- Jika ada unit name, tampilkan dalam baris terpisah -->
+                            <!-- Jika ada unit name, tampilkan position + unit dengan instansi di baris baru -->
                             <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
-                           
-                            {{-- <div>{{ \DB::table('org_settings')->value('name') }}</div> --}}
+                            <div style="word-wrap: break-word; white-space: normal;">{{ $instansiName }}</div>
                         @else
-                            <!-- Jika tidak ada unit name, position langsung disambung dengan organisasi -->
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
+                            <!-- Jika tidak ada unit name, tampilkan position dengan instansi -->
+                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $instansiName }}</div>
                         @endif
-                        <div>Kabupaten Bengkalis</div>             
                     @endif
                     
                     <br><br><br><br><br>

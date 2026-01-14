@@ -100,7 +100,24 @@
             <tr>
                 <td class="label">Dari</td>
                 <td class="separator">:</td>
-                <td class="content">{{ $notaDinas->custom_signer_title ?: ($notaDinas->from_user_position_name_snapshot ?: $notaDinas->fromUser?->position?->name ?? '-') . ' ' . ($notaDinas->from_user_unit_name_snapshot ?: $notaDinas->fromUser?->unit?->name ?? '-') }}</td>
+                <td class="content">
+                    @php
+                        $fromPositionDesc = $notaDinas->from_user_position_desc_snapshot ?: $notaDinas->fromUser?->position_desc;
+                        $fromPositionName = $notaDinas->from_user_position_name_snapshot ?: $notaDinas->fromUser?->position?->name ?? '-';
+                        $fromUnitName = $notaDinas->from_user_unit_name_snapshot ?: $notaDinas->fromUser?->unit?->name;
+                        $fromInstansiName = $notaDinas->fromUser?->getInstansiName();
+                    @endphp
+                    
+                    @if($notaDinas->custom_signer_title)
+                        {{ $notaDinas->custom_signer_title }}
+                    @elseif($fromPositionDesc)
+                        {{ $fromPositionDesc }}
+                    @else
+                        {{ $fromPositionName }}
+                        @if($fromUnitName) {{ $fromUnitName }} @endif
+                        @if($fromInstansiName) {{ $fromInstansiName }} @endif
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td class="label">Tembusan</td>

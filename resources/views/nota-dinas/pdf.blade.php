@@ -221,20 +221,17 @@
                     <tr>
                         <td class="no">{{ $i+1 }}</td>
                         <td>
-                            {{ $p->user_name_snapshot ?: $p->user->name ?? '-' }}<br>
+                            {{ $p->user_name_snapshot ?: $p->user->name ?? '-' }}
                             @if($p->user_rank_name_snapshot ?: $p->user->rank?->name)
                                 {{ $p->user_rank_name_snapshot ?: $p->user->rank?->name }}
                                 @if($p->user_rank_code_snapshot ?: $p->user->rank?->code)
                                     ({{ $p->user_rank_code_snapshot ?: $p->user->rank?->code }})
                                 @endif
-                                <br>
                             @endif
+                            <br>
                             @if($p->user_nip_snapshot ?: $p->user->nip ?? null)
                                 NIP {{ $p->user_nip_snapshot ?: $p->user->nip }}
-                                @else
-                                <br>
                             @endif
-                            
                         </td>
                         <td>
                             @php

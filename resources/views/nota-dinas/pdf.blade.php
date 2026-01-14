@@ -236,7 +236,22 @@
                             @endif
                             
                         </td>
-                        <td>{{ $p->user_position_desc_snapshot ?: ($p->user->position_desc ?: ($p->user->position?->name ?? '-')) }} {{ $p->user_unit_name_snapshot ?: $p->user->unit?->name ?? '-' }}</td>
+                        <td>
+                            @php
+                                $pPositionDesc = $p->user_position_desc_snapshot ?: $p->user->position_desc;
+                                $pPositionName = $p->user_position_name_snapshot ?: $p->user->position?->name ?? '-';
+                                $pUnitName = $p->user_unit_name_snapshot ?: $p->user->unit?->name;
+                                $pInstansiName = $p->user?->getInstansiName();
+                            @endphp
+                            
+                            @if($pPositionDesc)
+                                {{ $pPositionDesc }}
+                            @else
+                                {{ $pPositionName }}
+                                @if($pUnitName) {{ $pUnitName }} @endif
+                                @if($pInstansiName) {{ $pInstansiName }} @endif
+                            @endif
+                        </td>
                         <td></td>
                     </tr>
                 @empty

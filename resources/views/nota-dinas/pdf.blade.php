@@ -271,38 +271,35 @@
             <div class="signature">
                 <div class="block" style="max-width: 250px; word-wrap: break-word; overflow-wrap: break-word;">
                     @php
-                        // Deteksi apakah custom_signer_title adalah custom atau auto
-                        $defaultTitle = $notaDinas->from_user_position_desc_snapshot ?: ($notaDinas->from_user_position_name_snapshot ?: $notaDinas->fromUser?->position?->name ?? '');
-                        $isCustomAssignment = !empty(trim($notaDinas->custom_signer_title)) && trim($notaDinas->custom_signer_title) !== trim($defaultTitle);
+                        $signerCustomTitle = $notaDinas->custom_signer_title;
+                        $signerPositionDesc = $notaDinas->from_user_position_desc_snapshot ?: $notaDinas->fromUser?->position_desc;
+                        $signerPositionName = $notaDinas->from_user_position_name_snapshot ?: $notaDinas->fromUser?->position?->name ?? '-';
+                        $signerUnitName = $notaDinas->from_user_unit_name_snapshot ?: $notaDinas->fromUser?->unit?->name;
+                        $signerInstansiName = $notaDinas->fromUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                     @endphp
                     
-                    @if($isCustomAssignment)
-                        <!-- Custom assignment title -->
-                        <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{!! nl2br(e($notaDinas->custom_signer_title)) !!}</div>
+                    @if($signerCustomTitle)
+                        <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $signerCustomTitle }}</div>
+                    @elseif($signerPositionDesc)
+                        <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $signerPositionDesc }}</div>
                     @else
-                        <!-- Auto assignment title (dari snapshot Nota Dinas) -->
-                        @php
-                            $positionName = $notaDinas->from_user_position_name_snapshot ?: $notaDinas->fromUser?->position?->name ?? '-';
-                            $unitName = $notaDinas->from_user_unit_name_snapshot ?: $notaDinas->fromUser?->unit?->name ?? '';
-                            $positionDesc = $notaDinas->from_user_position_desc_snapshot ?: $notaDinas->fromUser?->position_desc ?? '';
-                            $instansiName = $notaDinas->fromUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
-                        @endphp
-                        @if($positionDesc)
-                            <!-- Jika ada position_desc, tampilkan position_desc dengan instansi di baris baru -->
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionDesc }}</div>
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $instansiName }}</div>
-                        @elseif($unitName)
-                            <!-- Jika ada unit name, tampilkan position + unit dengan instansi di baris baru -->
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionName }} {{ $unitName }}</div>
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $instansiName }}</div>
-                        @else
-                            <!-- Jika tidak ada unit name, tampilkan position dengan instansi -->
-                            <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">{{ $positionName }} {{ $instansiName }}</div>
-                        @endif             
+                        <div style="word-wrap: break-word; white-space: normal; max-width: 100%;">
+                            {{ $signerPositionName }}
+                            @if($signerUnitName) {{ $signerUnitName }}@endif
+                            @if($signerInstansiName) {{ $signerInstansiName }}@endif
+                        </div>
                     @endif
+                    
                     <br><br><br><br><br>
                     <div class="name" style="max-width: 100%; word-wrap: break-word;">{{ $notaDinas->from_user_gelar_depan_snapshot ?: $notaDinas->fromUser?->gelar_depan ?? '' }} {{ $notaDinas->from_user_name_snapshot ?: $notaDinas->fromUser?->name ?? '-' }} {{ $notaDinas->from_user_gelar_belakang_snapshot ?: $notaDinas->fromUser?->gelar_belakang ?? '' }}</div>
-                    <div class="rank" style="max-width: 100%; word-wrap: break-word;">{{ $notaDinas->from_user_rank_name_snapshot ?: $notaDinas->fromUser?->rank?->name ?? '-' }} ({{ $notaDinas->from_user_rank_code_snapshot ?: $notaDinas->fromUser?->rank?->code ?? '-' }})</div>
+                    <div class="rank" style="max-width: 100%; word-wrap: break-word;">
+                        @php
+                            $signerRankName = $notaDinas->from_user_rank_name_snapshot ?: $notaDinas->fromUser?->rank?->name;
+                            $signerRankCode = $notaDinas->from_user_rank_code_snapshot ?: $notaDinas->fromUser?->rank?->code;
+                        @endphp
+                        @if($signerRankName){{ $signerRankName }}@if($signerRankCode) ({{ $signerRankCode }})@endif
+@else-@endif
+                    </div>
                     <div class="nip" style="max-width: 100%; word-wrap: break-word;">NIP. {{ $notaDinas->from_user_nip_snapshot ?: $notaDinas->fromUser?->nip ?? '-' }}</div>
                 </div>
             </div>

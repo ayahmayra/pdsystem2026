@@ -24,6 +24,7 @@ class Create extends Component
     public $requesting_unit_id = '';
     public $to_user_id = '';
     public $from_user_id = '';
+    public $custom_signer_title = '';
     public $destination_city_id = '';
     public $origin_place_id = '';
     public $sifat = 'Penting';
@@ -74,6 +75,7 @@ class Create extends Component
         'requesting_unit_id' => 'required|exists:units,id',
         'to_user_id' => 'required|exists:users,id',
         'from_user_id' => 'required|exists:users,id',
+        'custom_signer_title' => 'nullable|string|max:255',
         'destination_city_id' => 'required|exists:cities,id',
         'origin_place_id' => 'required|exists:org_places,id',
         'sifat' => 'required|string',
@@ -265,6 +267,7 @@ class Create extends Component
                 'requesting_unit_id' => $this->requesting_unit_id,
                 'to_user_id' => $this->to_user_id,
                 'from_user_id' => $this->from_user_id,
+                'custom_signer_title' => $this->custom_signer_title ?: null,
                 'destination_city_id' => $this->destination_city_id,
                 'origin_place_id' => $this->origin_place_id,
                 'sifat' => $this->sifat,

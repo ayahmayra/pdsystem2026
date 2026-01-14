@@ -83,6 +83,25 @@
                                 @enderror
                             </div>
 
+                            <!-- Custom Signer Title -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Jabatan Penandatangan Khusus (Opsional)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    wire:model="custom_signer_title" 
+                                    class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                    placeholder="Contoh: Plt. Kepala Dinas, a.n. Kepala Dinas"
+                                >
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    Kosongkan jika menggunakan jabatan default dari pegawai yang dipilih. Isi jika ada penugasan khusus (misal: Plt., a.n., dll)
+                                </p>
+                                @error('custom_signer_title') 
+                                    <span class="text-red-500 text-sm">{{ $message }}</span> 
+                                @enderror
+                            </div>
+
                             <!-- Kota Tujuan -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

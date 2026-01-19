@@ -263,7 +263,7 @@
             <div class="col-label">C.</div>
             <div class="col-content">
               <div style="font-weight: bold; margin-bottom: 4px;">Lunas Dibayar</div>
-              <div>Pada Tanggal</div>
+              <div style="text-align: left;">Pada Tgl.</div>
               <div>{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
               
               <div class="mt-6"></div>

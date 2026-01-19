@@ -213,10 +213,10 @@
           <div class="row">
             <div class="col-label">A.</div>
             <div class="col-content">
-              <div class="block-title">PEMBAYARAN TAHUN DINAS</div>
-              <div>TAHUN ANGGARAN {{ $tahun }}</div>
+              <div class="block-title">Pembayaran Tahun Dinas</div>
+              <div>Tahun Anggaran {{ $tahun }}</div>
               <div class="mt-4"></div>
-              <div class="block-title">KODE REKENING</div>
+              <div class="block-title">Kode Rekening</div>
               <div style="font-size: 12px;">
                 @if($receipt->sppd->subKeg)
                   {{ $receipt->sppd->subKeg->kode_subkeg }}
@@ -239,7 +239,7 @@
           <div class="row">
             <div class="col-label">B.</div>
             <div class="col-content">
-              <div class="block-title">SETUJU DIBAYAR</div>
+              <div class="block-title">Setuju Dibayar</div>
               @php
                 // Cek apakah penandatangan adalah pimpinan organisasi
                 $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
@@ -263,7 +263,7 @@
           <div class="row">
             <div class="col-label">C.</div>
             <div class="col-content">
-              <div class="block-title">LUNAS DIBAYAR</div>
+              <div class="block-title">Lunas Dibayar</div>
               <div class="muted">PADA TGL.</div>
               <div class="muted">{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
               
@@ -282,9 +282,13 @@
         <!-- SUDAH TERIMA DARI -->
         <table class="right-table">
           <tr>
-            <td class="label-cell">SUDAH TERIMA DARI</td>
+            <td class="label-cell">Sudah Terima Dari</td>
        
-            <td>: KUASA PENGGUNA ANGGARAN</td>
+            <td>: {{ strtoupper(match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+                'pengguna_anggaran' => 'Pengguna Anggaran',
+                'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
+                default => 'Kuasa Pengguna Anggaran'
+            }) }}</td>
           </tr>
         </table>
 
@@ -293,7 +297,7 @@
         <!-- UANG SEBESAR -->
         <table class="right-table">
           <tr>
-            <td class="label-cell">UANG SEBESAR</td>
+            <td class="label-cell">Uang Sebesar</td>
            
             <td>: {{ money_id($receipt->total_amount) }} -</td>
           </tr>

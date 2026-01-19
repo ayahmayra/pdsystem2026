@@ -361,7 +361,7 @@
                     </div>
                 @endif
                 
-                <div>{{ $isOrgHead ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran' }}</div>
+                <div>{{ $budgetRoleLabel }}</div>
                 <br><br><br><br><br><br>
                 <div class="name">{{ $signatorySnapshot['gelar_depan'] ?? '' }} {{ $signatorySnapshot['name'] ?? '-' }} {{ $signatorySnapshot['gelar_belakang'] ?? '' }}</div>
                 <div class="rank">
@@ -673,11 +673,15 @@
                         @endif
                         
                         @php
-                            // Cek apakah penandatangan adalah pimpinan organisasi
-                            $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
-                            $isOrgHead = $sppd->signed_by_user_id == $orgHeadUserId;
+                            // Get budget role dari snapshot, fallback ke check org head
+                            $budgetRole2 = $sppd->signed_by_user_budget_role_snapshot;
+                            if (!$budgetRole2) {
+                                $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
+                                $budgetRole2 = ($sppd->signed_by_user_id == $orgHeadUserId) ? 'pengguna_anggaran' : 'kuasa_pengguna_anggaran';
+                            }
+                            $budgetRoleLabel2 = $budgetRole2 === 'pengguna_anggaran' ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran';
                         @endphp
-                        <div>{{ $isOrgHead ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran' }}</div>
+                        <div>{{ $budgetRoleLabel2 }}</div>
                         <br><br><br><br>
                         <div class="name">{{ $signatorySnapshot['gelar_depan'] ?? '' }} {{ $signatorySnapshot['name'] ?? '-' }} {{ $signatorySnapshot['gelar_belakang'] ?? '' }}</div>
                         <div class="rank">{{ $signatorySnapshot['rank_name'] ?? '-' }} ({{ $signatorySnapshot['rank_code'] ?? '-' }})</div>
@@ -724,11 +728,15 @@
                                 @endif
                                 
                                 @php
-                                    // Cek apakah penandatangan adalah pimpinan organisasi
-                                    $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
-                                    $isOrgHead = $sppd->signed_by_user_id == $orgHeadUserId;
+                                    // Get budget role dari snapshot, fallback ke check org head
+                                    $budgetRole3 = $sppd->signed_by_user_budget_role_snapshot;
+                                    if (!$budgetRole3) {
+                                        $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
+                                        $budgetRole3 = ($sppd->signed_by_user_id == $orgHeadUserId) ? 'pengguna_anggaran' : 'kuasa_pengguna_anggaran';
+                                    }
+                                    $budgetRoleLabel3 = $budgetRole3 === 'pengguna_anggaran' ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran';
                                 @endphp
-                                <div>{{ $isOrgHead ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran' }}</div>
+                                <div>{{ $budgetRoleLabel3 }}</div>
                                 <br><br><br><br>
                                 <div class="name">{{ $signatorySnapshot['gelar_depan'] ?? '' }} {{ $signatorySnapshot['name'] ?? '-' }} {{ $signatorySnapshot['gelar_belakang'] ?? '' }}</div>
                                 <div class="rank">{{ $signatorySnapshot['rank_name'] ?? '-' }} ({{ $signatorySnapshot['rank_code'] ?? '-' }})</div>

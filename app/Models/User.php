@@ -661,4 +661,18 @@ class User extends Authenticatable
         // Fallback to org_settings name
         return DB::table('org_settings')->value('name') ?? '';
     }
+
+    /**
+     * Get the NIP label based on employee type
+     * 
+     * @return string
+     */
+    public function getNipLabel(): string
+    {
+        return match($this->employee_type) {
+            'PPPK' => 'NIP PPPK',
+            'PPPK PW' => 'NIP PPPK PW',
+            'PNS', 'Non ASN', default => 'NIP',
+        };
+    }
 }

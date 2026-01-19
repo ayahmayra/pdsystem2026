@@ -7,7 +7,7 @@
   <style>
     @page { size: A4; margin: 15mm 12mm; }
     body { font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.3; color:#000; }
-    .topbar{display:flex;justify-content:flex-end;font-size:10pt;margin-bottom:4px}
+    .topbar{text-align:right;font-size:10pt;margin-bottom:4px}
     .header{text-align:center;margin:1px 0 6px}
     .title{font-weight:bold;letter-spacing:4px;font-size:14pt}
     /* === BAGIAN KWITANSI (2 kolom menggunakan tabel) === */
@@ -487,26 +487,26 @@
   </table>
 
   <!-- TTD bawah menggunakan tabel 2 kolom -->
-  <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+  <table style="width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 11pt;">
     <tr>
       <!-- Kolom 1: Mengetahui -->
-      <td style="width: 50%; text-align: center; vertical-align: bottom; padding: 8px;">
+      <td style="width: 50%; text-align: center; vertical-align: bottom; padding: 8px; font-size: 11pt;">
         <div>Mengetahui</div>
-        <div class="muted">Pejabat Pelaksana Teknis Kegiatan</div>
+        <div >Pejabat Pelaksana Teknis Kegiatan</div>
         <div class="sign-place"></div>
         @php($pptk = $receipt->sppd->getPptkSnapshotFromSubKegiatan())
-        <div class="name">{{ ($pptk['name'] ?? null) ?: '-' }}</div>
-        <div class="muted">NIP. {{ ($pptk['nip'] ?? null) ?: '-' }}</div>
+        <div class="">{{ ($pptk['name'] ?? null) ?: '-' }}</div>
+        <div class="">NIP. {{ ($pptk['nip'] ?? null) ?: '-' }}</div>
       </td>
       
       <!-- Kolom 2: Dihitung Oleh -->
-      <td style="width: 50%; text-align: center; vertical-align: bottom; padding: 8px;">
+      <td style="width: 50%; text-align: center; vertical-align: bottom; padding: 8px; font-size: 11pt;">
         <div>Bengkalis, {{ $receipt->receipt_date ? \Carbon\Carbon::parse($receipt->receipt_date)->locale('id')->translatedFormat('d F Y') : '__________' }}</div>
         <div>Dihitung Oleh :</div>
-        <div class="muted">{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
+        <div class=>{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
         <div class="sign-place"></div>
-        <div class="name">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? '-' }}</div>
-        <div class="muted">NIP. {{ $receipt->getTreasurerUserSnapshot()['nip'] ?? '-' }}</div>
+        <div class="">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? '-' }}</div>
+        <div class="">NIP. {{ $receipt->getTreasurerUserSnapshot()['nip'] ?? '-' }}</div>
       </td>
     </tr>
   </table>

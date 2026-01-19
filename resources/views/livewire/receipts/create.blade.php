@@ -738,19 +738,19 @@
                                                                                                                     <div class="col-span-2">
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                                 Harga Satuan
-                                                                @if(isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden']))
+                                                                @if(($line['has_reference'] ?? false) && !($line['is_overridden'] ?? false))
                                                                     <span class="text-green-600 dark:text-green-400 text-xs">✓ Auto</span>
                                                                 @endif
-                                                                @if(isset($line['is_overridden']) && $line['is_overridden'])
+                                                                @if($line['is_overridden'] ?? false)
                                                                     <span class="text-blue-600 dark:text-blue-400 text-xs">✏️ Manual</span>
                                                                 @endif
                                                             </label>
                                                             <input type="number" 
                                                                 wire:model.live="transportLines.{{ $index }}.unit_amount" 
                                                                 min="0" 
-                                                                class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ (isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden'])) ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600' : ((isset($line['is_overridden']) && $line['is_overridden']) ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') }}"
-                                                                @if(isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden'])) readonly @endif
-                                                                placeholder="{{ (isset($line['has_reference']) && $line['has_reference']) ? 'Otomatis terisi' : 'Masukkan harga satuan' }}">
+                                                                class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ (($line['has_reference'] ?? false) && !($line['is_overridden'] ?? false)) ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600' : (($line['is_overridden'] ?? false) ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') }}"
+                                                                @if(($line['has_reference'] ?? false) && !($line['is_overridden'] ?? false)) readonly @endif
+                                                                placeholder="{{ ($line['has_reference'] ?? false) ? 'Otomatis terisi' : 'Masukkan harga satuan' }}">
                                                             
                                                             <!-- Warning for manual values exceeding reference -->
                                                             @if($line['exceeds_reference'])
@@ -773,7 +773,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-span-2 flex items-center justify-end space-x-2 h-10">
-                                                                @if(isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden']))
+                                                                @if(($line['has_reference'] ?? false) && !($line['is_overridden'] ?? false))
                                                                     <button type="button" 
                                                                         wire:click="overrideTransportRate({{ $index }})" 
                                                                         class="px-3 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 border border-blue-300 hover:border-blue-500 rounded transition-colors">

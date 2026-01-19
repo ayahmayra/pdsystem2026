@@ -773,7 +773,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-span-2 flex items-center justify-end space-x-2 h-10">
-                                                                @if(($line['has_reference'] ?? false) && !($line['is_overridden'] ?? false))
+                                                                @if(!($line['is_overridden'] ?? false))
                                                                     <button type="button" 
                                                                         wire:click="overrideTransportRate({{ $index }})" 
                                                                         class="px-3 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 border border-blue-300 hover:border-blue-500 rounded transition-colors">

@@ -672,7 +672,8 @@ class User extends Authenticatable
         return match($this->employee_type) {
             'PPPK' => 'NIP PPPK',
             'PPPK PW' => 'NIP PPPK PW',
-            'PNS', 'Non ASN', default => 'NIP',
+            'PNS', 'Non ASN' => 'NIP',
+            default => 'NIP',
         };
     }
 }

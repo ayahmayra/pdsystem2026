@@ -208,51 +208,37 @@
                 <div class="block" style="width: 300px;">
                     <div>Bengkalis, {{ $spt->spt_date ? \Carbon\Carbon::parse($spt->spt_date)->locale('id')->translatedFormat('d F Y') : '-' }}</div>
                     @php
-                        // Jika assignment_title tidak custom, gunakan deskripsi jabatan dari pegawai terkait
-                        $defaultTitle = $spt->signedByUser?->position_desc ?: ($spt->signedByUser?->position?->name ?? '');
-                        $isCustomAssignment = !empty(trim($spt->assignment_title)) && trim($spt->assignment_title) !== trim($defaultTitle);
-
-                        // Dapatkan deskripsi jabatan untuk default, jika tidak custom assignment
-                        $jabatanDescription = $spt->signedByUser?->position_desc ?? '';
+                        $signedByUserSnapshot = $spt->getSignedByUserSnapshot();
+                        $signerCustomTitle = $spt->assignment_title;
+                        $signerPositionDesc = $signedByUserSnapshot['position_desc'] ?? $spt->signedByUser?->position_desc;
+                        $signerPositionName = $signedByUserSnapshot['position_name'] ?? $spt->signedByUser?->position?->name ?? '-';
+                        $signerUnitName = $signedByUserSnapshot['unit_name'] ?? $spt->signedByUser?->unit?->name;
+                        $signerInstansiName = $spt->signedByUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                     @endphp
                     
-                    @if($isCustomAssignment)
-                        <!-- Custom assignment title -->
-                        <div style="word-wrap: break-word; white-space: normal;">{!! nl2br(e($spt->assignment_title)) !!}</div>
+                    @if($signerCustomTitle)
+                        <div style="word-wrap: break-word; white-space: normal;">{{ $signerCustomTitle }}</div>
+                    @elseif($signerPositionDesc)
+                        <div style="word-wrap: break-word; white-space: normal;">{{ $signerPositionDesc }}</div>
                     @else
-                        <!-- Auto assignment title (dari snapshot Nota Dinas) -->
-                        @php
-                            $signedByUserSnapshot = $spt->getSignedByUserSnapshot();
-                            $positionName = $signedByUserSnapshot['position_name'] ?? $spt->signedByUser?->position?->name ?? '-';
-                            $unitName = $signedByUserSnapshot['unit_name'] ?? $spt->signedByUser?->unit?->name ?? '';
-                            $positionDesc = $signedByUserSnapshot['position_desc'] ?? $spt->signedByUser?->position_desc ?? '';
-                            $instansiName = $spt->signedByUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
-                        @endphp
-                        @if($positionDesc)
-                            <!-- Jika ada position_desc, tampilkan position_desc dengan instansi di baris baru -->
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}</div>
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $instansiName }}</div>
-                        @elseif($unitName)
-                            <!-- Jika ada unit name, tampilkan position + unit dengan instansi di baris baru -->
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $instansiName }}</div>
-                        @else
-                            <!-- Jika tidak ada unit name, tampilkan position dengan instansi -->
-                            <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $instansiName }}</div>
-                        @endif
+                        <div style="word-wrap: break-word; white-space: normal;">
+                            {{ $signerPositionName }}
+                            @if($signerUnitName) {{ $signerUnitName }}@endif
+                            @if($signerInstansiName) {{ $signerInstansiName }}@endif
+                        </div>
                     @endif
                     
                     <br><br><br><br><br>
-                    <div class="name">{{ $spt->getSignedByUserSnapshot()['gelar_depan'] ?? $spt->signedByUser?->gelar_depan ?? '-' }} {{ $spt->getSignedByUserSnapshot()['name'] ?? $spt->signedByUser?->name ?? '-' }} {{ $spt->getSignedByUserSnapshot()['gelar_belakang'] ?? $spt->signedByUser?->gelar_belakang ?? '-' }}</div>
+                    <div class="name">{{ $signedByUserSnapshot['gelar_depan'] ?? $spt->signedByUser?->gelar_depan ?? '' }} {{ $signedByUserSnapshot['name'] ?? $spt->signedByUser?->name ?? '-' }} {{ $signedByUserSnapshot['gelar_belakang'] ?? $spt->signedByUser?->gelar_belakang ?? '' }}</div>
                     @php
-                        $rankName = $spt->getSignedByUserSnapshot()['rank_name'] ?? $spt->signedByUser?->rank?->name ?? null;
-                        $rankCode = $spt->getSignedByUserSnapshot()['rank_code'] ?? $spt->signedByUser?->rank?->code ?? null;
+                        $rankName = $signedByUserSnapshot['rank_name'] ?? $spt->signedByUser?->rank?->name ?? null;
+                        $rankCode = $signedByUserSnapshot['rank_code'] ?? $spt->signedByUser?->rank?->code ?? null;
                     @endphp
-                    @if($rankName && $rankCode)
-                        <div class="rank">{{ $rankName }} ({{ $rankCode }})</div>
-                    @endif
+                    <div class="rank">
+                        @if($rankName){{ $rankName }}@if($rankCode) ({{ $rankCode }})@endif@else-@endif
+                    </div>
                     @php
-                        $nip = $spt->getSignedByUserSnapshot()['nip'] ?? $spt->signedByUser?->nip ?? null;
+                        $nip = $signedByUserSnapshot['nip'] ?? $spt->signedByUser?->nip ?? null;
                     @endphp
                     @if($nip)
                         <div class="nip">NIP. {{ $nip }}</div>

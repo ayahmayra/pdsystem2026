@@ -56,7 +56,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <table style="border-bottom: 2px solid black;">
+            <table style="border-bottom: 4px solid black;">
                 <tr>
                     <td style="width: 22mm;">
                         <img src="{{ public_path('logobengkalis.png') }}" alt="Logo" class="logo">
@@ -66,6 +66,8 @@
                         <h1>{{ \DB::table('org_settings')->value('name') }}</h1>
                         <p>{{ \DB::table('org_settings')->value('address') }}</p>
                         <p>Telepon {{ \DB::table('org_settings')->value('phone') }} e-mail : {{ \DB::table('org_settings')->value('email') }}</p>
+                        <br>
+                    <div style="margin-bottom: 8px;"></div>
                     </td>
                     <td style="width: 22mm;"></td>
                 </tr>

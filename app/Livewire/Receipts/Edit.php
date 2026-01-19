@@ -169,17 +169,18 @@ class Edit extends Component
                     'excess_amount' => $isOverridden && $line->unit_amount > $referenceRate ? $line->unit_amount - $referenceRate : 0,
                     'excess_percentage' => $isOverridden && $referenceRate > 0 ? (($line->unit_amount - $referenceRate) / $referenceRate) * 100 : 0,
                 ];
-            } elseif (in_array($line->component, ['AIRFARE', 'INTRA_PROV', 'INTRA_DISTRICT', 'OFFICIAL_VEHICLE', 'TAXI', 'RORO', 'TOLL', 'PARKIR_INAP'])) {
+            } elseif (in_array($line->component, ['AIRFARE', 'INTRA_PROV', 'INTRA_DISTRICT', 'OFFICIAL_VEHICLE', 'TAXI', 'RORO', 'TOLL', 'PARKIR_INAP', 'CUSTOM'])) {
                 $this->transportLines[] = [
                     'component' => $line->component,
+                    'custom_name' => $line->component === 'CUSTOM' ? ($line->remark ?? '') : '', // Load custom name from remark
                     'category' => 'transport',
                     'desc' => $line->desc ?? '',
                     'qty' => $line->qty,
                     'unit_amount' => $line->unit_amount,
-                    'rate_info' => '',
+                    'rate_info' => $line->component === 'CUSTOM' ? 'Item Custom - Input manual nama dan nilai' : '',
                     'has_reference' => false,
                     'original_reference_rate' => 0,
-                    'is_overridden' => false,
+                    'is_overridden' => $line->component === 'CUSTOM' ? true : false, // Custom items are always "overridden"
                     'exceeds_reference' => false,
                     'excess_amount' => 0,
                     'excess_percentage' => 0,

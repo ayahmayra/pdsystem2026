@@ -74,6 +74,9 @@
                 </tr>
             </table>
         </div>
+        @else
+        <!-- Space untuk kop custom saat header disembunyikan -->
+        <div style="height: 40mm; margin-bottom: 4mm;"></div>
         @endif
         
         <div class="document-title">SURAT TUGAS</div>

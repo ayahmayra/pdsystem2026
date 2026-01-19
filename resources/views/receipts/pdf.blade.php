@@ -37,7 +37,7 @@
     .right-table{width:100%;border:none}
     .right-table td{padding:4px 0;vertical-align:top;border:none;text-align:left}
     .right-table .label-cell{width:35mm;border:none;text-align:left}
-    .right-table .content-cell{padding-left:8px;border:none;text-align:left}
+    .right-table {padding-left:8px;border:none;text-align:left}
     .right-table .amount-cell{text-align:left !important;padding-left:0 !important;width:auto !important}
     /* === TABEL PERHITUNGAN SPPD RAMPUNG === */
     table{width:100%;border-collapse:collapse}
@@ -217,7 +217,7 @@
               <div>Tahun Anggaran {{ $tahun }}</div>
               <div class="mt-4"></div>
               <div style="font-weight: bold; margin-bottom: 4px;">Kode Rekening</div>
-              <div>
+              <div style="font-size: 10pt;">
                 @if($receipt->sppd->subKeg)
                   {{ $receipt->sppd->subKeg->kode_subkeg }}
                 @endif
@@ -263,7 +263,7 @@
             <div class="col-label">C.</div>
             <div class="col-content">
               <div style="font-weight: bold; margin-bottom: 4px;">Lunas Dibayar</div>
-              <div>PADA TGL.</div>
+              <div>Pada Tanggal</div>
               <div>{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
               
               <div class="mt-6"></div>
@@ -282,8 +282,8 @@
         <table class="right-table">
           <tr>
             <td class="label-cell">Sudah Terima Dari</td>
-       
-            <td>: {{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+            <td>:</td>
+            <td>{{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
                 'pengguna_anggaran' => 'Pengguna Anggaran',
                 'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
                 default => 'Kuasa Pengguna Anggaran'
@@ -297,12 +297,12 @@
         <table class="right-table">
           <tr>
             <td class="label-cell">Uang Sebesar</td>
-           
-            <td>: {{ money_id($receipt->total_amount) }} -</td>
+           <td>:</td>
+            <td>{{ money_id($receipt->total_amount) }} - <br> ( {{ terbilang($receipt->total_amount) }} rupiah )</td>
           </tr>
           <tr>
-            <td></td>
-            <td class="content-cell">( {{ terbilang($receipt->total_amount) }} rupiah )</td>
+            
+           
           </tr>
         </table>
 
@@ -311,8 +311,9 @@
         <!-- Y A I T U -->
         <table class="right-table">
           <tr>
-            <td class="label-cell">Y A I T U</td>
-            <td class="content-cell">: Pembayaran Biaya Perjalanan Dinas ke {{ $kota ?? '-' }} An. {{ $receipt->payeeUser->fullNameWithTitles() ?? '-' }}  @if($maksud){{ $maksud }}  @endif</td>
+            <td class="label-cell">Y a i t u </td>
+            <td>:</td>
+            <td class="content-cell">Pembayaran Biaya Perjalanan Dinas ke {{ $kota ?? '-' }} An. {{ $receipt->payeeUser->fullNameWithTitles() ?? '-' }}  @if($maksud){{ $maksud }}  @endif</td>
           </tr>
          
         </table>
@@ -323,11 +324,13 @@
         <table class="right-table">
           <tr>
             <td class="label-cell">Tanggal</td>
-            <td class="content-cell">: {{ $bulanTahun }}</td>
+            <td>:</td>
+            <td class="content-cell">{{ $bulanTahun }}</td>
           </tr>
           <tr>
             <td class="label-cell">Nomor</td>
-            <td class="content-cell">: {{ $receipt->sppd->doc_no ?? '-' }}</td>
+            <td>:</td>
+            <td class="content-cell">{{ $receipt->sppd->doc_no ?? '-' }}</td>
           </tr>
         </table>
 

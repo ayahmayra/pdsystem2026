@@ -738,19 +738,19 @@
                                                                                                                     <div class="col-span-2">
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                                 Harga Satuan
-                                                                @if($line['has_reference'])
-                                                                    <span class="text-green-600 dark:text-green-400">✓ Auto-filled</span>
+                                                                @if(isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden']))
+                                                                    <span class="text-green-600 dark:text-green-400 text-xs">✓ Auto</span>
                                                                 @endif
-                                                                @if($line['is_overridden'])
-                                                                    <span class="text-blue-600 dark:text-blue-400">✏️ Manual</span>
+                                                                @if(isset($line['is_overridden']) && $line['is_overridden'])
+                                                                    <span class="text-blue-600 dark:text-blue-400 text-xs">✏️ Manual</span>
                                                                 @endif
                                                             </label>
                                                             <input type="number" 
                                                                 wire:model.live="transportLines.{{ $index }}.unit_amount" 
                                                                 min="0" 
-                                                                class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ $line['has_reference'] ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600' : ($line['is_overridden'] ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') }}"
-                                                                {{ $line['has_reference'] ? 'readonly' : '' }}
-                                                                placeholder="{{ $line['has_reference'] ? 'Otomatis terisi' : 'Masukkan harga satuan' }}">
+                                                                class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ (isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden'])) ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600' : ((isset($line['is_overridden']) && $line['is_overridden']) ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') }}"
+                                                                @if(isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden'])) readonly @endif
+                                                                placeholder="{{ (isset($line['has_reference']) && $line['has_reference']) ? 'Otomatis terisi' : 'Masukkan harga satuan' }}">
                                                             
                                                             <!-- Warning for manual values exceeding reference -->
                                                             @if($line['exceeds_reference'])

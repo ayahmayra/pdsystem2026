@@ -128,6 +128,7 @@
                             $rankCode = $participant['rank_code'] ?? '';
                             $nip = $participant['nip'] ?? '';
                             $position = $participant['position_desc'] ?: ($participant['position_name'] ?? '');
+                            $participantUser = $spt->notaDinas?->participants()->where('order', $participant['order'] ?? $i)->first()?->user;
                         @endphp
                         <tr>
                             <td>{{ $i+1 }}.</td>
@@ -146,7 +147,7 @@
                         @if($nip)
                         <tr>
                             <td></td>
-                            <td style="width: 150px; vertical-align: top; border: none; padding: 2px 0;">NIP</td>
+                            <td style="width: 150px; vertical-align: top; border: none; padding: 2px 0;">{{ $participantUser?->getNipLabel() ?? 'NIP' }}</td>
                             <td style="width: 10px; vertical-align: top; border: none; padding: 2px 0;">:</td>
                             <td style="border: none; padding: 2px 0;">{{ $nip }}</td>
                         </tr>
@@ -241,7 +242,7 @@
                         $nip = $signedByUserSnapshot['nip'] ?? $spt->signedByUser?->nip ?? null;
                     @endphp
                     @if($nip)
-                        <div class="nip">NIP. {{ $nip }}</div>
+                        <div class="nip">{{ $spt->signedByUser?->getNipLabel() ?? 'NIP' }}. {{ $nip }}</div>
                     @endif
                 </div>
             </div>

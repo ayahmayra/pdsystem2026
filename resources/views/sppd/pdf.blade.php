@@ -167,10 +167,11 @@
                     @php
                         $participants = $sppd->getSortedParticipantsSnapshot();
                         $firstParticipant = $participants->first();
+                        $firstParticipantUser = $sppd->spt?->notaDinas?->participants()->orderBy('order')->first()?->user;
                     @endphp
                     @if($firstParticipant)
                         {{ $firstParticipant['name'] ?? '-' }}  /
-                        <strong>NIP</strong> : {{ $firstParticipant['nip'] ?? '-' }}
+                        <strong>{{ $firstParticipantUser?->getNipLabel() ?? 'NIP' }}</strong> : {{ $firstParticipant['nip'] ?? '-' }}
                     @else
                         <strong>Nama</strong> : -<br>
                         <strong>NIP</strong> : -
@@ -371,7 +372,7 @@
                     @endphp
                     @if($rankName){{ $rankName }}@if($rankCode) ({{ $rankCode }})@endif@else-@endif
                 </div>
-                <div class="nip">NIP. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
+                <div class="nip">{{ $sppd->signedByUser?->getNipLabel() }}. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
             </div>
         </div>
     </div>
@@ -408,6 +409,7 @@
                             <td colspan="3" style="font-size: 10pt;"><br>Pejabat Pelaksana Teknis Kegiatan<br><br>
                                 @php
                                     $pptkSnapshot = $sppd->getPptkSnapshotFromSubKegiatan();
+                                    $pptkUser = $sppd->subKeg?->pptk;
                                 @endphp
                                 @if($pptkSnapshot && $pptkSnapshot['name'])
                                     {{ ($pptkSnapshot['gelar_depan'] ? $pptkSnapshot['gelar_depan'] . ' ' : '') . $pptkSnapshot['name'] . ($pptkSnapshot['gelar_belakang'] ? ', ' . $pptkSnapshot['gelar_belakang'] : '') }}
@@ -418,7 +420,7 @@
                                         @endif
                                     @endif
                                     @if($pptkSnapshot['nip'])
-                                        <br>NIP. {{ $pptkSnapshot['nip'] }}
+                                        <br>{{ $pptkUser?->getNipLabel() ?? 'NIP' }}. {{ $pptkSnapshot['nip'] }}
                                     @endif
                                 @else
                                     -
@@ -648,7 +650,7 @@
                                     @endphp
                                     @if($rankName){{ $rankName }}@if($rankCode) ({{ $rankCode }})@endif@else-@endif
                                 </div>
-                                <div class="nip">NIP. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
+                                <div class="nip">{{ $sppd->signedByUser?->getNipLabel() }}. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
                             </div>
                         
                     <div style="height: 10px;"></div>

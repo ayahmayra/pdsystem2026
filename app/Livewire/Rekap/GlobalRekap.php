@@ -426,8 +426,7 @@ class GlobalRekap extends Component
                             'transport' => [],
                             'lodging' => [],
                             'perdiem' => [],
-                            'representation' => [],
-                            'other' => []
+                            'representation' => []
                         ],
                     ]));
                 }
@@ -699,8 +698,7 @@ class GlobalRekap extends Component
             'transport' => [],
             'lodging' => [],
             'perdiem' => [],
-            'representation' => [],
-            'other' => []
+            'representation' => []
         ];
 
         foreach ($lines as $line) {
@@ -732,8 +730,8 @@ class GlobalRekap extends Component
      */
     private function getReceiptLineCategory($component)
     {
-        // Transport components
-        if (in_array($component, ['AIRFARE', 'INTRA_PROV', 'INTRA_DISTRICT', 'OFFICIAL_VEHICLE', 'TAXI', 'RORO', 'TOLL', 'PARKIR_INAP'])) {
+        // Transport components (including CUSTOM)
+        if (in_array($component, ['AIRFARE', 'INTRA_PROV', 'INTRA_DISTRICT', 'OFFICIAL_VEHICLE', 'TAXI', 'RORO', 'TOLL', 'PARKIR_INAP', 'CUSTOM'])) {
             return 'transport';
         }
         
@@ -752,8 +750,8 @@ class GlobalRekap extends Component
             return 'representation';
         }
         
-        // Other costs
-        return 'other';
+        // Fallback to transport for any other custom items
+        return 'transport';
     }
 
     /**

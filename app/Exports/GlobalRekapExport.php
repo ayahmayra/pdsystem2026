@@ -67,9 +67,6 @@ class GlobalRekapExport implements FromCollection, WithHeadings, WithMapping, Wi
             'Representatif - Uraian',
             'Representatif - Nilai',
             'Representatif - Deskripsi',
-            'Biaya Lainnya - Uraian',
-            'Biaya Lainnya - Nilai',
-            'Biaya Lainnya - Deskripsi',
             'Dokumen Pendukung'
         ];
     }
@@ -81,14 +78,12 @@ class GlobalRekapExport implements FromCollection, WithHeadings, WithMapping, Wi
         $lodgingLines = $item['receipt_lines']['lodging'] ?? [];
         $perdiemLines = $item['receipt_lines']['perdiem'] ?? [];
         $representationLines = $item['receipt_lines']['representation'] ?? [];
-        $otherLines = $item['receipt_lines']['other'] ?? [];
 
         // Get first item from each category for main row
         $transportLine = !empty($transportLines) ? $transportLines[0] : null;
         $lodgingLine = !empty($lodgingLines) ? $lodgingLines[0] : null;
         $perdiemLine = !empty($perdiemLines) ? $perdiemLines[0] : null;
         $representationLine = !empty($representationLines) ? $representationLines[0] : null;
-        $otherLine = !empty($otherLines) ? $otherLines[0] : null;
 
         // Format supporting documents
         $supportingDocs = '';
@@ -140,10 +135,6 @@ class GlobalRekapExport implements FromCollection, WithHeadings, WithMapping, Wi
             $representationLine ? $this->formatReceiptLine($representationLine) : '',
             $representationLine ? number_format($representationLine['line_total'] ?? 0, 0, ',', '.') : '',
             $representationLine['desc'] ?? '',
-            // Other
-            $otherLine ? $this->formatReceiptLine($otherLine) : '',
-            $otherLine ? number_format($otherLine['line_total'] ?? 0, 0, ',', '.') : '',
-            $otherLine['desc'] ?? '',
             $supportingDocs
         ];
     }
@@ -203,10 +194,7 @@ class GlobalRekapExport implements FromCollection, WithHeadings, WithMapping, Wi
             'AG' => 25, // Representatif - Uraian
             'AH' => 15, // Representatif - Nilai
             'AI' => 30, // Representatif - Deskripsi
-            'AJ' => 25, // Biaya Lainnya - Uraian
-            'AK' => 15, // Biaya Lainnya - Nilai
-            'AL' => 30, // Biaya Lainnya - Deskripsi
-            'AM' => 30, // Dokumen Pendukung
+            'AJ' => 30, // Dokumen Pendukung
         ];
     }
 

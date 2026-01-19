@@ -171,14 +171,6 @@
                                         <span class="text-gray-900 dark:text-white font-semibold">Representatif</span>
                                     </div>
                                 </th>
-                                <th scope="col" class="px-2 py-1 text-center text-sm font-medium text-gray-900 dark:text-white border-r border-gray-200 dark:border-gray-600 table-cell-border header-group-border" style="width: 300px;" colspan="3">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                        </svg>
-                                        <span class="text-gray-900 dark:text-white font-semibold">Biaya Lainnya</span>
-                                    </div>
-                                </th>
                                 <th scope="col" class="px-2 py-1 text-center text-sm font-medium text-gray-900 dark:text-white border-r border-gray-200 dark:border-gray-600 table-cell-border header-group-border" style="width: 150px;">
                                     <div class="flex items-center justify-center space-x-2">
                                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,10 +221,6 @@
                                 <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border " style="width: 75px;">Uraian</th>
                                 <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border " style="width: 75px;">Nilai</th>
                                 <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border group-border-thick-right" style="width: 75px;">Deskripsi</th>
-                                <!-- Biaya Lainnya sub-columns -->
-                                <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border " style="width: 100px;">Uraian</th>
-                                <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border " style="width: 100px;">Nilai</th>
-                                <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border group-border-thick-right" style="width: 100px;">Deskripsi</th>
                                 <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 table-cell-border group-border-thick-right" style="width: 150px;">Total Kwitansi</th>
                                 <th scope="col" class="px-3 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300" style="width: 200px;">Dokumen Pendukung</th>
                             </tr>
@@ -240,7 +228,7 @@
                         <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
                             <!-- Spacer row for sticky header -->
                             <tr style="height: 0px; background: transparent;">
-                                 <td colspan="28" style="padding: 0; border: none; background: transparent;"></td>
+                                 <td colspan="25" style="padding: 0; border: none; background: transparent;"></td>
                             </tr>
                             @forelse($rekapData as $index => $item)
                                 @php
@@ -701,72 +689,6 @@
                                         @endif
                                     </td>
 
-                                    <!-- Biaya Lainnya - Uraian -->
-                                    <td class="px-2 py-1 text-xs border-r border-gray-200 dark:border-gray-600 table-cell-border whitespace-nowrap" style="width: 100px;">
-                                        @if(isset($item['receipt_line']) && $item['receipt_line'] && $item['receipt_line']['category'] === 'other' && $item['receipt_line']['line'])
-                                            {{-- Additional row for specific category --}}
-                                            <div class="text-gray-700 dark:text-gray-300">
-                                                <div class="font-medium">
-                                                    ({{ number_format($item['receipt_line']['line']['qty'], 0, ',', '.') }} x Rp {{ number_format($item['receipt_line']['line']['unit_amount'], 0, ',', '.') }})
-                                                </div>
-                                            </div>
-                                        @elseif(isset($item['receipt_lines']) && !empty($item['receipt_lines']['other']))
-                                            {{-- Main row with all categories --}}
-                                            <div class="space-y-1">
-                                                @foreach($item['receipt_lines']['other'] as $line)
-                                                    <div class="text-gray-700 dark:text-gray-300">
-                                                        <div class="font-medium">
-                                                            ({{ number_format($line['qty'], 0, ',', '.') }} x Rp {{ number_format($line['unit_amount'], 0, ',', '.') }})
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <span class="text-gray-400 dark:text-gray-500">-</span>
-                                        @endif
-                                    </td>
-
-                                    <!-- Biaya Lainnya - Nilai -->
-                                    <td class="px-2 py-1 text-xs border-r border-gray-200 dark:border-gray-600 table-cell-border text-right whitespace-nowrap" style="width: 100px;">
-                                        @if(isset($item['receipt_line']) && $item['receipt_line'] && $item['receipt_line']['category'] === 'other' && $item['receipt_line']['line'])
-                                            {{-- Additional row for specific category --}}
-                                            <div class="font-semibold text-gray-900 dark:text-white">
-                                                Rp {{ number_format($item['receipt_line']['line']['line_total'], 0, ',', '.') }}
-                                            </div>
-                                        @elseif(isset($item['receipt_lines']) && !empty($item['receipt_lines']['other']))
-                                            {{-- Main row with all categories --}}
-                                            <div class="space-y-1">
-                                                @foreach($item['receipt_lines']['other'] as $line)
-                                                    <div class="font-semibold text-gray-900 dark:text-white">
-                                                        Rp {{ number_format($line['line_total'], 0, ',', '.') }}
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <span class="text-gray-400 dark:text-gray-500">-</span>
-                                        @endif
-                                    </td>
-
-                                    <!-- Biaya Lainnya - Deskripsi -->
-                                    <td class="px-2 py-1 text-xs border-r border-gray-200 dark:border-gray-600 table-cell-border group-border-thick-right" style="width: 100px;">
-                                        @if(isset($item['receipt_line']) && $item['receipt_line'] && $item['receipt_line']['category'] === 'other' && $item['receipt_line']['line'])
-                                            {{-- Additional row for specific category --}}
-                                            <div class="text-gray-600 dark:text-gray-400 text-xs">
-                                                {{ $item['receipt_line']['line']['desc'] ?: '-' }}
-                                            </div>
-                                        @elseif(isset($item['receipt_lines']) && !empty($item['receipt_lines']['other']))
-                                            {{-- Main row with all categories --}}
-                                            <div class="space-y-1">
-                                                @foreach($item['receipt_lines']['other'] as $line)
-                                                    <div class="text-gray-600 dark:text-gray-400 text-xs">
-                                                        {{ $line['desc'] ?: '-' }}
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <span class="text-gray-400 dark:text-gray-500">-</span>
-                                        @endif
-                                    </td>
                                     
                                     <!-- Total Kwitansi -->
                                     <td class="px-2 py-1 text-xs border-r border-gray-200 dark:border-gray-600 table-cell-border group-border-thick-right text-right whitespace-nowrap" style="width: 150px;">
@@ -814,7 +736,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                     <td colspan="28" class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 text-center dark:text-white">
+                                     <td colspan="25" class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 text-center dark:text-white">
                                         @if($loading)
                                             <div class="flex items-center justify-center">
                                                 <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>

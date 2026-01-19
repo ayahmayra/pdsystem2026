@@ -67,9 +67,6 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
             'Representatif - Uraian',
             'Representatif - Nilai',
             'Representatif - Deskripsi',
-            'Biaya Lainnya - Uraian',
-            'Biaya Lainnya - Nilai',
-            'Biaya Lainnya - Deskripsi',
             'Total Kwitansi',
             'Dokumen Pendukung'
         ];
@@ -119,7 +116,7 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
             ]);
         } else {
             // Handle main receipt lines - create synchronized rows
-            $categories = ['transport', 'lodging', 'perdiem', 'representation', 'other'];
+            $categories = ['transport', 'lodging', 'perdiem', 'representation'];
             $hasData = false;
             
             // Find the maximum number of items in any category
@@ -294,9 +291,6 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
             '', // Representatif - Uraian
             '', // Representatif - Nilai
             '', // Representatif - Deskripsi
-            '', // Biaya Lainnya - Uraian
-            '', // Biaya Lainnya - Nilai
-            '', // Biaya Lainnya - Deskripsi
         ];
     }
 
@@ -327,11 +321,6 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
                 $lineData[10] = $value;         // Nilai (numeric)
                 $lineData[11] = $desc;          // Deskripsi
                 break;
-            case 'other':
-                $lineData[12] = $formattedLine; // Uraian
-                $lineData[13] = $value;         // Nilai (numeric)
-                $lineData[14] = $desc;          // Deskripsi
-                break;
         }
 
         return $lineData;
@@ -343,8 +332,7 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
             'transport' => 'Transportasi',
             'lodging' => 'Penginapan',
             'perdiem' => 'Uang Harian',
-            'representation' => 'Representatif',
-            'other' => 'Biaya Lainnya'
+            'representation' => 'Representatif'
         ];
         
         return $names[$category] ?? $category;
@@ -393,11 +381,8 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
             'U' => 20, // Representatif - Uraian
             'V' => 15, // Representatif - Nilai
             'W' => 25, // Representatif - Deskripsi
-            'X' => 25, // Biaya Lainnya - Uraian
-            'Y' => 15, // Biaya Lainnya - Nilai
-            'Z' => 30, // Biaya Lainnya - Deskripsi
-            'AA' => 20, // Total Kwitansi
-            'AB' => 30, // Dokumen Pendukung
+            'X' => 20, // Total Kwitansi
+            'Y' => 30, // Dokumen Pendukung
         ];
     }
 
@@ -483,13 +468,12 @@ class GlobalRekapDetailedExport implements FromArray, WithHeadings, WithStyles, 
             'Penginapan' => ['O', 'P', 'Q'],      // 3 columns
             'Uang Harian' => ['R', 'S', 'T'],     // 3 columns
             'Representatif' => ['U', 'V', 'W'],   // 3 columns
-            'Biaya Lainnya' => ['X', 'Y', 'Z'],   // 3 columns
-            'Total Kwitansi' => ['AA'],           // 1 column
-            'Dokumen Pendukung' => ['AB']         // 1 column
+            'Total Kwitansi' => ['X'],            // 1 column
+            'Dokumen Pendukung' => ['Y']          // 1 column
         ];
         
         // Apply thick right border to the last column of each group
-        $thickBorderColumns = ['B', 'D', 'H', 'I', 'K', 'N', 'Q', 'T', 'W', 'Z', 'AA', 'AB'];
+        $thickBorderColumns = ['B', 'D', 'H', 'I', 'K', 'N', 'Q', 'T', 'W', 'X', 'Y'];
         
         foreach ($thickBorderColumns as $column) {
             $sheet->getStyle($column . '1:' . $column . $lastRow)->applyFromArray([

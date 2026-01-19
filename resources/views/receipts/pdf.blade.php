@@ -325,7 +325,7 @@
           <tr>
             <td class="label-cell">Tanggal</td>
             <td>:</td>
-            <td class="content-cell">{{ $bulanTahun }}</td>
+            <td class="content-cell">{{ $receipt->sppd->sppd_date ? \Carbon\Carbon::parse($receipt->sppd->sppd_date)->locale('id')->translatedFormat('d F Y') : '-' }}</td>
           </tr>
           <tr>
             <td class="label-cell">Nomor</td>
@@ -337,8 +337,10 @@
         <div class="mt-6"></div>
 
         <!-- Yang terima -->
+        <br>
         <div class="text-center">Yang terima</div>
         <div class="sign-place"></div>
+        <br>
         <div class="text-center" style="text-decoration: underline; font-weight: bold;">{{ $receipt->payeeUser->fullNameWithTitles() ?? '-' }}</div>
         <div class="text-center">NIP. {{ $receipt->payeeUser->nip ?? '-' }}</div>
       </td>

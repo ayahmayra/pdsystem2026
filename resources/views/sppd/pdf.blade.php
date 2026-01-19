@@ -630,7 +630,7 @@
                 <td style="border: 1px solid #000; vertical-align: top; padding: 4px; width: 50%;">
                     <div style="line-height: 1.3; text-align: justify; font-size: 9pt;">
                         Telah diperiksa, dengan keterangan bahwa perjalanan tersebut di atas
-                        benar dilakukan atas perintah dan semata‑mata untuk kepentingan jabatan
+                        benar dilakukan atas perintah dan semata-mata untuk kepentingan jabatan
                         dalam waktu yang sesingkat‑singkatnya.
                     </div>
                     <div style="height: 0px;"></div>
@@ -638,55 +638,7 @@
             </tr>
             <tr>
                 <td style="border: 1px solid #000; vertical-align: top; padding: 4px; width: 50%;">
-                    <div class="block">
-                        @php
-                            // Get signatory snapshot data
-                            $signatorySnapshot = $sppd->getSignedByUserSnapshot();
-                            
-                            // Deteksi apakah assignment_title adalah custom atau auto
-                            $defaultTitle = $signatorySnapshot['position_desc'] ?: ($signatorySnapshot['position_name'] ?? '');
-                            $isCustomAssignment = !empty(trim($sppd->assignment_title)) && trim($sppd->assignment_title) !== trim($defaultTitle);
-                        @endphp
-                        
-                        @if($isCustomAssignment)
-                            <!-- Custom assignment title -->
-                            <div style="word-wrap: break-word; white-space: normal;">{!! nl2br(e($sppd->assignment_title)) !!}</div>
-                        @else
-                            <!-- Auto assignment title (dari jabatan penandatangan) -->
-                            @php
-                                $positionName = $signatorySnapshot['position_name'] ?? '-';
-                                $unitName = $signatorySnapshot['unit_name'] ?? '';
-                                $positionDesc = $signatorySnapshot['position_desc'] ?? '';
-                            @endphp
-                            @if($positionDesc)
-                                <!-- Jika ada position_desc, tampilkan position_desc -> unit_name -> organisation name -->
-                                <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}</div>
-                                <div>{{ \DB::table('org_settings')->value('name') }}</div>
-                            @elseif($unitName)
-                                <!-- Jika ada unit name, tampilkan dalam baris terpisah -->
-                                <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
-                            @else
-                                <!-- Jika tidak ada unit name, position langsung disambung dengan organisasi -->
-                                <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ \DB::table('org_settings')->value('name') }}</div>
-                            @endif
-                            <div>Kabupaten Bengkalis</div>
-                        @endif
-                        
-                        @php
-                            // Get budget role dari snapshot, fallback ke check org head
-                            $budgetRole2 = $sppd->signed_by_user_budget_role_snapshot;
-                            if (!$budgetRole2) {
-                                $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
-                                $budgetRole2 = ($sppd->signed_by_user_id == $orgHeadUserId) ? 'pengguna_anggaran' : 'kuasa_pengguna_anggaran';
-                            }
-                            $budgetRoleLabel2 = $budgetRole2 === 'pengguna_anggaran' ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran';
-                        @endphp
-                        <div>{{ $budgetRoleLabel2 }}</div>
-                        <br><br><br><br>
-                        <div class="name">{{ $signatorySnapshot['gelar_depan'] ?? '' }} {{ $signatorySnapshot['name'] ?? '-' }} {{ $signatorySnapshot['gelar_belakang'] ?? '' }}</div>
-                        <div class="rank">{{ $signatorySnapshot['rank_name'] ?? '-' }} ({{ $signatorySnapshot['rank_code'] ?? '-' }})</div>
-                        <div class="nip">NIP. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
-                    </div>
+                    
                 
             <div style="height: 10px;"></div> 
                 </td>
@@ -694,40 +646,14 @@
                     
                             <div class="block">
                                 @php
-                                    // Get signatory snapshot data
+                                    // Get signatory snapshot data dengan pola yang sama seperti Nota Dinas & SPT
                                     $signatorySnapshot = $sppd->getSignedByUserSnapshot();
+                                    $signerCustomTitle = $sppd->assignment_title;
+                                    $signerPositionDesc = $signatorySnapshot['position_desc'] ?? null;
+                                    $signerPositionName = $signatorySnapshot['position_name'] ?? '-';
+                                    $signerUnitName = $signatorySnapshot['unit_name'] ?? null;
+                                    $signerInstansiName = $sppd->signedByUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                                     
-                                    // Deteksi apakah assignment_title adalah custom atau auto
-                                    $defaultTitle = $signatorySnapshot['position_desc'] ?: ($signatorySnapshot['position_name'] ?? '');
-                                    $isCustomAssignment = !empty(trim($sppd->assignment_title)) && trim($sppd->assignment_title) !== trim($defaultTitle);
-                                @endphp
-                                
-                                @if($isCustomAssignment)
-                                    <!-- Custom assignment title -->
-                                    <div style="word-wrap: break-word; white-space: normal;">{!! nl2br(e($sppd->assignment_title)) !!}</div>
-                                @else
-                                    <!-- Auto assignment title (dari jabatan penandatangan) -->
-                                    @php
-                                        $positionName = $signatorySnapshot['position_name'] ?? '-';
-                                        $unitName = $signatorySnapshot['unit_name'] ?? '';
-                                        $positionDesc = $signatorySnapshot['position_desc'] ?? '';
-                                    @endphp
-                                    @if($positionDesc)
-                                        <!-- Jika ada position_desc, tampilkan position_desc -> unit_name -> organisation name -->
-                                        <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}</div>
-                                        <div>{{ \DB::table('org_settings')->value('name') }}</div>
-                                    @elseif($unitName)
-                                        <!-- Jika ada unit name, tampilkan dalam baris terpisah -->
-                                        <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
-                                    @else
-                                        <!-- Jika tidak ada unit name, position langsung disambung dengan organisasi -->
-                                        <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ \DB::table('org_settings')->value('name') }}</div>
-                                    @endif
-                                    <div>Kabupaten Bengkalis</div>
-                                    <div></div>
-                                @endif
-                                
-                                @php
                                     // Get budget role dari snapshot, fallback ke check org head
                                     $budgetRole3 = $sppd->signed_by_user_budget_role_snapshot;
                                     if (!$budgetRole3) {
@@ -736,10 +662,29 @@
                                     }
                                     $budgetRoleLabel3 = $budgetRole3 === 'pengguna_anggaran' ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran';
                                 @endphp
+                                
+                                @if($signerCustomTitle)
+                                    <div style="word-wrap: break-word; white-space: normal;">{{ $signerCustomTitle }}</div>
+                                @elseif($signerPositionDesc)
+                                    <div style="word-wrap: break-word; white-space: normal;">{{ $signerPositionDesc }}</div>
+                                @else
+                                    <div style="word-wrap: break-word; white-space: normal;">
+                                        {{ $signerPositionName }}
+                                        @if($signerUnitName) {{ $signerUnitName }}@endif
+                                        @if($signerInstansiName) {{ $signerInstansiName }}@endif
+                                    </div>
+                                @endif
+                                
                                 <div>{{ $budgetRoleLabel3 }}</div>
                                 <br><br><br><br>
                                 <div class="name">{{ $signatorySnapshot['gelar_depan'] ?? '' }} {{ $signatorySnapshot['name'] ?? '-' }} {{ $signatorySnapshot['gelar_belakang'] ?? '' }}</div>
-                                <div class="rank">{{ $signatorySnapshot['rank_name'] ?? '-' }} ({{ $signatorySnapshot['rank_code'] ?? '-' }})</div>
+                                <div class="rank">
+                                    @php
+                                        $rankName = $signatorySnapshot['rank_name'] ?? null;
+                                        $rankCode = $signatorySnapshot['rank_code'] ?? null;
+                                    @endphp
+                                    @if($rankName){{ $rankName }}@if($rankCode) ({{ $rankCode }})@endif@else-@endif
+                                </div>
                                 <div class="nip">NIP. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
                             </div>
                         
@@ -753,7 +698,7 @@
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
                             <td style="width: 25px; font-weight: bold; white-space: nowrap; vertical-align: top; font-size: 10pt;">VII.</td>
-                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Catatan Lain‑Lain</td>
+                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Catatan Lain-Lain</td>
                             <td style="word-break: break-word; vertical-align: top; font-size: 10pt;"></td>
                         </tr>
                     </table>

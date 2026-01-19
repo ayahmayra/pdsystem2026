@@ -204,10 +204,7 @@
                 <td class="label">c. Tingkat Biaya Perjalanan Dinas</td>
                 <td class="content">
                     @if($firstParticipant)
-                        @php
-                            $travelGrade = $sppd->getTravelGradeSnapshot();
-                        @endphp
-                        {{ $travelGrade['code'] ?? '-' }}
+                        {{ $firstParticipant['travel_grade_code'] ?? '-' }}
                     @else
                         -
                     @endif

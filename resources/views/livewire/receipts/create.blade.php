@@ -942,8 +942,11 @@
                                                     </div>
                                                     <h4 class="text-lg font-semibold text-gray-900 dark:text-white">3. Uang Harian (Perdiem)</h4>
                                                 </div>
-                                                <button type="button" wire:click="addPerdiemLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                    + Tambah
+                                                <button type="button" wire:click="addPerdiemLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                    Tambah Item
                                                 </button>
                                             </div>
                                             

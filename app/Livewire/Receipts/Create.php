@@ -544,6 +544,8 @@ class Create extends Component
         $unitAmount = null;
         $rateInfo = '';
 
+        $hasReference = false;
+        
         switch ($component) {
             case 'AIRFARE':
                 $unitAmount = $defaultOriginCity ? $referenceRateService->getAirfareRate(
@@ -551,6 +553,7 @@ class Create extends Component
                     $destinationCity->id
                 ) : null;
                 $rateInfo = $defaultOriginCity ? "Tiket Pesawat: {$defaultOriginCity->name} → {$destinationCity->name}" : '';
+                $hasReference = $unitAmount !== null && $unitAmount > 0;
                 break;
 
             case 'INTRA_PROV':
@@ -559,6 +562,7 @@ class Create extends Component
                     $destinationCity->id
                 ) : null;
                 $rateInfo = $originPlace ? "Transport Dalam Provinsi: {$originPlace->name} → {$destinationCity->name}" : '';
+                $hasReference = $unitAmount !== null && $unitAmount > 0;
                 break;
 
             case 'INTRA_DISTRICT':
@@ -567,50 +571,56 @@ class Create extends Component
                     $destinationCity->district_id
                 ) : null;
                 $rateInfo = $originPlace && $destinationCity->district_id ? "Transport Dalam Kabupaten: {$originPlace->name} → {$destinationCity->district_id}" : '';
+                $hasReference = $unitAmount !== null && $unitAmount > 0;
                 break;
 
             case 'OFFICIAL_VEHICLE':
-                // Kendaraan dinas biasanya flat rate atau berdasarkan jarak
-                $unitAmount = 0; // User input manual
+                // Kendaraan dinas - input manual
+                $unitAmount = null; // User input manual, jangan set default
                 $rateInfo = "Kendaraan Dinas - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'TAXI':
-                // Taxi biasanya flat rate atau berdasarkan ketentuan
-                $unitAmount = 0; // User input manual
+                // Taxi - input manual
+                $unitAmount = null; // User input manual, jangan set default
                 $rateInfo = "Taxi - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'RORO':
-                // Kapal RORO biasanya flat rate
-                $unitAmount = 0; // User input manual
+                // Kapal RORO - input manual
+                $unitAmount = null; // User input manual, jangan set default
                 $rateInfo = "Kapal RORO - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'TOLL':
-                // Tol biasanya flat rate
-                $unitAmount = 0; // User input manual
+                // Tol - input manual
+                $unitAmount = null; // User input manual, jangan set default
                 $rateInfo = "Tol - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'PARKIR_INAP':
-                // Parkir & penginapan biasanya flat rate
-                $unitAmount = 0; // User input manual
+                // Parkir & penginapan - input manual
+                $unitAmount = null; // User input manual, jangan set default
                 $rateInfo = "Parkir & Penginapan - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
         }
 
         // Update the transport line with auto-filled data
         if (isset($this->transportLines[$index])) {
             // Jangan override nilai manual yang sudah ada
-            if (!$this->transportLines[$index]['is_overridden']) {
+            if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
                 $this->transportLines[$index]['unit_amount'] = $unitAmount ?? 0;
             }
             
             $this->transportLines[$index]['rate_info'] = $rateInfo;
             // Jangan ubah has_reference jika sudah di-override
-            if (!$this->transportLines[$index]['is_overridden']) {
-                $this->transportLines[$index]['has_reference'] = $unitAmount !== null;
+            if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
+                $this->transportLines[$index]['has_reference'] = $hasReference;
             }
             $this->transportLines[$index]['original_reference_rate'] = $unitAmount ?? 0;
             

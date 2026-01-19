@@ -240,7 +240,7 @@
             <div class="col-label">B.</div>
             <div class="col-content">
               <div class="block-title">Setuju Dibayar</div>
-              <div class="muted">{{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+              <div class="name">{{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
                 'pengguna_anggaran' => 'Pengguna Anggaran',
                 'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
                 default => 'Kuasa Pengguna Anggaran'
@@ -283,11 +283,11 @@
           <tr>
             <td class="label-cell">Sudah Terima Dari</td>
        
-            <td>: {{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+            <td><span style="font-size: 12pt; font-weight: normal;">: {{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
                 'pengguna_anggaran' => 'Pengguna Anggaran',
                 'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
                 default => 'Kuasa Pengguna Anggaran'
-            } }}</td>
+            } }}</span></td>
           </tr>
         </table>
 

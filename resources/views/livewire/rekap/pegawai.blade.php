@@ -135,7 +135,7 @@
                                                 {{ $p->fullNameWithTitles() }}
                                             </div>
                                             <div class="text-xs text-gray-500 dark:text-gray-400 font-mono">
-                                                NIP: {{ $p->nip ?? '-' }}
+                                                {{ $p->getNipLabel() }}: {{ $p->nip ?? '-' }}
                                             </div>
                                             <div class="text-xs text-gray-500 dark:text-gray-400">
                                                 {{ $p->rank->name ?? '-' }}

@@ -146,7 +146,7 @@
                         <td style="text-align: left;">
                             <div class="name-info">
                                 <div class="full-name">{{ $p->fullNameWithTitles() }}</div>
-                                <div class="nip">NIP: {{ $p->nip ?? '-' }}</div>
+                                <div class="nip">{{ $p->getNipLabel() }}: {{ $p->nip ?? '-' }}</div>
                                 <div class="rank">{{ $p->rank->name ?? '-' }}</div>
                             </div>
                         </td>

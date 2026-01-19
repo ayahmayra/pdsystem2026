@@ -20,6 +20,7 @@ class Create extends Component
     // Form properties
     public $name = '';
     public $email = '';
+    public $employee_type = 'PNS';
     public $nip = '';
     public $nik = '';
     public $gelar_depan = '';
@@ -103,6 +104,7 @@ class Create extends Component
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'employee_type' => 'required|in:PNS,PPPK,PPPK PW,Non ASN',
             'nip' => 'nullable|string|max:20|unique:users,nip',
             'nik' => 'nullable|string|max:20|unique:users,nik',
             'gelar_depan' => 'nullable|string|max:255',

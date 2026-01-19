@@ -22,6 +22,7 @@ class Edit extends Component
     // Form properties
     public $name = '';
     public $email = '';
+    public $employee_type = 'PNS';
     public $nip = '';
     public $nik = '';
     public $gelar_depan = '';
@@ -105,6 +106,7 @@ class Edit extends Component
         $this->user = $user;
         $this->name = $user->name;
         $this->email = $user->email;
+        $this->employee_type = $user->employee_type ?? 'PNS';
         $this->nip = $user->nip;
         $this->nik = $user->nik;
         $this->gelar_depan = $user->gelar_depan;
@@ -142,6 +144,7 @@ class Edit extends Component
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $this->user->id,
+            'employee_type' => 'required|in:PNS,PPPK,PPPK PW,Non ASN',
             'nip' => 'nullable|string|max:20|unique:users,nip,' . $this->user->id,
             'nik' => 'nullable|string|max:20|unique:users,nik,' . $this->user->id,
             'gelar_depan' => 'nullable|string|max:255',

@@ -123,6 +123,17 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Informasi Organisasi</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis Pegawai <span class="text-red-500">*</span></label>
+                            <select wire:model="employee_type" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option value="PNS">PNS</option>
+                                <option value="PPPK">PPPK</option>
+                                <option value="PPPK PW">PPPK PW</option>
+                                <option value="Non ASN">Non ASN</option>
+                            </select>
+                            @error('employee_type') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit Kerja</label>
                             <select wire:model="unit_id" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                 <option value="">Pilih unit kerja</option>

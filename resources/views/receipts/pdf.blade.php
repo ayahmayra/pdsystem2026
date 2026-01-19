@@ -240,12 +240,11 @@
             <div class="col-label">B.</div>
             <div class="col-content">
               <div class="block-title">Setuju Dibayar</div>
-              @php
-                // Cek apakah penandatangan adalah pimpinan organisasi
-                $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
-                $isOrgHead = $receipt->sppd->signed_by_user_id == $orgHeadUserId;
-              @endphp
-              <div class="muted">{{ $isOrgHead ? 'PENGGUNA ANGGARAN' : 'KUASA PENGGUNA ANGGARAN' }}</div>
+              <div class="muted">{{ strtoupper(match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+                'pengguna_anggaran' => 'Pengguna Anggaran',
+                'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
+                default => 'Kuasa Pengguna Anggaran'
+              }) }}</div>
              
               <div class="mt-6"></div>
               <div class="mt-6"></div>

@@ -30,6 +30,7 @@ class Edit extends Component
     // Status dihapus dari SPT; gunakan catatan saja jika perlu
     public $status = null;
     public $notes = '';
+    public $hide_header = false;
 
     private function guessAssignmentTitle(): string
     {
@@ -55,6 +56,7 @@ class Edit extends Component
         $this->manual_doc_no = $spt->number_is_manual ? $spt->doc_no : '';
         $this->status = null;
         $this->notes = $spt->notes;
+        $this->hide_header = $spt->hide_header ?? false;
     }
 
     public function save()
@@ -94,6 +96,7 @@ class Edit extends Component
                 'assignment_title' => $assignmentTitle,
                 // status dihapus
                 'notes' => $this->notes,
+                'hide_header' => $this->hide_header,
             ]);
 
             // Refresh model to get updated relationships

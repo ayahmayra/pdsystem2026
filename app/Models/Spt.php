@@ -16,7 +16,7 @@ class Spt extends Model
         'doc_no', 'number_is_manual', 'number_manual_reason', 'number_format_id', 'number_sequence_id', 'number_scope_unit_id',
         'nota_dinas_id', 'spt_date', 'signed_by_user_id', 'assignment_title',
         'origin_place_id', 'destination_city_id', 'start_date', 'end_date', 'days_count', 'funding_source', 'status',
-        'notes',
+        'notes', 'hide_header',
         // Snapshot fields for signed_by_user data
         'signed_by_user_name_snapshot', 'signed_by_user_gelar_depan_snapshot', 'signed_by_user_gelar_belakang_snapshot',
         'signed_by_user_nip_snapshot', 'signed_by_user_unit_id_snapshot', 'signed_by_user_unit_name_snapshot',

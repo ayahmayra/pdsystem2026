@@ -18,7 +18,7 @@
         .header-text h3 { font-size: 12pt; margin: 0 0 1pt 0; text-transform: uppercase; letter-spacing: 0.5pt; }
         .header-text .unit { font-size: 12pt; font-weight: 700; margin: 0 0 2pt 0; text-transform: uppercase; }
         .header-text p { font-size: 9pt; margin: 1pt 0; }
-        .document-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 2mm 0 6mm 0;  }
+        .document-title { font-size: 14pt; font-weight: bold; text-align: center; margin: 2mm 0 6mm 0;  }
         .info-table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; }
         .info-table td { padding: 1pt 0; vertical-align: top; }
         .info-table .label { width: 50px;  }

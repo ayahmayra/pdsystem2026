@@ -159,6 +159,25 @@
                 </div>
             </div>
 
+            <!-- Pengaturan Tampilan Header -->
+            <div class="rounded-md border border-gray-200 dark:border-gray-700 p-4">
+                <h3 class="text-sm font-semibold mb-3">Pengaturan Tampilan Dokumen</h3>
+                <div class="flex items-center gap-2">
+                    <input 
+                        type="checkbox" 
+                        id="hide_header" 
+                        wire:model="hide_header" 
+                        class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
+                    />
+                    <label for="hide_header" class="text-sm text-gray-700 dark:text-gray-300">
+                        Sembunyikan Kop Dinas
+                    </label>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    Jika dicentang, kop dinas tidak akan ditampilkan pada dokumen PDF. Berguna untuk menggunakan kop custom saat pencetakan.
+                </p>
+            </div>
+
             <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <a href="{{ route('documents', ['nota_dinas_id' => $this->spt->nota_dinas_id, 'spt_id' => $this->spt->id]) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">Batal</a>
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan Perubahan</button>

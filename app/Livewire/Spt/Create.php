@@ -38,6 +38,7 @@ class Create extends Component
     // Status dihapus dari SPT
     public $status = null;
     public $notes = '';
+    public $hide_header = false;
     public $number_is_manual = false;
     public $number_manual_reason = '';
     public $manual_doc_no = '';
@@ -198,6 +199,7 @@ class Create extends Component
                 'assignment_title' => $assignmentTitle,
                 // status dihapus
                 'notes' => $this->notes,
+                'hide_header' => $this->hide_header,
             ]);
 
             // Create snapshot of signed_by_user data

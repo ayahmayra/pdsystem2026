@@ -22,7 +22,7 @@ class Sppd extends Model
         'signed_by_user_nip_snapshot', 'signed_by_user_unit_id_snapshot', 'signed_by_user_unit_name_snapshot',
         'signed_by_user_position_id_snapshot', 'signed_by_user_position_name_snapshot', 'signed_by_user_position_desc_snapshot',
         'signed_by_user_rank_id_snapshot', 'signed_by_user_rank_name_snapshot', 'signed_by_user_rank_code_snapshot',
-        'signed_by_user_position_echelon_id_snapshot', 'travel_grade_code',
+        'signed_by_user_position_echelon_id_snapshot', 'travel_grade_code', 'signed_by_user_budget_role_snapshot',
     ];
 
     public function spt() { return $this->belongsTo(Spt::class); }
@@ -169,6 +169,7 @@ class Sppd extends Model
             'signed_by_user_rank_code_snapshot' => $user->rank?->code,
             'signed_by_user_position_echelon_id_snapshot' => $user->position?->echelon_id,
             'travel_grade_code' => $travelGradeCode,
+            'signed_by_user_budget_role_snapshot' => $user->budget_user_role,
         ]);
     }
 

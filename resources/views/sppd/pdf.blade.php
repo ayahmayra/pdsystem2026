@@ -339,9 +339,14 @@
                     $signerUnitName = $signatorySnapshot['unit_name'] ?? null;
                     $signerInstansiName = $sppd->signedByUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                     
-                    // Cek apakah penandatangan adalah pimpinan organisasi
-                    $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
-                    $isOrgHead = $sppd->signed_by_user_id == $orgHeadUserId;
+                    // Get budget role dari snapshot, fallback ke check org head jika belum ada
+                    $budgetRole = $sppd->signed_by_user_budget_role_snapshot;
+                    if (!$budgetRole) {
+                        // Fallback untuk SPPD lama yang belum punya snapshot
+                        $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
+                        $budgetRole = ($sppd->signed_by_user_id == $orgHeadUserId) ? 'pengguna_anggaran' : 'kuasa_pengguna_anggaran';
+                    }
+                    $budgetRoleLabel = $budgetRole === 'pengguna_anggaran' ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran';
                 @endphp
                 
                 @if($signerCustomTitle)

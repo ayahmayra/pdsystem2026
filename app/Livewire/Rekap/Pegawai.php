@@ -101,15 +101,22 @@ class Pegawai extends Component
             $query->where('users.rank_id', $this->rank_filter);
         }
 
-        // Sort by eselon, rank, and NIP
+        // Sort by employee type, eselon, rank, and NIP
         $query->leftJoin('positions', 'users.position_id', '=', 'positions.id')
               ->leftJoin('echelons', 'positions.echelon_id', '=', 'echelons.id')
               ->leftJoin('ranks', 'users.rank_id', '=', 'ranks.id')
-              // 1. Sort by eselon (lower number = higher eselon)
+              // 1. Sort by employee type: PNS -> PPPK -> PPPK PW -> Non ASN
+              ->orderByRaw("CASE users.employee_type 
+                  WHEN 'PNS' THEN 1 
+                  WHEN 'PPPK' THEN 2 
+                  WHEN 'PPPK PW' THEN 3 
+                  WHEN 'Non ASN' THEN 4 
+                  ELSE 5 END ASC")
+              // 2. Sort by eselon (lower number = higher eselon)
               ->orderByRaw('CASE WHEN echelons.id IS NULL THEN 999999 ELSE echelons.id END ASC')
-              // 2. Sort by rank (higher number = higher rank)
+              // 3. Sort by rank (higher number = higher rank)
               ->orderByRaw('CASE WHEN ranks.id IS NULL THEN 0 ELSE ranks.id END DESC')
-              // 3. Sort by NIP (alphabetical)
+              // 4. Sort by NIP (alphabetical)
               ->orderBy('users.nip', 'ASC')
               ->select('users.*');
 

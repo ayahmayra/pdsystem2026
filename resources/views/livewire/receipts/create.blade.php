@@ -513,152 +513,182 @@
 
                                 <!-- Reference Rates & Perhitungan Biaya (hanya tampil jika travel grade sudah dipilih) -->
                                 @if($travel_grade_id)
-                                <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
-                                    <!-- Reference Rates Section -->
+                                <div class="border-t border-gray-200 dark:border-gray-600 pt-6 mt-6">
+                                    
+                                    <!-- Reference Rates Section - Collapsible -->
                                     @if($airfareRate || $lodgingCap || $perdiemDailyRate || $representationRate)
-                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
-                                        <h4 class="text-md font-medium text-yellow-800 dark:text-yellow-200 mb-3 flex items-center">
-                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    <div x-data="{ openRates: false }" class="mb-6">
+                                        <button 
+                                            type="button"
+                                            @click="openRates = !openRates" 
+                                            class="w-full flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 border border-blue-200 dark:border-gray-500 rounded-lg hover:shadow-md transition-all duration-200"
+                                        >
+                                            <div class="flex items-center">
+                                                <svg class="w-5 h-5 mr-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Referensi Tarif Maksimal</span>
+                                                <span class="ml-3 text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full">Panduan</span>
+                                            </div>
+                                            <svg 
+                                                class="w-5 h-5 text-gray-600 dark:text-gray-300 transition-transform duration-200" 
+                                                :class="{ 'rotate-180': openRates }"
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
-                                            Referensi Tarif Maksimal
-                                        </h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                                            @if($airfareRate)
-                                            <div class="space-y-1">
-                                                <span class="font-medium text-gray-700 dark:text-gray-300">Tiket Pesawat:</span>
-                                                <p class="text-yellow-700 dark:text-yellow-300 font-mono">
-                                                    Rp {{ number_format($airfareRate, 0, ',', '.') }}
-                                                </p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                    {{ $airfareOrigin }} → {{ $airfareDestination }}
-                                                </p>
+                                        </button>
+                                        
+                                        <div 
+                                            x-show="openRates" 
+                                            x-collapse
+                                            class="mt-3 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg"
+                                        >
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                                Berikut adalah tarif referensi maksimal berdasarkan peraturan perjalanan dinas. Tarif ini akan otomatis terisi pada form di bawah.
+                                            </p>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                                                @if($airfareRate)
+                                                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Tiket Pesawat</span>
+                                                    <p class="text-lg font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">
+                                                        Rp {{ number_format($airfareRate, 0, ',', '.') }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {{ $airfareOrigin }} → {{ $airfareDestination }}
+                                                    </p>
+                                                </div>
+                                                @endif
+                                                
+                                                @if($lodgingCap)
+                                                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Maksimal Penginapan /malam</span>
+                                                    <p class="text-lg font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">
+                                                        Rp {{ number_format($lodgingCap, 0, ',', '.') }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        Provinsi {{ $lodgingProvince }}
+                                                    </p>
+                                                </div>
+                                                @endif
+                                                
+                                                @if($perdiemDailyRate)
+                                                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Uang Harian /hari</span>
+                                                    <p class="text-lg font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">
+                                                        Rp {{ number_format($perdiemDailyRate, 0, ',', '.') }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {{ ucfirst(str_replace('_', ' ', $perdiemTripType)) }} - {{ $perdiemProvince }}
+                                                    </p>
+                                                </div>
+                                                @endif
+                                                
+                                                @if($perdiemTotalAmount)
+                                                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Total Uang Harian</span>
+                                                    <p class="text-lg font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">
+                                                        Rp {{ number_format($perdiemTotalAmount, 0, ',', '.') }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {{ $this->calculateTripDays($sppd->spt->notaDinas) }} hari
+                                                    </p>
+                                                </div>
+                                                @endif
+                                                
+                                                @if($representationRate)
+                                                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Tarif Representasi</span>
+                                                    <p class="text-lg font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">
+                                                        Rp {{ number_format($representationRate, 0, ',', '.') }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {{ ucfirst(str_replace('_', ' ', $representationTripType)) }}
+                                                    </p>
+                                                </div>
+                                                @endif
                                             </div>
-                                            @endif
-                                            
-                                            @if($lodgingCap)
-                                            <div class="space-y-1">
-                                                <span class="font-medium text-gray-700 dark:text-gray-300">Maksimal Penginapan:</span>
-                                                <p class="text-yellow-700 dark:text-yellow-300 font-mono">
-                                                    Rp {{ number_format($lodgingCap, 0, ',', '.') }}
-                                                </p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                    Provinsi {{ $lodgingProvince }}
-                                                </p>
-                                            </div>
-                                            @endif
-                                            
-                                            @if($perdiemDailyRate)
-                                            <div class="space-y-1">
-                                                <span class="font-medium text-gray-700 dark:text-gray-300">Uang Harian per Hari:</span>
-                                                <p class="text-yellow-700 dark:text-yellow-300 font-mono">
-                                                    Rp {{ number_format($perdiemDailyRate, 0, ',', '.') }}
-                                                </p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                    {{ ucfirst(str_replace('_', ' ', $perdiemTripType)) }} - {{ $perdiemProvince }}
-                                                </p>
-                                            </div>
-                                            @endif
-                                            
-                                            @if($perdiemTotalAmount)
-                                            <div class="space-y-1">
-                                                <span class="font-medium text-gray-700 dark:text-gray-300">Total Uang Harian:</span>
-                                                <p class="text-yellow-700 dark:text-yellow-300 font-mono">
-                                                    Rp {{ number_format($perdiemTotalAmount, 0, ',', '.') }}
-                                                </p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                    {{ $this->calculateTripDays($sppd->spt->notaDinas) }} hari
-                                                </p>
-                                            </div>
-                                            @endif
-                                            
-                                            @if($representationRate)
-                                            <div class="space-y-1">
-                                                <span class="font-medium text-gray-700 dark:text-gray-300">Tarif Representasi:</span>
-                                                <p class="text-yellow-700 dark:text-yellow-300 font-mono">
-                                                    Rp {{ number_format($representationRate, 0, ',', '.') }}
-                                                </p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                    {{ ucfirst(str_replace('_', ' ', $representationTripType)) }}
-                                                </p>
-                                            </div>
-                                            @endif
                                         </div>
                                     </div>
                                     @endif
                                     
-                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
-                                        <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
-                                        Perhitungan Biaya
-                                    </h3>
-                                    
-                                    <!-- Komponen Biaya -->
-                                    <div class="space-y-4">
-                                        <!-- 1. Biaya Transportasi -->
-                                        <div class="bg-red-100 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                            <div class="flex items-center justify-between mb-3">
-                                                <h4 class="font-medium text-gray-900 dark:text-white">1. Biaya Transportasi</h4>
-                                                <button type="button" wire:click="addTransportLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                    + Tambah
-                                                </button>
-                                            </div>
-                                            
-                                                                                    <!-- Reference rate warning for transport -->
-                                        @if($transportIntraProvince || $transportIntraDistrict || $airfareRate)
-                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
-                                            <div class="text-xs text-blue-700 dark:text-blue-300">
-                                                <strong>Referensi Tarif:</strong>
-                                                @if($transportIntraProvince)
-                                                    <span class="block">Dalam Provinsi: Rp {{ number_format($transportIntraProvince, 0, ',', '.') }}</span>
-                                                @endif
-                                                @if($transportIntraDistrict)
-                                                    <span class="block">Dalam Kabupaten: Rp {{ number_format($transportIntraDistrict, 0, ',', '.') }}</span>
-                                                @endif
-                                                @if($airfareRate)
-                                                    <span class="block">Tiket Pesawat: Rp {{ number_format($airfareRate, 0, ',', '.') }}</span>
-                                                @endif
+                                    <!-- Main Header with Total Summary -->
+                                    <div class="flex items-center justify-between mb-6">
+                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                                            <svg class="w-6 h-6 mr-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                            </svg>
+                                            Rincian Biaya
+                                        </h3>
+                                        
+                                        <!-- Sticky Total Card -->
+                                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-700 dark:to-gray-600 border-2 border-green-500 dark:border-green-600 rounded-lg px-6 py-3 shadow-md">
+                                            <div class="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">TOTAL KWITANSI</div>
+                                            <div class="text-2xl font-bold text-green-700 dark:text-green-400 font-mono">
+                                                Rp {{ number_format($totalAmount, 0, ',', '.') }}
                                             </div>
                                         </div>
-                                        @endif
+                                    </div>
+                                    
+                                    <!-- Komponen Biaya -->
+                                    <div class="space-y-6">
+                                        <!-- 1. Biaya Transportasi -->
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-red-500 dark:border-red-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">1. Biaya Transportasi</h4>
+                                                </div>
+                                                <button type="button" wire:click="addTransportLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                    Tambah Item
+                                                </button>
+                                            </div>
 
-                                                                            <!-- Notification for transport without reference rates -->
-                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-3">
-                                        <div class="text-xs text-yellow-700 dark:text-yellow-300">
-                                            <strong>ℹ️ Informasi:</strong>
-                                            <span class="block">• Tiket Pesawat, Transport Dalam Provinsi, dan Transport Dalam Kabupaten akan otomatis terisi dengan tarif standar</span>
-                                            <span class="block">• Kendaraan Dinas, Taxi, RORO, Tol, dan Parkir & Penginapan perlu diisi manual sesuai ketentuan</span>
-                                            <span class="block">• ⚠️ Nilai manual yang melebihi tarif referensi akan ditampilkan peringatan</span>
+                                    <!-- Info Alert -->
+                                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3 mb-4">
+                                        <div class="flex items-start">
+                                            <svg class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <div class="text-xs text-blue-800 dark:text-blue-300">
+                                                Beberapa jenis transportasi akan otomatis terisi dengan tarif referensi. Anda dapat mengedit manual jika diperlukan.
+                                            </div>
                                         </div>
                                     </div>
 
                                     <!-- Warning Banner for Excessive Values -->
                                     @if($hasExcessiveValues)
-                                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-3">
+                                    <div class="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-2 border-red-300 dark:border-red-600 rounded-lg p-4 mb-4 shadow-sm">
                                         <div class="flex items-start">
                                             <div class="flex-shrink-0">
-                                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                                <svg class="h-6 w-6 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                 </svg>
                                             </div>
-                                            <div class="ml-3">
-                                                <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
-                                                    ⚠️ Nilai Melebihi Standar Referensi
+                                            <div class="ml-3 flex-1">
+                                                <h3 class="text-sm font-bold text-red-800 dark:text-red-300 mb-2">
+                                                    ⚠️ Peringatan: Nilai Melebihi Referensi
                                                 </h3>
-                                                <div class="mt-2 text-sm text-red-700 dark:text-red-300">
-                                                    <p class="mb-2">Terdapat nilai yang melebihi standar referensi. Silakan sesuaikan terlebih dahulu sebelum menyimpan kwitansi:</p>
-                                                    <ul class="list-disc list-inside space-y-1">
-                                                        @foreach($excessiveValueDetails as $detail)
-                                                        <li>
+                                                <div class="text-sm text-red-700 dark:text-red-300 space-y-1">
+                                                    @foreach($excessiveValueDetails as $detail)
+                                                    <div class="flex items-start">
+                                                        <span class="inline-block w-2 h-2 bg-red-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                                                        <span>
                                                             <strong>{{ $detail['type'] }}:</strong> 
                                                             Rp {{ number_format($detail['manual_value'], 0, ',', '.') }} 
-                                                            (melebihi Rp {{ number_format($detail['reference_value'], 0, ',', '.') }} 
-                                                            sebesar Rp {{ number_format($detail['excess_amount'], 0, ',', '.') }} 
-                                                            atau {{ $detail['excess_percentage'] }}%)
-                                                        </li>
-                                                        @endforeach
-                                                    </ul>
+                                                            <span class="text-red-600 dark:text-red-400">(+{{ $detail['excess_percentage'] }}% dari referensi)</span>
+                                                        </span>
+                                                    </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -668,8 +698,8 @@
                                             @if(count($transportLines) > 0)
                                                 <div class="space-y-3">
                                                     @foreach($transportLines as $index => $line)
-                                                    <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 p-3">
-                                                        <div class="grid grid-cols-12 gap-3 items-end">
+                                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:shadow-sm transition-shadow duration-200">
+                                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
                                                             <div class="col-span-2">
                                                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis</label>
                                                                 <select wire:model.live="transportLines.{{ $index }}.component" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -766,20 +796,35 @@
                                         </div>
 
                                         <!-- 2. Biaya Penginapan -->
-                                        <div class="bg-yellow-100 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                            <div class="flex items-center justify-between mb-3">
-                                                <h4 class="font-medium text-gray-900 dark:text-white">2. Biaya Penginapan</h4>
-                                                <button type="button" wire:click="addLodgingLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                    + Tambah
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-yellow-500 dark:border-yellow-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">2. Biaya Penginapan</h4>
+                                                </div>
+                                                <button type="button" wire:click="addLodgingLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                    Tambah Item
                                                 </button>
                                             </div>
                                             
-                                            <!-- Reference rate warning for lodging -->
+                                            <!-- Reference rate info for lodging -->
                                             @if($lodgingCap)
-                                            <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3 mb-3">
-                                                <div class="text-xs text-orange-700 dark:text-orange-300">
-                                                    <strong>⚠️ Batas Maksimal:</strong> Rp {{ number_format($lodgingCap, 0, ',', '.') }} per malam
-                                                    <br><span class="text-gray-600 dark:text-gray-400">Provinsi: {{ $lodgingProvince }}</span>
+                                            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg p-3 mb-4">
+                                                <div class="flex items-start">
+                                                    <svg class="w-5 h-5 text-amber-500 dark:text-amber-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <div class="text-xs text-amber-800 dark:text-amber-300">
+                                                        <strong>Batas Maksimal:</strong> Rp {{ number_format($lodgingCap, 0, ',', '.') }} per malam 
+                                                        <span class="text-gray-600 dark:text-gray-400">(Provinsi: {{ $lodgingProvince }})</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             @endif
@@ -889,9 +934,16 @@
                                         </div>
 
                                         <!-- 3. Uang Harian (Perdiem) -->
-                                        <div class="bg-green-200 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                            <div class="flex items-center justify-between mb-3">
-                                                <h4 class="font-medium text-gray-900 dark:text-white">3. Uang Harian (Perdiem)</h4>
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-green-500 dark:border-green-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">3. Uang Harian (Perdiem)</h4>
+                                                </div>
                                                 <button type="button" wire:click="addPerdiemLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
                                                     + Tambah
                                                 </button>
@@ -950,11 +1002,21 @@
                                         </div>
 
                                         <!-- 4. Biaya Representatif -->
-                                        <div class="bg-teal-200 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                            <div class="flex items-center justify-between mb-3">
-                                                <h4 class="font-medium text-gray-900 dark:text-white">4. Biaya Representatif</h4>
-                                                <button type="button" wire:click="addRepresentationLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                    + Tambah
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-teal-500 dark:border-teal-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                        <svg class="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">4. Biaya Representatif</h4>
+                                                </div>
+                                                <button type="button" wire:click="addRepresentationLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                    Tambah Item
                                                 </button>
                                             </div>
                                             
@@ -1006,11 +1068,21 @@
                                         </div>
 
                                         <!-- 5. Biaya Lainnya -->
-                                        <div class="bg-indigo-200 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                            <div class="flex items-center justify-between mb-3">
-                                                <h4 class="font-medium text-gray-900 dark:text-white">5. Biaya Lainnya</h4>
-                                                <button type="button" wire:click="addOtherLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                    + Tambah
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-indigo-500 dark:border-indigo-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                        <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">5. Biaya Lainnya</h4>
+                                                </div>
+                                                <button type="button" wire:click="addOtherLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                    Tambah Item
                                                 </button>
                                             </div>
                                             

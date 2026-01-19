@@ -144,20 +144,20 @@
                 <td class="label">Pengguna Anggaran</td>
                 <td class="content">
                     @php
-                        // Ambil data penandatangan dari snapshot atau relasi
-                        $signerPosition = $sppd->signed_by_user_position_name_snapshot ?: $sppd->signedByUser?->position?->name;
+                        // Ambil data penandatangan dengan prioritas yang sama seperti Nota Dinas & SPT
+                        $signerPositionDesc = $sppd->signed_by_user_position_desc_snapshot ?: $sppd->signedByUser?->position_desc;
+                        $signerPosition = $sppd->signed_by_user_position_name_snapshot ?: $sppd->signedByUser?->position?->name ?? '-';
                         $signerUnit = $sppd->signed_by_user_unit_name_snapshot ?: $sppd->signedByUser?->unit?->name;
                         $signerInstansi = $sppd->signedByUser?->getInstansiName();
                     @endphp
                     
-                    {{ $signerPosition ?? '-' }}
-                    @if($signerUnit)
-                        {{ $signerUnit }}
+                    @if($signerPositionDesc)
+                        {{ $signerPositionDesc }}
+                    @else
+                        {{ $signerPosition }}
+                        @if($signerUnit) {{ $signerUnit }}@endif
+                        @if($signerInstansi) {{ $signerInstansi }}@endif
                     @endif
-                    @if($signerUnit || $signerPosition)
-                        <br>
-                    @endif
-                    {{ $signerInstansi }}
                 </td>
             </tr>
             <tr>

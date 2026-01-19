@@ -167,7 +167,7 @@
                     @php
                         $participants = $sppd->getSortedParticipantsSnapshot();
                         $firstParticipant = $participants->first();
-                        $firstParticipantUser = $sppd->spt?->notaDinas?->participants()->orderBy('order')->first()?->user;
+                        $firstParticipantUser = $sppd->spt?->notaDinas?->getSortedParticipants()->first()?->user;
                     @endphp
                     @if($firstParticipant)
                         {{ $firstParticipant['name'] ?? '-' }}  /

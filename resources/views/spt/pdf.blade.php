@@ -117,6 +117,7 @@
                 <td class="content">
                     @php
                         $ordered = $spt->getSortedParticipantsSnapshot();
+                        $orderedParticipants = $spt->notaDinas?->getSortedParticipants() ?? collect();
                     @endphp
                     @if($ordered->count() > 0)
                         
@@ -128,7 +129,7 @@
                             $rankCode = $participant['rank_code'] ?? '';
                             $nip = $participant['nip'] ?? '';
                             $position = $participant['position_desc'] ?: ($participant['position_name'] ?? '');
-                            $participantUser = $spt->notaDinas?->participants()->where('order', $participant['order'] ?? $i)->first()?->user;
+                            $participantUser = $orderedParticipants->get($i)?->user;
                         @endphp
                         <tr>
                             <td>{{ $i+1 }}.</td>

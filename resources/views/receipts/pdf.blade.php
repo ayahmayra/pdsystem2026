@@ -398,34 +398,34 @@
               - 
               @switch($line->component)
                 @case('AIRFARE')
-                  Tiket Pesawat ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Tiket Pesawat ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   @break
                 @case('INTRA_PROV')
-                  Transport Dalam Provinsi ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Transport Dalam Provinsi ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('INTRA_DISTRICT')
-                  Transport Dalam Kabupaten ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Transport Dalam Kabupaten ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('OFFICIAL_VEHICLE')
-                  Kendaraan Dinas ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Kendaraan Dinas ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('TAXI')
-                  Taxi ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Taxi ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('RORO')
-                  Kapal RORO ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Kapal RORO ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('TOLL')
-                  Tol ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Tol ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('PARKIR_INAP')
-                  Parkir & Penginapan ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Parkir & Penginapan ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('LODGING')
@@ -441,23 +441,23 @@
                   @endphp
                   Penginapan
                   @if($isNoLodging && $referenceRate)
-                    ({{ $line->qty }} Malam x (30% x {{ money_id($referenceRate) }}))
+                    ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} Malam x (30% x {{ money_id($referenceRate) }}))
                   @else
-                    ({{ $line->qty }} Malam x {{ money_id($line->unit_amount) }})
+                    ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} Malam x {{ money_id($line->unit_amount) }})
                   @endif
                   {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
                   @break
                 @case('PERDIEM')
-                  ({{ $line->qty }} hari x {{ money_id($line->unit_amount) }})
+                  ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} hari x {{ money_id($line->unit_amount) }})
                   @break
                 @case('REPRESENTASI')
-                  Biaya representatif ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  Biaya representatif ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   @break
                 @case('CUSTOM')
-                  {{ $line->remark ?: 'Item Custom' }} ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  {{ $line->remark ?: 'Item Custom' }} ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
                   @break
                 @default
-                  {{ ucfirst(str_replace('_', ' ', $line->component)) }} ({{ $line->qty }} x {{ money_id($line->unit_amount) }})
+                  {{ ucfirst(str_replace('_', ' ', $line->component)) }} ({{ rtrim(rtrim(number_format($line->qty, 2, '.', ''), '0'), '.') }} x {{ money_id($line->unit_amount) }})
               @endswitch
             </td>
             <td class="text-right">-</td>
@@ -495,7 +495,7 @@
         <div >Pejabat Pelaksana Teknis Kegiatan</div>
         <div class="sign-place"></div>
         @php($pptk = $receipt->sppd->getPptkSnapshotFromSubKegiatan())
-        <div class="">{{ ($pptk['name'] ?? null) ?: '-' }}</div>
+        <div class="name">{{ ($pptk['name'] ?? null) ?: '-' }}</div>
         <div class="">NIP. {{ ($pptk['nip'] ?? null) ?: '-' }}</div>
       </td>
       
@@ -505,7 +505,7 @@
         <div>Dihitung Oleh :</div>
         <div class=>{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
         <div class="sign-place"></div>
-        <div class="">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? '-' }}</div>
+        <div class="name" font-size="12px">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? '-' }}</div>
         <div class="">NIP. {{ $receipt->getTreasurerUserSnapshot()['nip'] ?? '-' }}</div>
       </td>
     </tr>

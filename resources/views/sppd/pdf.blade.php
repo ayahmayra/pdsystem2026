@@ -331,48 +331,41 @@
         <div class="signature end-section">
             <div class="block" style="max-width: 300px;">
                 @php
-                    // Get signatory snapshot data
+                    // Get signatory snapshot data dengan pola yang sama seperti Nota Dinas & SPT
                     $signatorySnapshot = $sppd->getSignedByUserSnapshot();
+                    $signerCustomTitle = $sppd->assignment_title;
+                    $signerPositionDesc = $signatorySnapshot['position_desc'] ?? null;
+                    $signerPositionName = $signatorySnapshot['position_name'] ?? '-';
+                    $signerUnitName = $signatorySnapshot['unit_name'] ?? null;
+                    $signerInstansiName = $sppd->signedByUser?->getInstansiName() ?? \DB::table('org_settings')->value('name');
                     
-                    // Deteksi apakah assignment_title adalah custom atau auto
-                    $defaultTitle = $signatorySnapshot['position_desc'] ?: ($signatorySnapshot['position_name'] ?? '');
-                    $isCustomAssignment = !empty(trim($sppd->assignment_title)) && trim($sppd->assignment_title) !== trim($defaultTitle);
-                @endphp
-                
-                @if($isCustomAssignment)
-                    <!-- Custom assignment title -->
-                    <div style="word-wrap: break-word; white-space: normal;">{!! nl2br(e($sppd->assignment_title)) !!}</div>
-                @else
-                    <!-- Auto assignment title (dari jabatan penandatangan) -->
-                    @php
-                        $positionName = $signatorySnapshot['position_name'] ?? '-';
-                        $unitName = $signatorySnapshot['unit_name'] ?? '';
-                        $positionDesc = $signatorySnapshot['position_desc'] ?? '';
-                    @endphp
-                    @if($positionDesc)
-                        <!-- Jika ada position_desc, tampilkan position_desc -> unit_name -> organisation name -->
-                        <div style="word-wrap: break-word; white-space: normal;">{{ $positionDesc }}</div>
-                        <div>{{ \DB::table('org_settings')->value('name') }}</div>
-                    @elseif($unitName)
-                        <!-- Jika ada unit name, tampilkan dalam baris terpisah -->
-                        <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ $unitName }}</div>
-                    @else
-                        <!-- Jika tidak ada unit name, position langsung disambung dengan organisasi -->
-                        <div style="word-wrap: break-word; white-space: normal;">{{ $positionName }} {{ \DB::table('org_settings')->value('name') }}</div>
-                    @endif
-                    <div>Kabupaten Bengkalis</div>
-                    <div></div>
-                @endif
-                
-                @php
                     // Cek apakah penandatangan adalah pimpinan organisasi
                     $orgHeadUserId = \DB::table('org_settings')->value('head_user_id');
                     $isOrgHead = $sppd->signed_by_user_id == $orgHeadUserId;
                 @endphp
+                
+                @if($signerCustomTitle)
+                    <div style="word-wrap: break-word; white-space: normal;">{{ $signerCustomTitle }}</div>
+                @elseif($signerPositionDesc)
+                    <div style="word-wrap: break-word; white-space: normal;">{{ $signerPositionDesc }}</div>
+                @else
+                    <div style="word-wrap: break-word; white-space: normal;">
+                        {{ $signerPositionName }}
+                        @if($signerUnitName) {{ $signerUnitName }}@endif
+                        @if($signerInstansiName) {{ $signerInstansiName }}@endif
+                    </div>
+                @endif
+                
                 <div>{{ $isOrgHead ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran' }}</div>
                 <br><br><br><br><br><br>
                 <div class="name">{{ $signatorySnapshot['gelar_depan'] ?? '' }} {{ $signatorySnapshot['name'] ?? '-' }} {{ $signatorySnapshot['gelar_belakang'] ?? '' }}</div>
-                <div class="rank">{{ $signatorySnapshot['rank_name'] ?? '-' }} ({{ $signatorySnapshot['rank_code'] ?? '-' }})</div>
+                <div class="rank">
+                    @php
+                        $rankName = $signatorySnapshot['rank_name'] ?? null;
+                        $rankCode = $signatorySnapshot['rank_code'] ?? null;
+                    @endphp
+                    @if($rankName){{ $rankName }}@if($rankCode) ({{ $rankCode }})@endif@else-@endif
+                </div>
                 <div class="nip">NIP. {{ $signatorySnapshot['nip'] ?? '-' }}</div>
             </div>
         </div>

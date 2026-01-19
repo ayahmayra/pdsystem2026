@@ -42,7 +42,7 @@
     /* === TABEL PERHITUNGAN SPPD RAMPUNG === */
     table{width:100%;border-collapse:collapse}
     .table{margin-top:8px}
-    .table th,.table td{padding:4px;font-size:9pt;vertical-align:top;border-left:1px solid #000;border-right:1px solid #000}
+    .table th,.table td{padding:2px 4px;font-size:9pt;vertical-align:top;border-left:1px solid #000;border-right:1px solid #000;line-height:1.2}
     .table th{text-align:center;font-weight:bold;border-top:1px solid #000;border-bottom:1px solid #000}
     .table .category-row td{border-top:1px solid #000}
     .table .total-row td{border-top:2px solid #000;border-bottom:1px solid #000}
@@ -495,7 +495,7 @@
         <div >Pejabat Pelaksana Teknis Kegiatan</div>
         <div class="sign-place"></div>
         @php($pptk = $receipt->sppd->getPptkSnapshotFromSubKegiatan())
-        <div class="name">{{ ($pptk['name'] ?? null) ?: '-' }}</div>
+        <div class="" style="font-weight: bold;">{{ ($pptk['name'] ?? null) ?: '-' }}</div>
         <div class="">NIP. {{ ($pptk['nip'] ?? null) ?: '-' }}</div>
       </td>
       
@@ -505,7 +505,7 @@
         <div>Dihitung Oleh :</div>
         <div class=>{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
         <div class="sign-place"></div>
-        <div class="name" font-size="12px">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? '-' }}</div>
+        <div class="" style="font-weight: bold;">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? '-' }}</div>
         <div class="">NIP. {{ $receipt->getTreasurerUserSnapshot()['nip'] ?? '-' }}</div>
       </td>
     </tr>

@@ -832,93 +832,91 @@
                                             @if(count($lodgingLines) > 0)
                                                 <div class="space-y-3">
                                                     @foreach($lodgingLines as $index => $line)
-                                                    <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 p-3">
-                                                        <div class="grid grid-cols-12 gap-3 items-end">
-                                                            <div>
+                                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 p-4 hover:shadow-sm transition-shadow duration-200">
+                                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                                                            <!-- Kota Tujuan -->
+                                                            <div class="lg:col-span-2">
                                                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Kota Tujuan</label>
-                                                                <select wire:model.live="lodgingLines.{{ $index }}.destination_city_id" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                                <select wire:model.live="lodgingLines.{{ $index }}.destination_city_id" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                                     <option value="">Tujuan Utama</option>
                                                                     @foreach($availableCities as $city)
                                                                         <option value="{{ $city->id }}">{{ $city->name }}, {{ $city->province->name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
-                                                            <div>
+                                                            
+                                                            <!-- Jumlah Malam -->
+                                                            <div class="lg:col-span-1">
                                                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah Malam</label>
-                                                                <input type="number" wire:model="lodgingLines.{{ $index }}.qty" min="0" step="0.5" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                                <input type="number" wire:model="lodgingLines.{{ $index }}.qty" min="0" step="0.5" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                             </div>
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Keterangan Tambahan</label>
-                                                                <input type="text" wire:model="lodgingLines.{{ $index }}.desc" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Hotel Bintang 4">
+                                                            
+                                                            <!-- Keterangan Tambahan -->
+                                                            <div class="lg:col-span-2">
+                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Keterangan</label>
+                                                                <input type="text" wire:model="lodgingLines.{{ $index }}.desc" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Hotel Bintang 4">
                                                             </div>
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                            
+                                                            <!-- Tidak Menginap Checkbox -->
+                                                            <div class="lg:col-span-2">
+                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Opsi</label>
+                                                                <div class="flex items-center h-10 px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-800">
                                                                     <input type="checkbox" wire:model.live="lodgingLines.{{ $index }}.no_lodging" class="mr-2">
-                                                                    Tidak Menginap
-                                                                </label>
-                                                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                                    (30% dari tarif penginapan)
+                                                                    <span class="text-xs">Tidak Menginap (30%)</span>
                                                                 </div>
                                                             </div>
-                                                            <div>
+                                                            
+                                                            <!-- Tarif per Malam -->
+                                                            <div class="lg:col-span-2">
                                                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                    Tarif per Malam
+                                                                    Tarif /malam
                                                                     @if($line['has_reference'])
-                                                                        <span class="text-green-600 dark:text-green-400">✓ Referensi</span>
+                                                                        <span class="text-green-600 dark:text-green-400 text-xs">✓</span>
                                                                     @endif
                                                                     @if($line['is_overridden'])
-                                                                        <span class="text-blue-600 dark:text-blue-400">✏️ Manual</span>
+                                                                        <span class="text-blue-600 dark:text-blue-400 text-xs">✏️</span>
                                                                     @endif
                                                                 </label>
                                                                 <input type="number" 
                                                                     wire:model.live="lodgingLines.{{ $index }}.unit_amount" 
                                                                     min="0" 
-                                                                    class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ $line['has_reference'] ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600' : ($line['is_overridden'] ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') }}"
+                                                                    class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ $line['has_reference'] ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600' : ($line['is_overridden'] ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : '') }}"
                                                                     {{ $line['has_reference'] ? 'readonly' : '' }}
-                                                                    placeholder="{{ $line['has_reference'] ? 'Otomatis terisi' : 'Masukkan tarif per malam' }}">
+                                                                    placeholder="{{ $line['has_reference'] ? 'Auto' : 'Input tarif' }}">
                                                                 
-                                                                <!-- Rate Info Display -->
+                                                                <!-- Rate Info - Compact -->
                                                                 @if($line['rate_info'])
                                                                 <div class="mt-1 text-xs {{ $line['has_reference'] ? 'text-green-600 dark:text-green-400' : ($line['is_overridden'] ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400') }}">
-                                                                    @if($line['has_reference'])
-                                                                        ✓ {{ $line['rate_info'] }}
-                                                                    @elseif($line['is_overridden'])
-                                                                        ✏️ {{ $line['rate_info'] }}
-                                                                    @else
-                                                                        {{ $line['rate_info'] }}
-                                                                    @endif
+                                                                    {{ $line['has_reference'] ? '✓ ' : ($line['is_overridden'] ? '✏️ ' : '') }}{{ Str::limit($line['rate_info'], 25) }}
                                                                 </div>
                                                                 @endif
                                                                 
-                                                                <!-- Warning for manual values exceeding reference -->
+                                                                <!-- Warning Compact -->
                                                                 @if($line['exceeds_reference'])
-                                                                <div class="mt-1 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-xs">
-                                                                    <div class="text-red-700 dark:text-red-300 font-medium">
-                                                                        ⚠️ Nilai melebihi tarif referensi!
-                                                                    </div>
-                                                                    <div class="text-red-600 dark:text-red-400 mt-1">
-                                                                        <span class="block">• Tarif referensi: Rp {{ number_format($line['original_reference_rate'], 0, ',', '.') }}</span>
-                                                                        <span class="block">• Nilai manual: Rp {{ number_format($line['unit_amount'], 0, ',', '.') }}</span>
-                                                                        <span class="block">• Kelebihan: Rp {{ number_format($line['excess_amount'], 0, ',', '.') }} ({{ $line['excess_percentage'] }}%)</span>
-                                                                    </div>
+                                                                <div class="mt-1 px-2 py-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-xs text-red-700 dark:text-red-300">
+                                                                    ⚠️ +{{ $line['excess_percentage'] }}%
                                                                 </div>
                                                                 @endif
                                                             </div>
-                                                            <div>
+                                                            
+                                                            <!-- Total -->
+                                                            <div class="lg:col-span-2">
                                                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Total</label>
-                                                                <div class="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-600 rounded font-mono">
+                                                                <div class="h-10 px-2 py-1 text-sm bg-gray-100 dark:bg-gray-600 rounded font-mono flex items-center font-semibold">
                                                                     Rp {{ number_format((float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0), 0, ',', '.') }}
                                                                 </div>
                                                             </div>
-                                                            <div class="flex items-end space-x-2">
+                                                            
+                                                            <!-- Actions -->
+                                                            <div class="lg:col-span-1 flex items-center lg:items-end lg:justify-end space-x-2 h-10">
                                                                 @if($line['has_reference'])
                                                                     <button type="button" 
                                                                         wire:click="overrideLodgingRate({{ $index }})" 
-                                                                        class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-xs">
-                                                                        Edit Manual
+                                                                        class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-xs font-medium">
+                                                                        Edit
                                                                     </button>
                                                                 @endif
-                                                                <button type="button" wire:click="removeLodgingLine({{ $index }})" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm">
+                                                                <button type="button" wire:click="removeLodgingLine({{ $index }})" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-xs font-medium">
                                                                     Hapus
                                                                 </button>
                                                             </div>

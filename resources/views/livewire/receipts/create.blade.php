@@ -772,18 +772,18 @@
                                                                     Rp {{ number_format((float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0), 0, ',', '.') }}
                                                                 </div>
                                                             </div>
-                                                                                                                    <div class="col-span-2 flex items-center space-x-2 h-10">
-                                                            @if($line['has_reference'])
-                                                                <button type="button" 
-                                                                    wire:click="overrideTransportRate({{ $index }})" 
-                                                                    class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-xs">
-                                                                    Edit Manual
+                                                            <div class="col-span-2 flex items-center justify-end space-x-2 h-10">
+                                                                @if(isset($line['has_reference']) && $line['has_reference'] && !isset($line['is_overridden']))
+                                                                    <button type="button" 
+                                                                        wire:click="overrideTransportRate({{ $index }})" 
+                                                                        class="px-3 py-1 text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 border border-blue-300 hover:border-blue-500 rounded transition-colors">
+                                                                        Edit Manual
+                                                                    </button>
+                                                                @endif
+                                                                <button type="button" wire:click="removeTransportLine({{ $index }})" class="px-3 py-1 text-xs font-medium text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 border border-red-300 hover:border-red-500 rounded transition-colors">
+                                                                    Hapus
                                                                 </button>
-                                                            @endif
-                                                            <button type="button" wire:click="removeTransportLine({{ $index }})" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm">
-                                                                Hapus
-                                                            </button>
-                                                        </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     @endforeach

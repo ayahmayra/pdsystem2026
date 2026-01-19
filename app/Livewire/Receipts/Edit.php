@@ -760,12 +760,16 @@ class Edit extends Component
     }
 
 
-    public function updatedTransportLines()
+    public function updatedTransportLines($value, $key)
     {
-        // Check if any transport component has changed and auto-fill rates
-        foreach ($this->transportLines as $index => $line) {
-            if (isset($line['component']) && !empty($line['component'])) {
-                $this->autoFillTransportRate($index, $line['component']);
+        // Only auto-fill if the component field specifically changed
+        // This prevents resetting values when adding new lines or changing other fields
+        if (str_contains($key, '.component')) {
+            $index = explode('.', $key)[0];
+            $component = $this->transportLines[$index]['component'] ?? null;
+            
+            if ($component) {
+                $this->autoFillTransportRate($index, $component);
             }
         }
         

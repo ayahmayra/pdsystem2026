@@ -477,12 +477,16 @@ class Create extends Component
     }
 
 
-    public function updatedTransportLines()
+    public function updatedTransportLines($value, $key)
     {
-        // Check if any transport component has changed and auto-fill rates
-        foreach ($this->transportLines as $index => $line) {
-            if (isset($line['component']) && !empty($line['component'])) {
-                $this->autoFillTransportRate($index, $line['component']);
+        // Only auto-fill if the component field specifically changed
+        // This prevents resetting values when adding new lines or changing other fields
+        if (str_contains($key, '.component')) {
+            $index = explode('.', $key)[0];
+            $component = $this->transportLines[$index]['component'] ?? null;
+            
+            if ($component) {
+                $this->autoFillTransportRate($index, $component);
             }
         }
         
@@ -597,22 +601,29 @@ class Create extends Component
 
         // Update the transport line with auto-filled data
         if (isset($this->transportLines[$index])) {
-            // Jangan override nilai manual yang sudah ada
-            if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
-                $this->transportLines[$index]['unit_amount'] = $unitAmount ?? 0;
-            }
-            
+            // Update rate info (always)
             $this->transportLines[$index]['rate_info'] = $rateInfo;
-            // Jangan ubah has_reference jika sudah di-override
-            if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
-                $this->transportLines[$index]['has_reference'] = $hasReference;
-            }
+            $this->transportLines[$index]['has_reference'] = $hasReference;
             $this->transportLines[$index]['original_reference_rate'] = $unitAmount ?? 0;
             
-            // Jika ini auto-fill baru, reset status override
-            if (!$this->transportLines[$index]['is_overridden']) {
+            // Only set unit_amount if there's a reference rate (has auto-fill value)
+            // For manual items (CUSTOM, TAXI, etc), don't override user's input
+            if ($hasReference && $unitAmount !== null) {
+                // Only update if not manually overridden
+                if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
+                    $this->transportLines[$index]['unit_amount'] = $unitAmount;
+                }
+            } else {
+                // For manual items, preserve existing value or set to 0 if new
+                if (!isset($this->transportLines[$index]['unit_amount']) || $this->transportLines[$index]['unit_amount'] === null) {
+                    $this->transportLines[$index]['unit_amount'] = 0;
+                }
+                // If already has value, don't touch it (preserve user input)
+            }
+            
+            // Reset override status for items with reference
+            if ($hasReference) {
                 $this->transportLines[$index]['is_overridden'] = false;
-                // Untuk transport, selalu set exceeds_reference = false karena tidak ada batasan
                 $this->transportLines[$index]['exceeds_reference'] = false;
                 $this->transportLines[$index]['excess_amount'] = 0;
                 $this->transportLines[$index]['excess_percentage'] = 0;

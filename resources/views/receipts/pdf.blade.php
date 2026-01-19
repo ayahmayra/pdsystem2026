@@ -41,9 +41,11 @@
     .right-table .amount-cell{text-align:left !important;padding-left:0 !important;width:auto !important}
     /* === TABEL PERHITUNGAN SPPD RAMPUNG === */
     table{width:100%;border-collapse:collapse}
-    .table{margin-top:8px}
-    .table th,.table td{border:1px solid #000;padding:4px;font-size:9pt;vertical-align:top}
-    .table th{text-align:center;font-weight:bold}
+    .table{margin-top:8px;border:1px solid #000}
+    .table th,.table td{padding:4px;font-size:9pt;vertical-align:top;border:none}
+    .table th{text-align:center;font-weight:bold;border-bottom:1px solid #000}
+    .table .category-row td{border-top:1px solid #000}
+    .table .total-row td{border-top:2px solid #000}
     /* === TANDA TANGAN BAWAH === */
     .signatures{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
     .sign-box{text-align:center}
@@ -209,7 +211,7 @@
       <!-- Kiri: A, B, C saja -->
       <td>
         <!-- A -->
-        <div class="block" style="font-size: 12pt;">
+        <div class="block" style="font-size: 11pt;">
           <div class="row">
             <div class="col-label">A.</div>
             <div class="col-content">
@@ -235,7 +237,7 @@
         <div class="divider"></div>
 
         <!-- B -->
-        <div class="block" style="font-size: 12pt;">
+        <div class="block" style="font-size: 11pt;">
           <div class="row">
             <div class="col-label">B.</div>
             <div class="col-content">
@@ -258,7 +260,7 @@
         <div class="divider"></div>
 
         <!-- C -->
-        <div class="block" style="font-size: 12pt;">
+        <div class="block" style="font-size: 11pt;">
           <div class="row">
             <div class="col-label">C.</div>
             <div class="col-content">
@@ -277,7 +279,7 @@
       </td>
 
       <!-- Kanan: SUDAH TERIMA DARI, UANG SEBESAR, Y A I T U, Tanggal/Nomor, "Yang Terima" -->
-      <td style="font-size: 12pt;">
+      <td style="font-size: 11pt;">
         <!-- SUDAH TERIMA DARI -->
         <table class="right-table">
           <tr>
@@ -379,7 +381,7 @@
         @endphp
 
         <!-- Header Kategori -->
-        <tr>
+        <tr class="category-row">
           <td class="text-center">{{ $index + 1 }}.</td>
           <td>{{ $categoryNames[$category] ?? ucfirst($category) }}</td>
           <td class="text-right"></td>
@@ -475,7 +477,7 @@
         @endif
       @endforeach
 
-      <tr>
+      <tr class="total-row">
         <td class="text-center" colspan="2" style="font-weight:bold;">JUMLAH</td>
         <td class="text-right">-</td>
         <td class="text-right" style="font-weight:bold;">{{ money_id($receipt->total_amount) }}</td>

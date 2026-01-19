@@ -25,6 +25,14 @@ class Spt extends Model
         'signed_by_user_position_echelon_id_snapshot',
     ];
 
+    protected $casts = [
+        'number_is_manual' => 'boolean',
+        'hide_header' => 'boolean',
+        'spt_date' => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
+
     public function notaDinas() { return $this->belongsTo(NotaDinas::class); }
     public function signedByUser() { return $this->belongsTo(User::class, 'signed_by_user_id'); }
     public function originPlace() { return $this->belongsTo(OrgPlace::class, 'origin_place_id'); }

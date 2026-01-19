@@ -344,7 +344,7 @@
         <div class="sign-place"></div>
         <br>
         <div class="text-center" style="text-decoration: underline; font-weight: bold;">{{ $receipt->payeeUser->fullNameWithTitles() ?? '-' }}</div>
-        <div class="text-center">NIP. {{ $receipt->payeeUser->nip ?? '-' }}</div>
+        <div class="text-center"> {{ $receipt->payeeUser?->getNipLabel() }}. {{ $receipt->payeeUser->nip ?? '-' }}</div>
       </td>
     </tr>
   </table>

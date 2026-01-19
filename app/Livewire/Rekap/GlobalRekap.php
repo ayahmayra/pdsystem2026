@@ -309,7 +309,7 @@ class GlobalRekap extends Component
                                 ($receipt->payeeUser->gelar_depan ? $receipt->payeeUser->gelar_depan . ' ' : '') .
                                 $receipt->payeeUser->name .
                                 ($receipt->payeeUser->gelar_belakang ? ', ' . $receipt->payeeUser->gelar_belakang : '') : null,
-                            'participant_nip' => $receipt->payeeUser ? $receipt->payeeUser->nip : null,
+                            'participant_nip' => $receipt->payeeUser ? ($receipt->payeeUser->getNipLabel() . ' ' . $receipt->payeeUser->nip) : null,
                             'participant_rank' => $receipt->payeeUser && $receipt->payeeUser->rank ? 
                                 $receipt->payeeUser->rank->fullName() : null,
                             // Only first item from each category

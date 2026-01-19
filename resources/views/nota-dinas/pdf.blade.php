@@ -35,8 +35,8 @@
         .participants-table th, .participants-table td { border: 1px solid black; padding: 2pt; vertical-align: top; }
         .participants-table th { background-color: #f3f4f6; font-weight: 600; text-align: center; }
         .participants-table .no { width: 15pt; text-align: center; }
-        .participants-table td:nth-child(2) { width: 30%; }
-        .participants-table td:nth-child(3) { width: 50%; }
+        .participants-table td:nth-child(2) { width: 40%; }
+        .participants-table td:nth-child(3) { width: 40%; }
         .participants-table td:nth-child(4) { width: 15%; }
         .closing { margin: 4mm 0; text-align: justify; }
         .signature { margin-top: 8mm; page-break-inside: avoid; text-align: right; }
@@ -223,7 +223,7 @@
                 @forelse($ordered as $i => $p)
                     <tr>
                         <td class="no">{{ $i+1 }}</td>
-                        <td>
+                        <td style="min-width: 220px; max-width: 380px; word-break: break-word;">
                             {{ $p->user_name_snapshot ?: $p->user->name ?? '-' }}<br>
                             @if($p->user_rank_name_snapshot ?: $p->user->rank?->name)
                                 {{ $p->user_rank_name_snapshot ?: $p->user->rank?->name }}@if($p->user_rank_code_snapshot ?: $p->user->rank?->code) ({{ $p->user_rank_code_snapshot ?: $p->user->rank?->code }})@endif
@@ -232,7 +232,7 @@
                             @if($p->user_nip_snapshot ?: $p->user->nip ?? null)
                             {{-- nip pegawai --}}
                                 {{ $p->user?->getNipLabel() }}. {{ $p->user_nip_snapshot ?: $p->user->nip }}
-                                @else
+                            @else
                                 <br>
                             @endif
                         </td>

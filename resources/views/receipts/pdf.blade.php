@@ -357,11 +357,10 @@
           'transport' => 'Transportasi',
           'lodging' => 'Penginapan',
           'per_diem' => 'Uang Harian',
-          'representation' => 'Representatif',
-          'other' => 'Biaya Lainnya'
+          'representation' => 'Representatif'
         ];
         
-        $allCategories = ['transport', 'lodging', 'per_diem', 'representation', 'other'];
+        $allCategories = ['transport', 'lodging', 'per_diem', 'representation'];
         $existingCategories = $lines->pluck('category')->unique()->toArray();
       @endphp
 
@@ -444,9 +443,8 @@
                 @case('REPRESENTASI')
                   Biaya representatif ({{ number_format($line->qty, 0, ',', '.') }} x {{ money_id($line->unit_amount) }})
                   @break
-                @case('LAINNYA')
-                  {{ $line->remark ?: 'Biaya tambahan' }} ({{ number_format($line->qty, 0, ',', '.') }} x {{ money_id($line->unit_amount) }})
-                  {{-- {{ $line->desc ? ' - ' . $line->desc : '' }} --}}
+                @case('CUSTOM')
+                  {{ $line->remark ?: 'Item Custom' }} ({{ number_format($line->qty, 0, ',', '.') }} x {{ money_id($line->unit_amount) }})
                   @break
                 @default
                   {{ ucfirst(str_replace('_', ' ', $line->component)) }} ({{ number_format($line->qty, 0, ',', '.') }} x {{ money_id($line->unit_amount) }})

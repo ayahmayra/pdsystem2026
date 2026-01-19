@@ -46,7 +46,6 @@ class Edit extends Component
     public $transportLines = [];
     public $lodgingLines = [];
     public $representationLines = [];
-    public $otherLines = [];
     public $totalAmount = 0;
 
     // Transport rate tracking properties
@@ -257,16 +256,8 @@ class Edit extends Component
                     'excess_amount' => $isOverridden && $line->unit_amount > $referenceRate ? $line->unit_amount - $referenceRate : 0,
                     'excess_percentage' => $isOverridden && $referenceRate > 0 ? (($line->unit_amount - $referenceRate) / $referenceRate) * 100 : 0,
                 ];
-            } elseif ($line->component === 'LAINNYA') {
-                $this->otherLines[] = [
-                    'category' => 'other',
-                    'remark' => $line->remark,
-                    'desc' => $line->desc ?? '',
-                    'qty' => $line->qty,
-                    'unit_amount' => $line->unit_amount,
-                    'no_lodging' => $line->no_lodging ?? false,
-                ];
             }
+            // LAINNYA component removed - migrate old data to CUSTOM transport if needed
         }
         
         $this->calculateTotal();
@@ -398,6 +389,7 @@ class Edit extends Component
     {
         $this->transportLines[] = [
             'component' => '',
+            'custom_name' => '', // For CUSTOM transport type
             'category' => 'transport',
             'qty' => 1,
             'unit_amount' => 0,
@@ -451,6 +443,7 @@ class Edit extends Component
 
         $unitAmount = null;
         $rateInfo = '';
+        $hasReference = false;
 
         switch ($component) {
             case 'AIRFARE':
@@ -459,6 +452,7 @@ class Edit extends Component
                     $destinationCity->id
                 ) : null;
                 $rateInfo = $defaultOriginCity ? "Tiket Pesawat: {$defaultOriginCity->name} → {$destinationCity->name}" : '';
+                $hasReference = $unitAmount !== null && $unitAmount > 0;
                 break;
 
             case 'INTRA_PROV':
@@ -467,6 +461,7 @@ class Edit extends Component
                     $destinationCity->id
                 ) : null;
                 $rateInfo = $originPlace ? "Transport Dalam Provinsi: {$originPlace->name} → {$destinationCity->name}" : '';
+                $hasReference = $unitAmount !== null && $unitAmount > 0;
                 break;
 
             case 'INTRA_DISTRICT':
@@ -475,45 +470,57 @@ class Edit extends Component
                     $destinationCity->district_id
                 ) : null;
                 $rateInfo = $originPlace && $destinationCity->district_id ? "Transport Dalam Kabupaten: {$originPlace->name} → {$destinationCity->district_id}" : '';
+                $hasReference = $unitAmount !== null && $unitAmount > 0;
                 break;
 
             case 'OFFICIAL_VEHICLE':
-                $unitAmount = 0;
+                $unitAmount = null;
                 $rateInfo = "Kendaraan Dinas - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'TAXI':
-                $unitAmount = 0;
+                $unitAmount = null;
                 $rateInfo = "Taxi - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'RORO':
-                $unitAmount = 0;
+                $unitAmount = null;
                 $rateInfo = "Kapal RORO - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'TOLL':
-                $unitAmount = 0;
+                $unitAmount = null;
                 $rateInfo = "Tol - Input manual sesuai ketentuan";
+                $hasReference = false;
                 break;
 
             case 'PARKIR_INAP':
-                $unitAmount = 0;
+                $unitAmount = null;
                 $rateInfo = "Parkir & Penginapan - Input manual sesuai ketentuan";
+                $hasReference = false;
+                break;
+                
+            case 'CUSTOM':
+                $unitAmount = null;
+                $rateInfo = "Item Custom - Input manual nama dan nilai";
+                $hasReference = false;
                 break;
         }
 
         // Update the transport line with auto-filled data
         if (isset($this->transportLines[$index])) {
             // Jangan override nilai manual yang sudah ada
-            if (!$this->transportLines[$index]['is_overridden']) {
+            if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
                 $this->transportLines[$index]['unit_amount'] = $unitAmount ?? 0;
             }
             
             $this->transportLines[$index]['rate_info'] = $rateInfo;
             // Jangan ubah has_reference jika sudah di-override
-            if (!$this->transportLines[$index]['is_overridden']) {
-                $this->transportLines[$index]['has_reference'] = $unitAmount !== null;
+            if (!isset($this->transportLines[$index]['is_overridden']) || !$this->transportLines[$index]['is_overridden']) {
+                $this->transportLines[$index]['has_reference'] = $hasReference;
             }
             $this->transportLines[$index]['original_reference_rate'] = $unitAmount ?? 0;
             
@@ -710,23 +717,6 @@ class Edit extends Component
         $this->calculateTotal();
     }
 
-    public function addOtherLine()
-    {
-        $this->otherLines[] = [
-            'category' => 'other',
-            'remark' => '',
-            'qty' => 1,
-            'unit_amount' => 0,
-            'no_lodging' => false,
-        ];
-    }
-
-    public function removeOtherLine($index)
-    {
-        unset($this->otherLines[$index]);
-        $this->otherLines = array_values($this->otherLines);
-        $this->calculateTotal();
-    }
 
     public function updatedTravelGradeId($value)
     {
@@ -763,11 +753,6 @@ class Edit extends Component
 
         // Hitung total representatif
         foreach ($this->representationLines as $line) {
-            $total += (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0);
-        }
-
-        // Hitung total biaya lainnya
-        foreach ($this->otherLines as $line) {
             $total += (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0);
         }
 
@@ -1259,6 +1244,11 @@ class Edit extends Component
         // Create transport lines
         foreach ($this->transportLines as $line) {
             if (($line['qty'] ?? 0) > 0 && ($line['unit_amount'] ?? 0) > 0 && !empty($line['component'])) {
+                // For CUSTOM type, use custom_name as remark
+                $remark = ($line['component'] === 'CUSTOM' && !empty($line['custom_name'])) 
+                    ? $line['custom_name'] 
+                    : '';
+                
                 \App\Models\ReceiptLine::create([
                     'receipt_id' => $receipt->id,
                     'component' => $line['component'],
@@ -1267,6 +1257,7 @@ class Edit extends Component
                     'unit' => $this->getUnitForComponent($line['component']),
                     'unit_amount' => $line['unit_amount'],
                     'desc' => $line['desc'] ?? '',
+                    'remark' => $remark,
                     'line_total' => (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0),
                 ]);
             }
@@ -1307,22 +1298,7 @@ class Edit extends Component
         }
 
         // Create other lines
-        foreach ($this->otherLines as $line) {
-            if (($line['qty'] ?? 0) > 0 && ($line['unit_amount'] ?? 0) > 0 && !empty($line['remark'])) {
-                \App\Models\ReceiptLine::create([
-                    'receipt_id' => $receipt->id,
-                    'component' => 'LAINNYA',
-                    'category' => $line['category'] ?? 'other',
-                    'qty' => $line['qty'],
-                    'unit' => 'Unit',
-                    'unit_amount' => $line['unit_amount'],
-                    'no_lodging' => $line['no_lodging'] ?? false,
-                    'desc' => $line['desc'] ?? '',
-                    'line_total' => (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0),
-                    'remark' => $line['remark'],
-                ]);
-            }
-        }
+        // Other lines removed - all items now handled through transport custom option
     }
 
     private function getUnitForComponent($component)
@@ -1336,6 +1312,7 @@ class Edit extends Component
             'RORO' => 'Tiket',
             'TOLL' => 'Trip',
             'PARKIR_INAP' => 'Unit',
+            'CUSTOM' => 'Unit',
         ];
 
         return $units[$component] ?? 'Unit';

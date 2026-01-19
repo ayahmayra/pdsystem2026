@@ -712,6 +712,7 @@
                                                                     <option value="RORO">Kapal RORO</option>
                                                                     <option value="TOLL">Tol</option>
                                                                     <option value="PARKIR_INAP">Parkir & Penginapan</option>
+                                                                    <option value="CUSTOM">Item Custom</option>
                                                                 </select>
                                                                 
                                                                 <!-- Rate Info Display -->
@@ -727,7 +728,16 @@
                                                                 </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="col-span-3">
+                                                            
+                                                            <!-- Custom Name Field (only show if CUSTOM selected) -->
+                                                            @if(($line['component'] ?? '') === 'CUSTOM')
+                                                            <div class="col-span-2">
+                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Item Custom <span class="text-red-500">*</span></label>
+                                                                <input type="text" wire:model="transportLines.{{ $index }}.custom_name" class="w-full h-10 px-2 py-1 text-sm border border-orange-300 dark:border-orange-600 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 dark:bg-gray-700 dark:text-white bg-orange-50 dark:bg-orange-900/20" placeholder="Contoh: Rapid Test, Sewa Alat">
+                                                            </div>
+                                                            @endif
+                                                            
+                                                            <div class="col-span-{{ ($line['component'] ?? '') === 'CUSTOM' ? '2' : '3' }}">
                                                                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Keterangan Tambahan</label>
                                                                 <input type="text" wire:model="transportLines.{{ $index }}.desc" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Garuda Indonesia">
                                                             </div>
@@ -1068,75 +1078,6 @@
                                             @endif
                                         </div>
 
-                                        <!-- 5. Biaya Lainnya -->
-                                        <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-indigo-500 dark:border-indigo-400 shadow-sm hover:shadow-md transition-shadow duration-200">
-                                            <div class="flex items-center justify-between mb-4">
-                                                <div class="flex items-center">
-                                                    <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mr-3">
-                                                        <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                        </svg>
-                                                    </div>
-                                                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white">5. Biaya Lainnya</h4>
-                                                </div>
-                                                <button type="button" wire:click="addOtherLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
-                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                                    </svg>
-                                                    Tambah Item
-                                                </button>
-                                            </div>
-                                            
-                                            @if(count($otherLines) > 0)
-                                                <div class="space-y-3">
-                                                    @foreach($otherLines as $index => $line)
-                                                    <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 p-3">
-                                                        <div class="grid grid-cols-12 gap-3 items-end">
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Keterangan</label>
-                                                                <input type="text" wire:model="otherLines.{{ $index }}.remark" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Rapid Test">
-                                                            </div>
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Keterangan Tambahan</label>
-                                                                <input type="text" wire:model="otherLines.{{ $index }}.desc" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Hotel Bintang 4">
-                                                            </div>
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah</label>
-                                                                <input type="number" wire:model="otherLines.{{ $index }}.qty" min="0" step="0.5" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                                            </div>
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Harga Satuan</label>
-                                                                <input type="number" wire:model="otherLines.{{ $index }}.unit_amount" min="0" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                                            </div>
-                                                            <div>
-                                                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Total</label>
-                                                                <div class="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-600 rounded font-mono">
-                                                                    Rp {{ number_format((float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0), 0, ',', '.') }}
-                                                                </div>
-                                                            </div>
-                                                            <div class="flex items-end">
-                                                                <button type="button" wire:click="removeOtherLine({{ $index }})" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm">
-                                                                    Hapus
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @endforeach
-                                                </div>
-                                            @else
-                                                <div class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
-                                                    Belum ada biaya lainnya yang ditambahkan
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <!-- Total Keseluruhan -->
-                                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                                            <h4 class="font-medium text-gray-900 dark:text-white mb-3">Total Keseluruhan</h4>
-                                            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                                Rp {{ number_format($totalAmount, 0, ',', '.') }}
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 @endif

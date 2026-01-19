@@ -57,7 +57,6 @@ class Create extends Component
     public $transportLines = [];
     public $lodgingLines = [];
     public $representationLines = [];
-    public $otherLines = [];
     public $totalAmount = 0;
 
     // Computed properties for reference rates
@@ -361,6 +360,7 @@ class Create extends Component
     {
         $this->transportLines[] = [
             'component' => '',
+            'custom_name' => '', // For CUSTOM transport type
             'category' => 'transport', // Set default category for transport lines
             'desc' => '',
             'qty' => 1,
@@ -448,23 +448,6 @@ class Create extends Component
         $this->calculateTotal();
     }
 
-    public function addOtherLine()
-    {
-        $this->otherLines[] = [
-            'category' => 'other', // Set default category for other lines
-            'remark' => '',
-            'desc' => '',
-            'qty' => 1,
-            'unit_amount' => 0,
-        ];
-    }
-
-    public function removeOtherLine($index)
-    {
-        unset($this->otherLines[$index]);
-        $this->otherLines = array_values($this->otherLines);
-        $this->calculateTotal();
-    }
 
     public function calculateTotal()
     {
@@ -487,11 +470,6 @@ class Create extends Component
 
         // Hitung total representatif
         foreach ($this->representationLines as $line) {
-            $total += (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0);
-        }
-
-        // Hitung total biaya lainnya
-        foreach ($this->otherLines as $line) {
             $total += (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0);
         }
 
@@ -606,6 +584,13 @@ class Create extends Component
                 // Parkir & penginapan - input manual
                 $unitAmount = null; // User input manual, jangan set default
                 $rateInfo = "Parkir & Penginapan - Input manual sesuai ketentuan";
+                $hasReference = false;
+                break;
+                
+            case 'CUSTOM':
+                // Custom item - input manual (nama dan nilai)
+                $unitAmount = null; // User input manual
+                $rateInfo = "Item Custom - Input manual nama dan nilai";
                 $hasReference = false;
                 break;
         }
@@ -1320,6 +1305,11 @@ class Create extends Component
         // Create transport lines
         foreach ($this->transportLines as $line) {
             if (($line['qty'] ?? 0) > 0 && ($line['unit_amount'] ?? 0) > 0 && !empty($line['component'])) {
+                // For CUSTOM type, use custom_name as remark
+                $remark = ($line['component'] === 'CUSTOM' && !empty($line['custom_name'])) 
+                    ? $line['custom_name'] 
+                    : '';
+                
                 \App\Models\ReceiptLine::create([
                     'receipt_id' => $receipt->id,
                     'component' => $line['component'],
@@ -1328,6 +1318,7 @@ class Create extends Component
                     'unit' => $this->getUnitForComponent($line['component']),
                     'unit_amount' => $line['unit_amount'],
                     'desc' => $line['desc'] ?? '',
+                    'remark' => $remark,
                     'line_total' => (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0),
                 ]);
             }
@@ -1367,22 +1358,7 @@ class Create extends Component
             }
         }
 
-        // Create other lines
-        foreach ($this->otherLines as $line) {
-            if (($line['qty'] ?? 0) > 0 && ($line['unit_amount'] ?? 0) > 0 && !empty($line['remark'])) {
-                \App\Models\ReceiptLine::create([
-                    'receipt_id' => $receipt->id,
-                    'component' => 'LAINNYA',
-                    'category' => $line['category'] ?? 'other',
-                    'qty' => $line['qty'],
-                    'unit' => 'Unit',
-                    'unit_amount' => $line['unit_amount'],
-                    'desc' => $line['desc'] ?? '',
-                    'line_total' => (float)($line['qty'] ?? 0) * (float)($line['unit_amount'] ?? 0),
-                    'remark' => $line['remark'],
-                ]);
-            }
-        }
+        // Other lines removed - all items now handled through transport custom option
     }
 
     private function getUnitForComponent($component)
@@ -1396,6 +1372,7 @@ class Create extends Component
             'RORO' => 'Tiket',
             'TOLL' => 'Trip',
             'PARKIR_INAP' => 'Unit',
+            'CUSTOM' => 'Unit',
         ];
 
         return $units[$component] ?? 'Unit';

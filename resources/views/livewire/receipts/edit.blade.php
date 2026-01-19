@@ -605,7 +605,7 @@
                                                         </div>
                                                         <div class="col-span-1">
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah</label>
-                                                            <input type="number" wire:model="transportLines.{{ $index }}.qty" min="0" step="0.5" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                            <input type="number" wire:model="transportLines.{{ $index }}.qty" min="0" step="any" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                         </div>
                                                         <div class="col-span-2">
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -716,7 +716,7 @@
                                                         <!-- Jumlah Malam -->
                                                         <div class="lg:col-span-1">
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah Malam</label>
-                                                            <input type="number" wire:model="lodgingLines.{{ $index }}.qty" min="0" step="0.5" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                            <input type="number" wire:model="lodgingLines.{{ $index }}.qty" min="0" step="any" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                         </div>
                                                         
                                                         <!-- Keterangan Tambahan -->
@@ -849,7 +849,7 @@
                                                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah Hari</label>
-                                                            <input type="number" wire:model="perdiemLines.{{ $index }}.qty" min="0" step="0.5" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                            <input type="number" wire:model="perdiemLines.{{ $index }}.qty" min="0" step="any" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                         </div>
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tarif per Hari</label>
@@ -914,7 +914,7 @@
                                                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah</label>
-                                                            <input type="number" wire:model="representationLines.{{ $index }}.qty" min="0" step="0.5" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                            <input type="number" wire:model="representationLines.{{ $index }}.qty" min="0" step="any" class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                         </div>
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Harga Satuan</label>

@@ -230,7 +230,7 @@
                                 <br>
                             @endif
                             @if($p->user_nip_snapshot ?: $p->user->nip ?? null)
-                                NIP {{ $p->user_nip_snapshot ?: $p->user->nip }}
+                                {{ $p->user?->getNipLabel() }}. {{ $p->user_nip_snapshot ?: $p->user->nip }}
                                 @else
                                 <br>
                             @endif
@@ -300,7 +300,7 @@
                         @if($signerRankName){{ $signerRankName }}@if($signerRankCode) ({{ $signerRankCode }})@endif
 @else-@endif
                     </div>
-                    <div class="nip" style="max-width: 100%; word-wrap: break-word;">NIP. {{ $notaDinas->from_user_nip_snapshot ?: $notaDinas->fromUser?->nip ?? '-' }}</div>
+                    <div class="nip" style="max-width: 100%; word-wrap: break-word;">{{ $notaDinas->fromUser?->getNipLabel() }}. {{ $notaDinas->from_user_nip_snapshot ?: $notaDinas->fromUser?->nip ?? '-' }}</div>
                 </div>
             </div>
         </div>

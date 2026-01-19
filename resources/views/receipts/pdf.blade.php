@@ -209,15 +209,15 @@
       <!-- Kiri: A, B, C saja -->
       <td>
         <!-- A -->
-        <div class="block">
+        <div class="block" style="font-size: 12pt;">
           <div class="row">
             <div class="col-label">A.</div>
             <div class="col-content">
-              <div class="block-title">Pembayaran Tahun Dinas</div>
+              <div style="font-weight: bold; margin-bottom: 4px;">Pembayaran Tahun Dinas</div>
               <div>Tahun Anggaran {{ $tahun }}</div>
               <div class="mt-4"></div>
-              <div class="block-title">Kode Rekening</div>
-              <div style="font-size: 12px;">
+              <div style="font-weight: bold; margin-bottom: 4px;">Kode Rekening</div>
+              <div>
                 @if($receipt->sppd->subKeg)
                   {{ $receipt->sppd->subKeg->kode_subkeg }}
                 @endif
@@ -235,12 +235,12 @@
         <div class="divider"></div>
 
         <!-- B -->
-        <div class="block">
+        <div class="block" style="font-size: 12pt;">
           <div class="row">
             <div class="col-label">B.</div>
             <div class="col-content">
-              <div class="block-title">Setuju Dibayar</div>
-              <div class="name">{{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+              <div style="font-weight: bold; margin-bottom: 4px;">Setuju Dibayar</div>
+              <div>{{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
                 'pengguna_anggaran' => 'Pengguna Anggaran',
                 'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
                 default => 'Kuasa Pengguna Anggaran'
@@ -249,8 +249,8 @@
               <div class="mt-6"></div>
               <div class="mt-6"></div>
               <div class="mt-6"></div>
-              <div class="name">{{ $receipt->sppd->signedByUser->fullNameWithTitles() ?? '-' }}</div>
-              <div class="muted">NIP. {{ $receipt->sppd->signedByUser->nip ?? '-' }}</div>
+              <div style="text-decoration: underline; font-weight: bold;">{{ $receipt->sppd->signedByUser->fullNameWithTitles() ?? '-' }}</div>
+              <div>NIP. {{ $receipt->sppd->signedByUser->nip ?? '-' }}</div>
             </div>
           </div>
         </div>
@@ -258,36 +258,36 @@
         <div class="divider"></div>
 
         <!-- C -->
-        <div class="block">
+        <div class="block" style="font-size: 12pt;">
           <div class="row">
             <div class="col-label">C.</div>
             <div class="col-content">
-              <div class="block-title">Lunas Dibayar</div>
-              <div class="muted">PADA TGL.</div>
-              <div class="muted">{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
+              <div style="font-weight: bold; margin-bottom: 4px;">Lunas Dibayar</div>
+              <div>PADA TGL.</div>
+              <div>{{ $receipt->treasurer_title ?? 'Bendahara Pengeluaran Pembantu' }}</div>
               
               <div class="mt-6"></div>
               <div class="mt-6"></div>
               <div class="mt-6"></div>
-              <div class="name">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? ($receipt->treasurerUser?->fullNameWithTitles() ?? '-') }}</div>
-              <div class="muted">NIP. {{ $receipt->getTreasurerUserSnapshot()['nip'] ?? ($receipt->treasurerUser?->nip ?? '-') }}</div>
+              <div style="text-decoration: underline; font-weight: bold;">{{ $receipt->getTreasurerUserSnapshot()['name'] ?? ($receipt->treasurerUser?->fullNameWithTitles() ?? '-') }}</div>
+              <div>NIP. {{ $receipt->getTreasurerUserSnapshot()['nip'] ?? ($receipt->treasurerUser?->nip ?? '-') }}</div>
             </div>
           </div>
         </div>
       </td>
 
       <!-- Kanan: SUDAH TERIMA DARI, UANG SEBESAR, Y A I T U, Tanggal/Nomor, "Yang Terima" -->
-      <td>
+      <td style="font-size: 12pt;">
         <!-- SUDAH TERIMA DARI -->
         <table class="right-table">
           <tr>
             <td class="label-cell">Sudah Terima Dari</td>
        
-            <td><span style="font-size: 12pt; font-weight: normal;">: {{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
+            <td>: {{ match($receipt->sppd->signed_by_user_budget_role_snapshot ?? 'kuasa_pengguna_anggaran') {
                 'pengguna_anggaran' => 'Pengguna Anggaran',
                 'kuasa_pengguna_anggaran' => 'Kuasa Pengguna Anggaran',
                 default => 'Kuasa Pengguna Anggaran'
-            } }}</span></td>
+            } }}</td>
           </tr>
         </table>
 
@@ -336,8 +336,8 @@
         <!-- Yang terima -->
         <div class="text-center">Yang terima</div>
         <div class="sign-place"></div>
-        <div class="text-center name">{{ $receipt->payeeUser->fullNameWithTitles() ?? '-' }}</div>
-        <div class="text-center muted">NIP. {{ $receipt->payeeUser->nip ?? '-' }}</div>
+        <div class="text-center" style="text-decoration: underline; font-weight: bold;">{{ $receipt->payeeUser->fullNameWithTitles() ?? '-' }}</div>
+        <div class="text-center">NIP. {{ $receipt->payeeUser->nip ?? '-' }}</div>
       </td>
     </tr>
   </table>

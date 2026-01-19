@@ -284,17 +284,17 @@
                         <table style="width: 100%; border-collapse: collapse; border: none;">
                             <thead>
                                 <tr>
-                                    <th style="text-align: left; font-weight: normal; font-size: 9pt; border: none; width: 8%;"><strong>No.</strong></th>
-                                    <th style="text-align: left; font-weight: normal; font-size: 9pt; border: none; width: 45%;"><strong>Nama</strong></th>
-                                    <th style="text-align: left; font-weight: normal; font-size: 9pt; border: none; width: 47%;"><strong>Jabatan</strong></th>
+                                    <th style="text-align: left; font-weight: normal;  border: none; width: 8%;"><strong>No.</strong></th>
+                                    <th style="text-align: left; font-weight: normal;  border: none; width: 45%;"><strong>Nama</strong></th>
+                                    <th style="text-align: left; font-weight: normal;  border: none; width: 47%;"><strong>Jabatan</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($otherParticipants as $index => $participant)
                                     <tr>
-                                        <td style="text-align: left; font-size: 9pt; border: none;">{{ $index }}.</td>
-                                        <td style="text-align: left; font-size: 9pt; border: none;">{{ $participant['name'] ?? '-' }}</td>
-                                        <td style="text-align: left; font-size: 9pt; border: none;">{{ $participant['position_desc'] ?: ($participant['position_name'] ?? '-') }}</td>
+                                        <td style="text-align: left;  border: none;">{{ $index }}.</td>
+                                        <td style="text-align: left;  border: none;">{{ $participant['name'] ?? '-' }}</td>
+                                        <td style="text-align: left;  border: none;">{{ $participant['position_desc'] ?: ($participant['position_name'] ?? '-') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -585,57 +585,20 @@
                 </td>
                 <td style="border: 1px solid #000; vertical-align: top; padding: 4px; width: 50%;">
                     <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Berangkat dari</td>
-                            <td style="width: 8px; text-align: center; vertical-align: top; font-size: 10pt;">:</td>
-                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Ke</td>
-                            <td style="width: 8px; text-align: center; vertical-align: top; font-size: 10pt;">:</td>
-                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Pada tanggal</td>
-                            <td style="width: 8px; text-align: center; vertical-align: top; font-size: 10pt;">:</td>
-                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" style="height: 40px;"></td>
-                        </tr>
+                        <td>
+                            <div style="line-height: 1.3; text-align: justify; font-size: 9pt;">
+                                Telah diperiksa, dengan keterangan bahwa perjalanan tersebut di atas
+                                benar dilakukan atas perintah dan semata-mata untuk kepentingan jabatan
+                                dalam waktu yang sesingkat-singkatnya.
+                            </div>
+                            <div style="height: 0px;"></div>
+                        </td>
                     </table>
                 </td>
             </tr>
 
             <!-- ROW 6 -->
-            <tr >
-                <td style="border: 1px solid #000; vertical-align: top; padding: 4px; width: 50%;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="width: 25px; font-weight: bold; white-space: nowrap; vertical-align: top; font-size: 10pt;" rowspan="3">VI.</td>
-                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Tiba di</td>
-                            <td style="width: 8px; text-align: center; vertical-align: top; font-size: 10pt;">:</td>
-                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 150px; vertical-align: top; font-size: 10pt;">Pada tanggal</td>
-                            <td style="width: 8px; text-align: center; vertical-align: top; font-size: 10pt;">:</td>
-                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" style="height: 0px;"></td>
-                        </tr>
-                    </table>
-                </td>
-                <td style="border: 1px solid #000; vertical-align: top; padding: 4px; width: 50%;">
-                    <div style="line-height: 1.3; text-align: justify; font-size: 9pt;">
-                        Telah diperiksa, dengan keterangan bahwa perjalanan tersebut di atas
-                        benar dilakukan atas perintah dan semata-mata untuk kepentingan jabatan
-                        dalam waktu yang sesingkat‑singkatnya.
-                    </div>
-                    <div style="height: 0px;"></div>
-                </td>
-            </tr>
+            
             <tr>
                 <td style="border: 1px solid #000; vertical-align: top; padding: 4px; width: 50%;">
                     
@@ -697,7 +660,7 @@
                 <td colspan="2" style="border: 1px solid #000; vertical-align: top; padding: 4px;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <td style="width: 25px; font-weight: bold; white-space: nowrap; vertical-align: top; font-size: 10pt;">VII.</td>
+                            <td style="width: 25px; font-weight: bold; white-space: nowrap; vertical-align: top; font-size: 10pt;">VI.</td>
                             <td style="width: 150px; vertical-align: top; font-size: 10pt;">Catatan Lain-Lain</td>
                             <td style="word-break: break-word; vertical-align: top; font-size: 10pt;"></td>
                         </tr>
@@ -711,7 +674,7 @@
                 <td colspan="2" style="border: 1px solid #000; vertical-align: top; padding: 4px;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <td style="width: 25px; font-weight: bold; white-space: nowrap; vertical-align: top; font-size: 10pt;">VIII.</td>
+                            <td style="width: 25px; font-weight: bold; white-space: nowrap; vertical-align: top; font-size: 10pt;">VII.</td>
                             <td style="line-height: 1.3; text-align: justify; font-size: 9pt;">
                                 <strong>PERHATIAN</strong><br/>
                                 PPK yang menerbitkan SPD, pegawai yang melakukan perjalanan dinas, para pejabat

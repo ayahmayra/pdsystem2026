@@ -41,11 +41,11 @@
     .right-table .amount-cell{text-align:left !important;padding-left:0 !important;width:auto !important}
     /* === TABEL PERHITUNGAN SPPD RAMPUNG === */
     table{width:100%;border-collapse:collapse}
-    .table{margin-top:8px;border:1px solid #000}
-    .table th,.table td{padding:4px;font-size:9pt;vertical-align:top;border:none}
-    .table th{text-align:center;font-weight:bold;border-bottom:1px solid #000}
+    .table{margin-top:8px}
+    .table th,.table td{padding:4px;font-size:9pt;vertical-align:top;border-left:1px solid #000;border-right:1px solid #000}
+    .table th{text-align:center;font-weight:bold;border-top:1px solid #000;border-bottom:1px solid #000}
     .table .category-row td{border-top:1px solid #000}
-    .table .total-row td{border-top:2px solid #000}
+    .table .total-row td{border-top:2px solid #000;border-bottom:1px solid #000}
     /* === TANDA TANGAN BAWAH === */
     .signatures{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
     .sign-box{text-align:center}

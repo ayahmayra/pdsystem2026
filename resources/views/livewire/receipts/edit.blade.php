@@ -545,7 +545,16 @@
                                                             </div>
                                                             @endif
                                                         </div>
-                                                        <div class="col-span-3">
+                                                        
+                                                        <!-- Custom Name Field (only show if CUSTOM selected) -->
+                                                        @if(($line['component'] ?? '') === 'CUSTOM')
+                                                        <div class="col-span-2">
+                                                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Item Custom <span class="text-red-500">*</span></label>
+                                                            <input type="text" wire:model="transportLines.{{ $index }}.custom_name" class="w-full h-10 px-2 py-1 text-sm border border-orange-300 dark:border-orange-600 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 dark:bg-gray-700 dark:text-white bg-orange-50 dark:bg-orange-900/20" placeholder="Contoh: Rapid Test, Sewa Alat">
+                                                        </div>
+                                                        @endif
+                                                        
+                                                        <div class="col-span-{{ ($line['component'] ?? '') === 'CUSTOM' ? '2' : '3' }}">
                                                             <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Keterangan Tambahan</label>
                                                             <input type="text" wire:model="transportLines.{{ $index }}.desc" class="w-full h-10 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Contoh: Garuda Indonesia">
                                                         </div>

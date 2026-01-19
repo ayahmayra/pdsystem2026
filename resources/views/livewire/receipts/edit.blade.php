@@ -442,13 +442,23 @@
                                 </h3>
                                 
                                 <!-- Komponen Biaya -->
-                                <div class="space-y-4 ">
+                                <div class="space-y-6">
                                     <!-- 1. Biaya Transportasi -->
-                                    <div class="bg-red-100 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <h4 class="font-medium text-gray-900 dark:text-white">1. Biaya Transportasi</h4>
-                                            <button type="button" wire:click="addTransportLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                + Tambah
+                                    <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-red-500 dark:border-red-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                    <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                                    </svg>
+                                                </div>
+                                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">1. Biaya Transportasi</h4>
+                                            </div>
+                                            <button type="button" wire:click="addTransportLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                </svg>
+                                                Tambah Item
                                             </button>
                                         </div>
                                         
@@ -623,11 +633,21 @@
                                     </div>
 
                                     <!-- 2. Biaya Penginapan -->
-                                    <div class="bg-yellow-100 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <h4 class="font-medium text-gray-900 dark:text-white">2. Biaya Penginapan</h4>
-                                            <button type="button" wire:click="addLodgingLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                + Tambah
+                                    <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-yellow-500 dark:border-yellow-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                    <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                                    </svg>
+                                                </div>
+                                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">2. Biaya Penginapan</h4>
+                                            </div>
+                                            <button type="button" wire:click="addLodgingLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                </svg>
+                                                Tambah Item
                                             </button>
                                         </div>
                                         
@@ -747,11 +767,21 @@
                                     </div>
 
                                     <!-- 3. Uang Harian (Perdiem) -->
-                                    <div class="bg-green-200 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <h4 class="font-medium text-gray-900 dark:text-white">3. Uang Harian (Perdiem)</h4>
-                                            <button type="button" wire:click="addPerdiemLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                + Tambah
+                                    <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-green-500 dark:border-green-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">3. Uang Harian (Perdiem)</h4>
+                                            </div>
+                                            <button type="button" wire:click="addPerdiemLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                </svg>
+                                                Tambah Item
                                             </button>
                                         </div>
                                         
@@ -803,11 +833,21 @@
                                     </div>
 
                                     <!-- 4. Biaya Representatif -->
-                                    <div class="bg-teal-200 dark:bg-gray-700 rounded-lg p-4 border border-gray-1000 dark:border-gray-600">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <h4 class="font-medium text-gray-900 dark:text-white">4. Biaya Representatif</h4>
-                                            <button type="button" wire:click="addRepresentationLine" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                                                + Tambah
+                                    <div class="bg-white dark:bg-gray-800 rounded-lg p-5 border-l-4 border-teal-500 dark:border-teal-400 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex items-center justify-center mr-3">
+                                                    <svg class="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                                    </svg>
+                                                </div>
+                                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">4. Biaya Representatif</h4>
+                                            </div>
+                                            <button type="button" wire:click="addRepresentationLine" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all duration-200">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                </svg>
+                                                Tambah Item
                                             </button>
                                         </div>
                                         

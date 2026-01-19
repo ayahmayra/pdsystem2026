@@ -22,7 +22,7 @@ class Sppd extends Model
         'signed_by_user_nip_snapshot', 'signed_by_user_unit_id_snapshot', 'signed_by_user_unit_name_snapshot',
         'signed_by_user_position_id_snapshot', 'signed_by_user_position_name_snapshot', 'signed_by_user_position_desc_snapshot',
         'signed_by_user_rank_id_snapshot', 'signed_by_user_rank_name_snapshot', 'signed_by_user_rank_code_snapshot',
-        'signed_by_user_position_echelon_id_snapshot',
+        'signed_by_user_position_echelon_id_snapshot', 'travel_grade_code',
     ];
 
     public function spt() { return $this->belongsTo(Spt::class); }
@@ -147,6 +147,13 @@ class Sppd extends Model
             return;
         }
 
+        // Get travel grade from first participant
+        $travelGradeCode = null;
+        $participants = $this->getSortedParticipantsSnapshot();
+        if ($participants->isNotEmpty()) {
+            $travelGradeCode = $participants->first()['travel_grade_code'] ?? null;
+        }
+
         $this->update([
             'signed_by_user_name_snapshot' => $user->name,
             'signed_by_user_gelar_depan_snapshot' => $user->gelar_depan,
@@ -161,6 +168,7 @@ class Sppd extends Model
             'signed_by_user_rank_name_snapshot' => $user->rank?->name,
             'signed_by_user_rank_code_snapshot' => $user->rank?->code,
             'signed_by_user_position_echelon_id_snapshot' => $user->position?->echelon_id,
+            'travel_grade_code' => $travelGradeCode,
         ]);
     }
 

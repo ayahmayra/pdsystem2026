@@ -203,11 +203,7 @@
                 <td class="number"></td>
                 <td class="label">c. Tingkat Biaya Perjalanan Dinas</td>
                 <td class="content">
-                    @if($firstParticipant)
-                        {{ $firstParticipant['travel_grade_code'] ?? '-' }}
-                    @else
-                        -
-                    @endif
+                    {{ $sppd->travel_grade_code ?? ($firstParticipant['travel_grade_code'] ?? '-') }}
                 </td>
             </tr>
             <tr>

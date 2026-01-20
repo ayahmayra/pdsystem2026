@@ -36,6 +36,8 @@ use App\Livewire\Units\Index as UnitIndex;
 use App\Livewire\Users\Create as UserCreate;
 use App\Livewire\Users\Edit as UserEdit;
 use App\Livewire\Users\Index as UserIndex;
+use App\Livewire\Users\Import as UserImport;
+use App\Http\Controllers\UsersImportController;
 use App\Livewire\TransportModes\Create as TransportModeCreate;
 use App\Livewire\TransportModes\Edit as TransportModeEdit;
 use App\Livewire\TransportModes\Index as TransportModeIndex;
@@ -135,6 +137,8 @@ Route::middleware(['auth', 'user.role'])->group(function () {
     // User CRUD
     Route::get('users', UserIndex::class)->name('users.index');
     Route::get('users/create', UserCreate::class)->name('users.create');
+    Route::get('users/import', UserImport::class)->name('users.import');
+    Route::get('users/import/template', [UsersImportController::class, 'downloadTemplate'])->name('users.import.template');
     Route::get('users/{user}/edit', UserEdit::class)->name('users.edit');
                 Route::get('users/{user}/permissions', \App\Livewire\Users\ManagePermissions::class)->name('users.permissions');
                 Route::get('users/{user}/roles', \App\Livewire\Users\ManageRoles::class)->name('users.roles');

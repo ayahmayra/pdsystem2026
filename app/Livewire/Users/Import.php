@@ -59,20 +59,25 @@ class Import extends Component
         $this->isUploading = true;
 
         try {
-            // Store file temporarily
-            $filePath = $this->file->store('temp', 'local');
-            $fullPath = storage_path('app/' . $filePath);
+            // Store file to a temporary location for import
+            $storedPath = $this->file->store('imports', 'local');
+            $filePath = storage_path('app/' . $storedPath);
+
+            // Verify file exists
+            if (!file_exists($filePath)) {
+                throw new \Exception('File tidak dapat diakses setelah upload.');
+            }
 
             // Import data
             $import = new UsersImport($this->employee_type);
-            Excel::import($import, $fullPath);
+            Excel::import($import, $filePath);
 
             // Get results
             $this->importResults = $import->getImportResults();
 
             // Clean up temp file
-            if (file_exists($fullPath)) {
-                unlink($fullPath);
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
 
             // Prepare success message

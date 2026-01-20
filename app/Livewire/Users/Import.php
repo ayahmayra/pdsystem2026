@@ -59,25 +59,54 @@ class Import extends Component
         $this->isUploading = true;
 
         try {
-            // Store file to a temporary location for import
-            $storedPath = $this->file->store('imports', 'local');
-            $filePath = storage_path('app/' . $storedPath);
+            // Pastikan direktori imports ada
+            $importsDir = storage_path('app/imports');
+            if (!is_dir($importsDir)) {
+                mkdir($importsDir, 0755, true);
+            }
 
-            // Verify file exists
-            if (!file_exists($filePath)) {
-                throw new \Exception('File tidak dapat diakses setelah upload.');
+            // Generate unique filename
+            $fileName = 'import_users_' . time() . '_' . uniqid() . '.' . $this->file->getClientOriginalExtension();
+            $fullPath = $importsDir . '/' . $fileName;
+
+            // Get temporary file path from Livewire
+            $tempPath = $this->file->getRealPath();
+
+            // Log untuk debugging
+            Log::info('User import - File upload', [
+                'temp_path' => $tempPath,
+                'target_path' => $fullPath,
+                'temp_exists' => file_exists($tempPath),
+                'target_dir_exists' => is_dir($importsDir),
+                'target_dir_writable' => is_writable($importsDir),
+                'original_name' => $this->file->getClientOriginalName(),
+            ]);
+
+            // Verify temp file exists
+            if (!$tempPath || !file_exists($tempPath)) {
+                throw new \Exception('File temporary tidak ditemukan. Path: ' . ($tempPath ?? 'null'));
+            }
+
+            // Copy file dari temp ke target location
+            if (!copy($tempPath, $fullPath)) {
+                throw new \Exception('Gagal menyalin file dari temporary ke storage. Pastikan direktori storage/app/imports dapat ditulis.');
+            }
+
+            // Verify file was copied successfully
+            if (!file_exists($fullPath)) {
+                throw new \Exception('File tidak ditemukan setelah copy: ' . $fullPath);
             }
 
             // Import data
             $import = new UsersImport($this->employee_type);
-            Excel::import($import, $filePath);
+            Excel::import($import, $fullPath);
 
             // Get results
             $this->importResults = $import->getImportResults();
 
             // Clean up temp file
-            if (file_exists($filePath)) {
-                unlink($filePath);
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
             }
 
             // Prepare success message

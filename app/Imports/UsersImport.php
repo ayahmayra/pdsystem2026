@@ -9,11 +9,13 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Validators\Failure;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithChunkReading
+class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithChunkReading, SkipsOnFailure
 {
     private $employeeType;
     private $importResults = [
@@ -44,14 +46,41 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithC
                 }
 
                 // Get data from Excel (support multiple column name variations)
-                $nama = trim($normalizedRow['nama'] ?? $normalizedRow['name'] ?? '');
-                $nip = trim($normalizedRow['nip'] ?? '');
+                // Try different column name variations (case-insensitive, with/without spaces)
+                $nama = '';
+                $nip = '';
+                
+                // Try to find nama/name column
+                foreach (['nama', 'name', 'n a m a', 'n a m e'] as $key) {
+                    if (isset($normalizedRow[$key]) && !empty(trim($normalizedRow[$key]))) {
+                        $nama = trim($normalizedRow[$key]);
+                        break;
+                    }
+                }
+                
+                // Try to find nip column
+                foreach (['nip', 'n i p'] as $key) {
+                    if (isset($normalizedRow[$key]) && !empty(trim($normalizedRow[$key]))) {
+                        $nip = trim($normalizedRow[$key]);
+                        break;
+                    }
+                }
+                
                 $jabatan = trim($normalizedRow['jabatan'] ?? $normalizedRow['position'] ?? '');
                 $bidang = trim($normalizedRow['bidang'] ?? $normalizedRow['unit'] ?? '');
                 
+                // Skip empty rows (both nama and nip empty)
+                if (empty($nama) && empty($nip)) {
+                    continue; // Skip completely empty rows silently
+                }
+                
+                // Error if nama or nip is missing (but not both)
                 if (empty($nama) || empty($nip)) {
                     $this->importResults['skipped']++;
-                    $this->importResults['errors'][] = "Baris " . ($index + 2) . ": Nama atau NIP kosong";
+                    $missing = [];
+                    if (empty($nama)) $missing[] = 'Nama';
+                    if (empty($nip)) $missing[] = 'NIP';
+                    $this->importResults['errors'][] = "Baris " . ($index + 2) . ": Kolom " . implode(' dan ', $missing) . " kosong";
                     continue;
                 }
 
@@ -133,11 +162,24 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithC
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255',
-            'nip' => 'required|string|max:20',
+            'nama' => 'nullable|string|max:255',
+            'nip' => 'nullable|string|max:20',
             'jabatan' => 'nullable|string|max:255',
             'bidang' => 'nullable|string|max:255',
         ];
+    }
+
+    /**
+     * Handle validation failures
+     */
+    public function onFailure(Failure ...$failures)
+    {
+        foreach ($failures as $failure) {
+            $row = $failure->row();
+            $errors = implode(', ', $failure->errors());
+            $this->importResults['errors'][] = "Baris {$row}: {$errors}";
+            $this->importResults['skipped']++;
+        }
     }
 
     public function chunkSize(): int

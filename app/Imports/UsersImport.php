@@ -7,15 +7,12 @@ use App\Models\Unit;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Validators\Failure;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithChunkReading, SkipsOnFailure
+class UsersImport implements ToCollection, WithHeadingRow, WithChunkReading
 {
     private $employeeType;
     private $importResults = [
@@ -130,13 +127,24 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithC
                     if (empty($nip)) $missing[] = 'NIP';
                     
                     // Show available columns in error message for debugging
-                    $availableCols = implode(', ', array_keys($normalizedRow));
-                    $errorMsg = "Baris " . ($index + 2) . ": Kolom " . implode(' dan ', $missing) . " kosong atau tidak ditemukan. Kolom yang tersedia: " . $availableCols;
+                    $availableCols = array_keys($normalizedRow);
+                    $originalCols = array_keys($rowArray);
+                    
+                    // Build detailed error message
+                    $errorMsg = "Baris " . ($index + 2) . ": Kolom " . implode(' dan ', $missing) . " kosong atau tidak ditemukan.";
+                    if (!empty($availableCols)) {
+                        $errorMsg .= " Kolom yang tersedia di Excel: " . implode(', ', $originalCols);
+                    }
+                    if (!empty($normalizedRow)) {
+                        $errorMsg .= " (Data: " . json_encode(array_slice($normalizedRow, 0, 4)) . ")";
+                    }
+                    
                     $this->importResults['errors'][] = $errorMsg;
                     Log::warning('User import - Missing required field', [
                         'row' => $index + 2,
                         'missing' => $missing,
-                        'available_columns' => array_keys($normalizedRow),
+                        'original_columns' => $originalCols,
+                        'normalized_columns' => array_keys($normalizedRow),
                         'row_data' => $normalizedRow
                     ]);
                     continue;
@@ -217,28 +225,6 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithC
         }
     }
 
-    public function rules(): array
-    {
-        return [
-            'nama' => 'nullable|string|max:255',
-            'nip' => 'nullable|string|max:20',
-            'jabatan' => 'nullable|string|max:255',
-            'bidang' => 'nullable|string|max:255',
-        ];
-    }
-
-    /**
-     * Handle validation failures
-     */
-    public function onFailure(Failure ...$failures)
-    {
-        foreach ($failures as $failure) {
-            $row = $failure->row();
-            $errors = implode(', ', $failure->errors());
-            $this->importResults['errors'][] = "Baris {$row}: {$errors}";
-            $this->importResults['skipped']++;
-        }
-    }
 
     public function chunkSize(): int
     {

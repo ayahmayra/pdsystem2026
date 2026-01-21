@@ -158,13 +158,21 @@
 
             @if (!empty($importResults['errors']))
                 <div class="mt-4">
-                    <h3 class="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">Error Details:</h3>
-                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-h-60 overflow-y-auto">
-                        <ul class="list-disc list-inside space-y-1 text-sm text-red-700 dark:text-red-300">
+                    <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-3">
+                        ⚠️ Error Details ({{ count($importResults['errors']) }} error):
+                    </h3>
+                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-h-96 overflow-y-auto">
+                        <ul class="list-disc list-inside space-y-2 text-sm text-red-700 dark:text-red-300">
                             @foreach ($importResults['errors'] as $error)
-                                <li>{{ $error }}</li>
+                                <li class="break-words">{{ $error }}</li>
                             @endforeach
                         </ul>
+                    </div>
+                    <div class="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                        <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                            <strong>Tips:</strong> Pastikan header Excel adalah <strong>Nama</strong>, <strong>NIP</strong>, <strong>Jabatan</strong> (opsional), <strong>Bidang</strong> (opsional). 
+                            Kolom Nama dan NIP harus diisi untuk setiap baris.
+                        </p>
                     </div>
                 </div>
             @endif

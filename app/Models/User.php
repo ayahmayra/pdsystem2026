@@ -670,8 +670,8 @@ class User extends Authenticatable
     public function getNipLabel(): string
     {
         return match($this->employee_type) {
-            'PPPK' => 'NIP PPPK',
-            'PPPK PW' => 'NIP PPPK PW',
+            'PPPK' => 'NI PPPK',
+            'PPPK PW' => 'NI PPPK PW',
             'PNS', 'Non ASN' => 'NIP',
             default => 'NIP',
         };

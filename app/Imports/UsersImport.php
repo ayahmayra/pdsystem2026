@@ -35,39 +35,87 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithC
      */
     public function collection(Collection $collection)
     {
+        // Log available columns from first row for debugging
+        if ($collection->isNotEmpty()) {
+            $firstRow = $collection->first()->toArray();
+            $availableColumns = array_keys($firstRow);
+            Log::info('User import - Available columns', [
+                'columns' => $availableColumns,
+                'first_row_data' => $firstRow
+            ]);
+        }
+
         foreach ($collection as $index => $row) {
             try {
                 // Normalize column names (case-insensitive, handle spaces)
                 $rowArray = $row->toArray();
                 $normalizedRow = [];
                 foreach ($rowArray as $key => $value) {
-                    $normalizedKey = strtolower(trim($key));
+                    // Handle null values
+                    $value = $value ?? '';
+                    $normalizedKey = strtolower(trim(str_replace(' ', '', $key))); // Remove spaces for matching
                     $normalizedRow[$normalizedKey] = $value;
                 }
 
+                // Log first row for debugging
+                if ($index === 0) {
+                    Log::info('User import - First row normalized', [
+                        'original_keys' => array_keys($rowArray),
+                        'normalized_keys' => array_keys($normalizedRow),
+                        'normalized_data' => $normalizedRow
+                    ]);
+                }
+
                 // Get data from Excel (support multiple column name variations)
-                // Try different column name variations (case-insensitive, with/without spaces)
                 $nama = '';
                 $nip = '';
                 
-                // Try to find nama/name column
-                foreach (['nama', 'name', 'n a m a', 'n a m e'] as $key) {
-                    if (isset($normalizedRow[$key]) && !empty(trim($normalizedRow[$key]))) {
-                        $nama = trim($normalizedRow[$key]);
-                        break;
+                // Try to find nama/name column (multiple variations)
+                $namaKeys = ['nama', 'name', 'n a m a', 'n a m e', 'namapegawai', 'namalengkap'];
+                foreach ($namaKeys as $key) {
+                    $keyNoSpace = str_replace(' ', '', $key);
+                    if (isset($normalizedRow[$keyNoSpace])) {
+                        $value = trim($normalizedRow[$keyNoSpace] ?? '');
+                        if (!empty($value)) {
+                            $nama = $value;
+                            break;
+                        }
                     }
                 }
                 
-                // Try to find nip column
-                foreach (['nip', 'n i p'] as $key) {
-                    if (isset($normalizedRow[$key]) && !empty(trim($normalizedRow[$key]))) {
-                        $nip = trim($normalizedRow[$key]);
-                        break;
+                // Try to find nip column (multiple variations)
+                $nipKeys = ['nip', 'n i p', 'nomorindukpegawai', 'nomorinduk'];
+                foreach ($nipKeys as $key) {
+                    $keyNoSpace = str_replace(' ', '', $key);
+                    if (isset($normalizedRow[$keyNoSpace])) {
+                        $value = trim($normalizedRow[$keyNoSpace] ?? '');
+                        if (!empty($value)) {
+                            $nip = $value;
+                            break;
+                        }
                     }
                 }
                 
-                $jabatan = trim($normalizedRow['jabatan'] ?? $normalizedRow['position'] ?? '');
-                $bidang = trim($normalizedRow['bidang'] ?? $normalizedRow['unit'] ?? '');
+                // Get optional fields
+                $jabatanKeys = ['jabatan', 'position', 'posisi'];
+                $jabatan = '';
+                foreach ($jabatanKeys as $key) {
+                    $keyNoSpace = str_replace(' ', '', $key);
+                    if (isset($normalizedRow[$keyNoSpace])) {
+                        $jabatan = trim($normalizedRow[$keyNoSpace] ?? '');
+                        if (!empty($jabatan)) break;
+                    }
+                }
+                
+                $bidangKeys = ['bidang', 'unit', 'bagian'];
+                $bidang = '';
+                foreach ($bidangKeys as $key) {
+                    $keyNoSpace = str_replace(' ', '', $key);
+                    if (isset($normalizedRow[$keyNoSpace])) {
+                        $bidang = trim($normalizedRow[$keyNoSpace] ?? '');
+                        if (!empty($bidang)) break;
+                    }
+                }
                 
                 // Skip empty rows (both nama and nip empty)
                 if (empty($nama) && empty($nip)) {
@@ -80,7 +128,17 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, WithC
                     $missing = [];
                     if (empty($nama)) $missing[] = 'Nama';
                     if (empty($nip)) $missing[] = 'NIP';
-                    $this->importResults['errors'][] = "Baris " . ($index + 2) . ": Kolom " . implode(' dan ', $missing) . " kosong";
+                    
+                    // Show available columns in error message for debugging
+                    $availableCols = implode(', ', array_keys($normalizedRow));
+                    $errorMsg = "Baris " . ($index + 2) . ": Kolom " . implode(' dan ', $missing) . " kosong atau tidak ditemukan. Kolom yang tersedia: " . $availableCols;
+                    $this->importResults['errors'][] = $errorMsg;
+                    Log::warning('User import - Missing required field', [
+                        'row' => $index + 2,
+                        'missing' => $missing,
+                        'available_columns' => array_keys($normalizedRow),
+                        'row_data' => $normalizedRow
+                    ]);
                     continue;
                 }
 

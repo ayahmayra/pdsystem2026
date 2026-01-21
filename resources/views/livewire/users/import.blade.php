@@ -31,10 +31,12 @@
     <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
         <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">Petunjuk Import</h2>
         <ul class="list-disc list-inside space-y-2 text-sm text-blue-800 dark:text-blue-200">
-            <li>File Excel harus memiliki kolom: <strong>Nama</strong>, <strong>NIP</strong>, <strong>Jabatan</strong>, <strong>Bidang</strong></li>
+            <li>File Excel harus memiliki kolom: <strong>Nama</strong> (wajib), <strong>NIP</strong> (wajib), <strong>Jabatan</strong> (opsional), <strong>Bidang</strong> (opsional)</li>
             <li>Baris pertama adalah header (akan diabaikan)</li>
-            <li>Kolom <strong>Jabatan</strong> dan <strong>Bidang</strong> bersifat opsional</li>
-            <li>Jika <strong>Bidang</strong> tidak ditemukan, akan dibuat unit baru secara otomatis</li>
+            <li><strong>Kolom wajib:</strong> Nama dan NIP harus diisi</li>
+            <li><strong>Kolom opsional:</strong> Jabatan dan Bidang boleh dikosongkan</li>
+            <li>Jika kolom <strong>Bidang</strong> dikosongkan, user akan dibuat tanpa unit (unit_id = null)</li>
+            <li>Jika kolom <strong>Bidang</strong> diisi tetapi unit tidak ditemukan, akan dibuat unit baru secara otomatis</li>
             <li>Jika user dengan NIP yang sama sudah ada, data akan diupdate</li>
             <li>Email akan dibuat otomatis dari nama jika belum ada</li>
             <li>Password default untuk user baru: <strong>password123</strong></li>

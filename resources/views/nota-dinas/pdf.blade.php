@@ -158,12 +158,23 @@
         
         <!-- Isi Surat -->
         <div class="closing">
-            <p>Bersama ini diajukan rencana Perjalanan Dinas kepada Bapak {{ \DB::table('org_settings')->value('head_title') }} {{ \DB::table('org_settings')->value('name') }} dengan ketentuan sebagai berikut :</p>
+            <p>Bersama ini diajukan rencana Perjalanan Dinas kepada 
+            @if($toPositionDesc)
+                {{ $toPositionDesc }}
+            @else
+                {{ $toPositionName }}
+                @if($toUnitName) {{ $toUnitName }} @endif
+                @if($toInstansiName) {{ $toInstansiName }} @endif
+            @endif
+            dengan ketentuan sebagai berikut :</p>
         </div>
         
         <table class="content-table">
+            @php $itemNumber = 1; @endphp
+            
+            @if($notaDinas->dasar)
             <tr>
-                <td class="number">1.</td>
+                <td class="number">{{ $itemNumber++ }}.</td>
                 <td class="label">Dasar</td>
                 <td class="separator">:</td>
                 <td class="content" style="text-align: justify; padding-bottom: 10px;">{{ $notaDinas->dasar }}</td>
@@ -171,8 +182,10 @@
             <tr>
                <td ></td>
             </tr>
+            @endif
+            
             <tr>
-                <td class="number">2.</td>
+                <td class="number">{{ $itemNumber++ }}.</td>
                 <td class="label">Maksud</td>
                 <td class="separator">:</td>
                 <td class="content"  style="text-align: justify; padding-bottom: 10px;">{{ $notaDinas->maksud }}</td>
@@ -181,7 +194,7 @@
                 <td ></td>
              </tr>
             <tr>
-                <td class="number">3.</td>
+                <td class="number">{{ $itemNumber++ }}.</td>
                 <td class="label">Tujuan</td>
                 <td class="separator">:</td>
                 <td class="content" >{{ $notaDinas->destinationCity?->name ?? '-' }}</td>
@@ -190,7 +203,7 @@
                 <td ></td>
              </tr>
             <tr>
-                <td class="number">4.</td>
+                <td class="number">{{ $itemNumber++ }}.</td>
                 <td class="label">Lamanya Perjalanan</td>
                 <td class="separator">:</td>
                 <td class="content">{{ $notaDinas->start_date && $notaDinas->end_date ? \Carbon\Carbon::parse($notaDinas->start_date)->diffInDays(\Carbon\Carbon::parse($notaDinas->end_date)) + 1 : '-' }} hari PP dari Tgl. {{ $notaDinas->start_date ? \Carbon\Carbon::parse($notaDinas->start_date)->locale('id')->translatedFormat('d F Y') : '-' }} s/d {{ $notaDinas->end_date ? \Carbon\Carbon::parse($notaDinas->end_date)->locale('id')->translatedFormat('d F Y') : '-' }}</td>
@@ -199,7 +212,7 @@
                 <td ></td>
              </tr>
             <tr>
-                <td class="number">5.</td>
+                <td class="number">{{ $itemNumber++ }}.</td>
                 <td class="label">Yang Bepergian</td>
                 <td class="separator">:</td>
                 <td class="content"></td>

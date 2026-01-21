@@ -86,7 +86,7 @@ class Edit extends Component
         'start_date' => 'required|date',
         'end_date' => 'required|date|after_or_equal:start_date',
         'trip_type' => 'required|string',
-        'dasar' => 'required|string',
+        'dasar' => 'nullable|string',
         'maksud' => 'required|string',
         'participants' => 'required|array|min:1',
         'participants.*' => 'exists:users,id',

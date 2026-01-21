@@ -16,6 +16,10 @@ class Index extends Component
     public $search = '';
     public $editId = null;
     public $editValue = null;
+    public $showResetModal = false;
+    public $resetDocType = '';
+    public $resetYear = '';
+    public $resetAll = false;
 
     public function updatingSearch() { $this->resetPage(); }
 
@@ -27,11 +31,75 @@ class Index extends Component
 
     public function saveEdit(NumberSequence $sequence)
     {
-        $this->validate(['editValue' => 'required|integer|min:1']);
+        $this->validate(['editValue' => 'required|integer|min:0']);
         $sequence->update(['current_value' => $this->editValue]);
         $this->editId = null;
         $this->editValue = null;
         session()->flash('message', 'Sequence berhasil diupdate.');
+    }
+
+    public function resetSequence($id)
+    {
+        $sequence = NumberSequence::find($id);
+        if ($sequence) {
+            $sequence->update([
+                'current_value' => 0,
+                'last_generated_at' => now(),
+            ]);
+            session()->flash('message', 'Sequence berhasil direset ke 0.');
+        }
+    }
+
+    public function openResetModal()
+    {
+        $this->showResetModal = true;
+        $this->resetDocType = '';
+        $this->resetYear = '';
+        $this->resetAll = false;
+    }
+
+    public function closeResetModal()
+    {
+        $this->showResetModal = false;
+        $this->resetDocType = '';
+        $this->resetYear = '';
+        $this->resetAll = false;
+    }
+
+    public function resetSequences()
+    {
+        $query = NumberSequence::query();
+
+        if ($this->resetAll) {
+            // Reset semua
+        } elseif ($this->resetDocType) {
+            $query->where('doc_type', $this->resetDocType);
+            if ($this->resetYear) {
+                $query->where('year_scope', $this->resetYear);
+            }
+        } elseif ($this->resetYear) {
+            $query->where('year_scope', $this->resetYear);
+        } else {
+            session()->flash('error', 'Pilih minimal satu filter untuk reset.');
+            return;
+        }
+
+        $count = $query->count();
+
+        if ($count === 0) {
+            session()->flash('error', 'Tidak ada sequence yang ditemukan dengan kriteria yang diberikan.');
+            $this->closeResetModal();
+            return;
+        }
+
+        $updated = $query->update([
+            'current_value' => 0,
+            'last_generated_at' => now(),
+        ]);
+
+        $this->closeResetModal();
+        $this->resetPage();
+        session()->flash('message', "Berhasil mereset {$updated} sequence(s) ke 0. Dokumen berikutnya akan dimulai dari nomor 001.");
     }
 
     public function render()

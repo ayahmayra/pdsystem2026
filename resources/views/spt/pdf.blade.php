@@ -89,13 +89,20 @@
                 <td class="separator">:</td>
                 <td class="content">
                     @if($spt->notaDinas)
+                        @php $itemNumber = 1; @endphp
                         <table style="width: 100%; border: none; border-collapse: collapse;">
                             <tr>
-                                <td style="width: 20px; vertical-align: top; border: none; padding: 0;">1.</td>
+                                <td style="width: 20px; vertical-align: top; border: none; padding: 0;">{{ $itemNumber++ }}.</td>
                                 <td style="border: none; padding-bottom: 10px;">Dokumen Pelaksanaan Anggaran Badan Pengelolaan Keuangan dan Aset Daerah Kabupaten Bengkalis</td>
                             </tr>
+                            @if($spt->notaDinas->dasar)
                             <tr>
-                                <td style="width: 20px; vertical-align: top; border: none; padding: 0;">2.</td>
+                                <td style="width: 20px; vertical-align: top; border: none; padding: 0;">{{ $itemNumber++ }}.</td>
+                                <td style="border: none; padding-bottom: 10px;">{{ $spt->notaDinas->dasar }}</td>
+                            </tr>
+                            @endif
+                            <tr>
+                                <td style="width: 20px; vertical-align: top; border: none; padding: 0;">{{ $itemNumber++ }}.</td>
                                 <td style="border: none; padding: 0;">Nota Dinas {{ $spt->notaDinas->fromUser?->position?->name ?? '-' }} {{ $spt->notaDinas->fromUser?->unit?->name ?? '-' }} Nomor: {{ $spt->notaDinas->doc_no }}, Tanggal {{ $spt->notaDinas->nd_date ? \Carbon\Carbon::parse($spt->notaDinas->nd_date)->locale('id')->translatedFormat('d F Y') : '-' }}</td>
                             </tr>
                         </table>

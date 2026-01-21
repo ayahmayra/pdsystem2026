@@ -350,6 +350,9 @@
                     $budgetRoleLabel = $budgetRole === 'pengguna_anggaran' ? 'Selaku Pengguna Anggaran' : 'Selaku Kuasa Pengguna Anggaran';
                 @endphp
                 
+                <div>Bengkalis, {{ $sppd->sppd_date ? \Carbon\Carbon::parse($sppd->sppd_date)->locale('id')->translatedFormat('d F Y') : '-' }}</div>
+                
+                
                 @if($signerCustomTitle)
                     <div style="word-wrap: break-word; white-space: normal;">{{ $signerCustomTitle }}</div>
                 @elseif($signerPositionDesc)

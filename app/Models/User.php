@@ -202,78 +202,59 @@ class User extends Authenticatable
     }
 
     /**
-     * Get nota dinas where this user is the "to" user (only non-deleted)
+     * Get nota dinas where this user is the "to" user
      */
     public function notaDinasTo(): HasMany
     {
-        return $this->hasMany(NotaDinas::class, 'to_user_id')->whereNull('deleted_at');
+        return $this->hasMany(NotaDinas::class, 'to_user_id');
     }
 
     /**
-     * Get nota dinas where this user is the "from" user (only non-deleted)
+     * Get nota dinas where this user is the "from" user
      */
     public function notaDinasFrom(): HasMany
     {
-        return $this->hasMany(NotaDinas::class, 'from_user_id')->whereNull('deleted_at');
+        return $this->hasMany(NotaDinas::class, 'from_user_id');
     }
 
     /**
-     * Get nota dinas where this user is the creator (only non-deleted)
+     * Get nota dinas where this user is the creator
      */
     public function notaDinasCreated(): HasMany
     {
-        return $this->hasMany(NotaDinas::class, 'created_by')->whereNull('deleted_at');
+        return $this->hasMany(NotaDinas::class, 'created_by');
     }
 
     /**
-     * Get nota dinas where this user is the approver (only non-deleted)
+     * Get nota dinas where this user is the approver
      */
     public function notaDinasApproved(): HasMany
     {
-        return $this->hasMany(NotaDinas::class, 'approved_by')->whereNull('deleted_at');
+        return $this->hasMany(NotaDinas::class, 'approved_by');
     }
 
     /**
-     * Get nota dinas participants where this user is a participant (only from non-deleted nota dinas)
+     * Get nota dinas participants where this user is a participant
      */
     public function notaDinasParticipants(): HasMany
     {
-        return $this->hasMany(NotaDinasParticipant::class, 'user_id')
-            ->whereHas('notaDinas', function($query) {
-                $query->whereNull('deleted_at');
-            });
+        return $this->hasMany(NotaDinasParticipant::class, 'user_id');
     }
 
     /**
-     * Get receipts where this user is the treasurer (bendahara) (only non-deleted)
+     * Get receipts where this user is the treasurer (bendahara)
      */
     public function receiptsAsTreasurer(): HasMany
     {
-        return $this->hasMany(Receipt::class, 'treasurer_user_id')->whereNull('deleted_at');
+        return $this->hasMany(Receipt::class, 'treasurer_user_id');
     }
 
     /**
-     * Get receipts where this user is the treasurer (bendahara) (including soft deleted)
-     */
-    public function receiptsAsTreasurerWithTrashed(): HasMany
-    {
-        return $this->hasMany(Receipt::class, 'treasurer_user_id')->withTrashed();
-    }
-
-    /**
-     * Get receipts where this user is the payee (penerima pembayaran) (only non-deleted)
+     * Get receipts where this user is the payee (penerima pembayaran)
      */
     public function receiptsAsPayee(): HasMany
     {
-        return $this->hasMany(Receipt::class, 'payee_user_id')->whereNull('deleted_at');
-    }
-
-    /**
-     * Get receipts where this user is the payee (penerima pembayaran) (including soft deleted)
-     */
-    public function receiptsAsPayeeWithTrashed(): HasMany
-    {
-        return $this->hasMany(Receipt::class, 'payee_user_id')->withTrashed();
+        return $this->hasMany(Receipt::class, 'payee_user_id');
     }
 
     /**
@@ -313,14 +294,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is used in any receipts (including soft deleted) - for foreign key constraint validation
-     */
-    public function isUsedInReceiptsWithTrashed(): bool
-    {
-        return $this->receiptsAsTreasurerWithTrashed()->exists() || $this->receiptsAsPayeeWithTrashed()->exists();
-    }
-
-    /**
      * Check if user is used in any documents (nota dinas, sub kegiatan, or receipts)
      */
     public function isUsedInDocuments(): bool
@@ -328,53 +301,6 @@ class User extends Authenticatable
         return $this->isUsedInNotaDinas() || $this->isUsedInSubKegiatan() || $this->isUsedAsTreasurer() || $this->isUsedAsPayee();
     }
 
-    /**
-     * Check if user is used in any documents (including soft deleted receipts) - for foreign key constraint validation
-     */
-    public function isUsedInDocumentsWithTrashed(): bool
-    {
-        return $this->isUsedInNotaDinas() || $this->isUsedInSubKegiatan() || $this->isUsedInReceiptsWithTrashed();
-    }
-
-    /**
-     * Check if user deletion will cause foreign key constraint violation
-     * This checks for any hard references in the database, regardless of soft delete status
-     */
-    public function willCauseForeignKeyViolation(): bool
-    {
-        // Check for hard references in receipts table
-        $receiptsCount = DB::table('receipts')
-            ->where('payee_user_id', $this->id)
-            ->orWhere('treasurer_user_id', $this->id)
-            ->count();
-            
-        return $receiptsCount > 0;
-    }
-
-    /**
-     * Clean up soft deleted receipts that reference this user
-     * This allows the user to be deleted if they're only referenced in soft deleted documents
-     */
-    public function cleanupSoftDeletedReferences(): int
-    {
-        $cleanedCount = 0;
-        
-        // Hard delete soft deleted receipts where user is payee (payee_user_id cannot be null)
-        $payeeReceipts = DB::table('receipts')
-            ->where('payee_user_id', $this->id)
-            ->whereNotNull('deleted_at')
-            ->delete();
-        $cleanedCount += $payeeReceipts;
-        
-        // Clean up soft deleted receipts where user is treasurer (treasurer_user_id can be null)
-        $treasurerReceipts = DB::table('receipts')
-            ->where('treasurer_user_id', $this->id)
-            ->whereNotNull('deleted_at')
-            ->update(['treasurer_user_id' => null]);
-        $cleanedCount += $treasurerReceipts;
-        
-        return $cleanedCount;
-    }
 
     /**
      * Get all nota dinas documents where this user is involved
@@ -506,55 +432,6 @@ class User extends Authenticatable
         return $involvements;
     }
 
-    /**
-     * Get all receipts where this user is involved as treasurer (including soft deleted)
-     */
-    public function getAllTreasurerInvolvementWithTrashed(): array
-    {
-        $involvements = [];
-
-        // Check as Bendahara Pengeluaran
-        $bendaharaReceipts = $this->receiptsAsTreasurerWithTrashed()->where('treasurer_title', 'Bendahara Pengeluaran')->get();
-        if ($bendaharaReceipts->count() > 0) {
-            $involvements[] = [
-                'type' => 'Bendahara Pengeluaran',
-                'count' => $bendaharaReceipts->count(),
-                'documents' => $bendaharaReceipts->pluck('receipt_no')->toArray()
-            ];
-        }
-
-        // Check as Bendahara Pengeluaran Pembantu
-        $bendaharaPembantuReceipts = $this->receiptsAsTreasurerWithTrashed()->where('treasurer_title', 'Bendahara Pengeluaran Pembantu')->get();
-        if ($bendaharaPembantuReceipts->count() > 0) {
-            $involvements[] = [
-                'type' => 'Bendahara Pengeluaran Pembantu',
-                'count' => $bendaharaPembantuReceipts->count(),
-                'documents' => $bendaharaPembantuReceipts->pluck('receipt_no')->toArray()
-            ];
-        }
-
-        return $involvements;
-    }
-
-    /**
-     * Get all receipts where this user is involved as payee (including soft deleted)
-     */
-    public function getAllPayeeInvolvementWithTrashed(): array
-    {
-        $involvements = [];
-
-        // Check as Payee
-        $payeeReceipts = $this->receiptsAsPayeeWithTrashed()->get();
-        if ($payeeReceipts->count() > 0) {
-            $involvements[] = [
-                'type' => 'Penerima Pembayaran',
-                'count' => $payeeReceipts->count(),
-                'documents' => $payeeReceipts->pluck('receipt_no')->toArray()
-            ];
-        }
-
-        return $involvements;
-    }
 
     /**
      * Get all document involvements (nota dinas, sub kegiatan, and receipts)
@@ -590,39 +467,6 @@ class User extends Authenticatable
         return $involvements;
     }
 
-    /**
-     * Get all document involvements including soft deleted receipts (for foreign key constraint validation)
-     */
-    public function getAllDocumentInvolvementsWithTrashed(): array
-    {
-        $involvements = [];
-
-        // Get nota dinas involvements
-        $notaDinasInvolvements = $this->getAllNotaDinasInvolvement();
-        if (!empty($notaDinasInvolvements)) {
-            $involvements['nota_dinas'] = $notaDinasInvolvements;
-        }
-
-        // Get sub kegiatan involvements
-        $subKegiatanInvolvements = $this->getAllSubKegiatanInvolvement();
-        if (!empty($subKegiatanInvolvements)) {
-            $involvements['sub_kegiatan'] = $subKegiatanInvolvements;
-        }
-
-        // Get treasurer involvements (including soft deleted)
-        $treasurerInvolvements = $this->getAllTreasurerInvolvementWithTrashed();
-        if (!empty($treasurerInvolvements)) {
-            $involvements['receipts'] = $treasurerInvolvements;
-        }
-
-        // Get payee involvements (including soft deleted)
-        $payeeInvolvements = $this->getAllPayeeInvolvementWithTrashed();
-        if (!empty($payeeInvolvements)) {
-            $involvements['receipts'] = array_merge($involvements['receipts'] ?? [], $payeeInvolvements);
-        }
-
-        return $involvements;
-    }
 
     /**
      * Check if user is superadmin

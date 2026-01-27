@@ -100,6 +100,9 @@ use App\Http\Controllers\SppdController;
 use App\Livewire\Rekap\Pegawai as RekapPegawai;
 use App\Livewire\Rekap\GlobalRekap;
 use App\Livewire\Dashboard;
+use App\Livewire\ApiClients\Index as ApiClientIndex;
+use App\Livewire\ApiClients\Create as ApiClientCreate;
+use App\Livewire\ApiClients\Edit as ApiClientEdit;
 
 
 Route::get('/', function () {
@@ -178,6 +181,11 @@ Route::middleware(['auth', 'user.role'])->group(function () {
     Route::get('units/{unit}/edit', [\App\Http\Controllers\UnitController::class, 'edit'])->name('units.edit');
     Route::put('units/{unit}', [\App\Http\Controllers\UnitController::class, 'update'])->name('units.update');
     Route::delete('units/{unit}', [\App\Http\Controllers\UnitController::class, 'destroy'])->name('units.destroy');
+
+    // API Clients CRUD
+    Route::get('api-clients', ApiClientIndex::class)->name('api-clients.index');
+    Route::get('api-clients/create', ApiClientCreate::class)->name('api-clients.create');
+    Route::get('api-clients/{apiClient}/edit', ApiClientEdit::class)->name('api-clients.edit');
 
     // Sub Kegiatan CRUD
     Route::resource('sub-keg', App\Http\Controllers\SubKegController::class);

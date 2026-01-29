@@ -84,7 +84,7 @@ class RekapPegawaiController extends Controller
         $startDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth();
         $endDate = $startDate->copy()->endOfMonth();
 
-        $sptData = Spt::with(['notaDinas.participants.user', 'notaDinas.originPlace', 'notaDinas.destinationCity', 'notaDinas.destinationDistrict'])
+        $sptData = Spt::with(['notaDinas.participants.user', 'notaDinas.originPlace', 'notaDinas.destinationCity'])
             ->whereHas('notaDinas', function($q) use ($startDate, $endDate) {
                 $q->where(function($q2) use ($startDate, $endDate) {
                     $q2->where('start_date', '<=', $endDate)
@@ -123,7 +123,7 @@ class RekapPegawaiController extends Controller
                         'doc_no' => $spt->doc_no,
                         'hal' => $spt->notaDinas->hal,
                         'origin_place' => $spt->notaDinas->originPlace->name ?? '-',
-                        'destination_city' => $spt->notaDinas->destination_display ?? '-'
+                        'destination_city' => $spt->notaDinas->destinationCity->name ?? '-'
                     ];
                 }
             }
@@ -248,7 +248,7 @@ class RekapPegawaiController extends Controller
         $startDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth();
         $endDate = $startDate->copy()->endOfMonth();
 
-        $sptData = Spt::with(['notaDinas.participants.user', 'notaDinas.originPlace', 'notaDinas.destinationCity', 'notaDinas.destinationDistrict'])
+        $sptData = Spt::with(['notaDinas.participants.user', 'notaDinas.originPlace', 'notaDinas.destinationCity'])
             ->whereHas('notaDinas', function($q) use ($startDate, $endDate) {
                 $q->where(function($q2) use ($startDate, $endDate) {
                     $q2->where('start_date', '<=', $endDate)
@@ -287,7 +287,7 @@ class RekapPegawaiController extends Controller
                         'doc_no' => $spt->doc_no,
                         'hal' => $spt->notaDinas->hal,
                         'origin_place' => $spt->notaDinas->originPlace->name ?? '-',
-                        'destination_city' => $spt->notaDinas->destination_display ?? '-'
+                        'destination_city' => $spt->notaDinas->destinationCity->name ?? '-'
                     ];
                 }
             }

@@ -45,7 +45,7 @@ class MainPage extends Component
         $this->selectedSppdId = null;
         
         // Load the actual Nota Dinas data
-        $this->selectedNotaDinas = NotaDinas::with(['spt.sppds', 'spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity', 'spt.notaDinas.destinationDistrict'])->find($notaDinasId);
+        $this->selectedNotaDinas = NotaDinas::with(['spt.sppds', 'spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity'])->find($notaDinasId);
         
         // Dispatch specific events to child components
     }
@@ -75,13 +75,13 @@ class MainPage extends Component
     {
         // Refresh selected data with proper eager loading
         if ($this->selectedNotaDinasId) {
-            $this->selectedNotaDinas = NotaDinas::with(['spt.sppds', 'spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity', 'spt.notaDinas.destinationDistrict'])->find($this->selectedNotaDinasId);
+            $this->selectedNotaDinas = NotaDinas::with(['spt.sppds', 'spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity'])->find($this->selectedNotaDinasId);
         }
         if ($this->selectedSptId) {
-            $this->selectedSpt = Spt::with(['sppds', 'notaDinas.originPlace', 'notaDinas.destinationCity', 'notaDinas.destinationDistrict'])->find($this->selectedSptId);
+            $this->selectedSpt = Spt::with(['sppds', 'notaDinas.originPlace', 'notaDinas.destinationCity'])->find($this->selectedSptId);
         }
         if ($this->selectedSppdId) {
-            $this->selectedSppd = Sppd::with(['spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity', 'spt.notaDinas.destinationDistrict'])->find($this->selectedSppdId);
+            $this->selectedSppd = Sppd::with(['spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity'])->find($this->selectedSppdId);
         }
         
         // Force refresh of trip report data to ensure latest data is displayed

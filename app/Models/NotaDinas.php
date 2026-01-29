@@ -12,7 +12,7 @@ class NotaDinas extends Model
     protected $fillable = [
         'doc_no', 'number_is_manual', 'number_manual_reason', 'number_format_id', 'number_sequence_id',
         'number_scope_unit_id', 'to_user_id', 'from_user_id', 'tembusan', 'nd_date',
-        'sifat', 'lampiran_count', 'hal', 'custom_signer_title', 'dasar', 'maksud', 'destination_city_id', 'origin_place_id', 'start_date',
+        'sifat', 'lampiran_count', 'hal', 'custom_signer_title', 'dasar', 'maksud', 'destination_city_id', 'destination_district_id', 'origin_place_id', 'start_date',
         'end_date', 'trip_type', 'requesting_unit_id', 'status', 'created_by',
         'approved_by', 'approved_at', 'notes',
         // Snapshot fields for from_user
@@ -32,6 +32,7 @@ class NotaDinas extends Model
     public function toUser() { return $this->belongsTo(User::class, 'to_user_id'); }
     public function fromUser() { return $this->belongsTo(User::class, 'from_user_id'); }
     public function destinationCity() { return $this->belongsTo(City::class, 'destination_city_id'); }
+    public function destinationDistrict() { return $this->belongsTo(District::class, 'destination_district_id'); }
     public function originPlace() { return $this->belongsTo(OrgPlace::class, 'origin_place_id'); }
     public function requestingUnit() { return $this->belongsTo(Unit::class, 'requesting_unit_id'); }
     public function createdBy() { return $this->belongsTo(User::class, 'created_by'); }
@@ -111,6 +112,27 @@ class NotaDinas extends Model
             $nb = (string)($b->user_nip_snapshot ?? $b->user?->nip ?? '');
             return strcmp($na, $nb);
         })->values();
+    }
+
+    /**
+     * Get destination display name (district, city if available)
+     * Format: "Kecamatan, Kota" atau "Kota" jika tidak ada kecamatan
+     */
+    public function getDestinationDisplayAttribute(): string
+    {
+        $parts = [];
+        
+        // Add district first if available
+        if ($this->destinationDistrict) {
+            $parts[] = $this->destinationDistrict->name;
+        }
+        
+        // Add city
+        if ($this->destinationCity) {
+            $parts[] = $this->destinationCity->name;
+        }
+        
+        return !empty($parts) ? implode(', ', $parts) : '-';
     }
 
     /**

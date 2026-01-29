@@ -107,7 +107,7 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Kota Tujuan <span class="text-red-500">*</span>
                                 </label>
-                                <flux:select wire:model="destination_city_id" variant="listbox" searchable placeholder="Pilih Kota...">
+                                <flux:select wire:model.live="destination_city_id" variant="listbox" searchable placeholder="Pilih Kota...">
                                     <flux:select.option value="">Pilih Kota</flux:select.option>
                                     @foreach($cities as $city)
                                         <flux:select.option value="{{ $city->id }}">{{ $city->name }}</flux:select.option>
@@ -117,6 +117,27 @@
                                     <span class="text-red-500 text-sm">{{ $message }}</span> 
                                 @enderror
                             </div>
+
+                            <!-- Kecamatan Tujuan (Opsional) -->
+                            @if($destination_city_id)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Kecamatan Tujuan <span class="text-gray-500 text-xs">(Opsional)</span>
+                                </label>
+                                <flux:select wire:model="destination_district_id" variant="listbox" searchable placeholder="Pilih Kecamatan...">
+                                    <flux:select.option value="">Pilih Kecamatan (Opsional)</flux:select.option>
+                                    @foreach($districts as $district)
+                                        <flux:select.option value="{{ $district->id }}">{{ $district->name }}</flux:select.option>
+                                    @endforeach
+                                </flux:select>
+                                @error('destination_district_id') 
+                                    <span class="text-red-500 text-sm">{{ $message }}</span> 
+                                @enderror
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    Pilih kecamatan jika tujuan perjalanan adalah ibukota kecamatan dalam kabupaten Bengkalis
+                                </p>
+                            </div>
+                            @endif
 
                             <!-- Tempat Asal -->
                             <div>

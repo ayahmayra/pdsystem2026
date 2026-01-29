@@ -49,7 +49,7 @@
             </div>
             <div class="space-y-1">
                 <span class="font-medium text-gray-700 dark:text-gray-300">Tujuan:</span>
-                <p class="text-gray-900 dark:text-white">{{ $notaDinas->destinationCity->name ?? '-' }}, {{ $notaDinas->destinationCity->province->name ?? '-' }}</p>
+                <p class="text-gray-900 dark:text-white">{{ $notaDinas->destination_display ?? '-' }}{{ $notaDinas->destinationCity?->province ? ', ' . $notaDinas->destinationCity->province->name : '' }}</p>
             </div>
             <div class="space-y-1">
                 <span class="font-medium text-gray-700 dark:text-gray-300">Periode Perjalanan:</span>

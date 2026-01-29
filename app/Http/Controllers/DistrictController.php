@@ -73,12 +73,14 @@ class DistrictController extends Controller
             'kemendagri_code' => 'required|string|max:10|unique:districts,kemendagri_code',
             'city_id' => 'required|exists:cities,id',
             'name' => 'required|string|max:120',
+            'capital_name' => 'nullable|string|max:120',
         ], [
             'kemendagri_code.required' => 'Kode Kemendagri wajib diisi',
             'kemendagri_code.unique' => 'Kode Kemendagri sudah ada',
             'city_id.required' => 'Kota/Kabupaten wajib dipilih',
             'city_id.exists' => 'Kota/Kabupaten yang dipilih tidak valid',
             'name.required' => 'Nama kecamatan wajib diisi',
+            'capital_name.max' => 'Nama ibukota kecamatan maksimal 120 karakter',
         ]);
 
         District::create($validated);
@@ -114,12 +116,14 @@ class DistrictController extends Controller
             'kemendagri_code' => ['required', 'string', 'max:10', Rule::unique('districts')->ignore($district->id)],
             'city_id' => 'required|exists:cities,id',
             'name' => 'required|string|max:120',
+            'capital_name' => 'nullable|string|max:120',
         ], [
             'kemendagri_code.required' => 'Kode Kemendagri wajib diisi',
             'kemendagri_code.unique' => 'Kode Kemendagri sudah ada',
             'city_id.required' => 'Kota/Kabupaten wajib dipilih',
             'city_id.exists' => 'Kota/Kabupaten yang dipilih tidak valid',
             'name.required' => 'Nama kecamatan wajib diisi',
+            'capital_name.max' => 'Nama ibukota kecamatan maksimal 120 karakter',
         ]);
 
         $district->update($validated);

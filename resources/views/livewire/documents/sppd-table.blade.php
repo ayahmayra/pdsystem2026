@@ -96,7 +96,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900 dark:text-white">
-                                        <div class="font-medium">{{ $sppd->spt?->notaDinas?->originPlace?->name ?? 'N/A' }} → {{ $sppd->spt?->notaDinas?->destinationCity?->name ?? 'N/A' }}</div>
+                                        <div class="font-medium">{{ $sppd->spt?->notaDinas?->originPlace?->name ?? 'N/A' }} → {{ $sppd->spt?->notaDinas?->destination_display ?? 'N/A' }}</div>
                                         <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                             @if($sppd->transportModes && $sppd->transportModes->count() > 0)
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 mr-1">

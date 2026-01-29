@@ -38,7 +38,7 @@
                     </div>
                     <div>
                         <span class="font-medium text-blue-800">Tujuan:</span>
-                        <span class="text-blue-700">{{ $notaDinas->destinationCity->name ?? '-' }}</span>
+                        <span class="text-blue-700">{{ $notaDinas->destination_display ?? '-' }}</span>
                     </div>
                 </div>
             </div>

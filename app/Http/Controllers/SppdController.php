@@ -10,7 +10,8 @@ class SppdController extends Controller
         // Load relationships yang diperlukan dengan eager loading yang benar
         $sppd->load([
             'spt.notaDinas.originPlace', 
-            'spt.notaDinas.destinationCity', 
+            'spt.notaDinas.destinationCity',
+            'spt.notaDinas.destinationDistrict', 
             'itineraries',
             'signedByUser.position',
             'signedByUser.unit',
@@ -42,7 +43,8 @@ class SppdController extends Controller
         // Load relationships yang diperlukan dengan eager loading yang benar
         $sppd->load([
             'spt.notaDinas.originPlace', 
-            'spt.notaDinas.destinationCity', 
+            'spt.notaDinas.destinationCity',
+            'spt.notaDinas.destinationDistrict', 
             'itineraries',
             'signedByUser.position',
             'signedByUser.unit',

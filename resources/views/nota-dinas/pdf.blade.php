@@ -197,7 +197,7 @@
                 <td class="number">{{ $itemNumber++ }}.</td>
                 <td class="label">Tujuan</td>
                 <td class="separator">:</td>
-                <td class="content" >{{ $notaDinas->destination_display }}</td>
+                <td class="content" >{{ $notaDinas->destinationCity?->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td ></td>

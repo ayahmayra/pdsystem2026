@@ -237,7 +237,7 @@
             <tr>
                 <td class="number"></td>
                 <td class="label">b. Tempat tujuan</td>
-                <td class="content">{{ $sppd->spt?->notaDinas?->destination_display ?? ($sppd->destinationCity?->name ?? '-') }}</td>
+                <td class="content">{{ $sppd->destinationCity?->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="number">7.</td>
@@ -400,7 +400,7 @@
                         <tr>
                             <td style="width: 150px; vertical-align: top; font-size: 10pt;">Ke</td>
                             <td style="width: 8px; text-align: center; vertical-align: top; font-size: 10pt;">:</td>
-                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">{{ $sppd->spt?->notaDinas?->destination_display ?? ($sppd->destinationCity->name ?? '-') }}</td>
+                            <td style="word-break: break-word; vertical-align: top; font-size: 10pt;">{{ $sppd->destinationCity->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td style="width: 150px; vertical-align: top; font-size: 10pt;">Pada tanggal</td>

@@ -13,8 +13,7 @@ class TripReportController extends Controller
         // Load relationships
         $tripReport->load([
             'spt.notaDinas.originPlace', 
-            'spt.notaDinas.destinationCity',
-            'spt.notaDinas.destinationDistrict', 
+            'spt.notaDinas.destinationCity', 
             'spt.notaDinas.participants.user.position',
             'spt.notaDinas.participants.user.rank',
             'spt.notaDinas.participants.user.unit',

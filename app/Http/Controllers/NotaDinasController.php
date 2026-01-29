@@ -25,7 +25,7 @@ class NotaDinasController extends Controller
         }
 
         // Load relationships yang diperlukan
-        $notaDinas->load(['participants.user', 'requestingUnit', 'destinationCity', 'destinationDistrict', 'toUser', 'fromUser', 'spt']);
+        $notaDinas->load(['participants.user', 'requestingUnit', 'destinationCity', 'toUser', 'fromUser', 'spt']);
         
         // Generate PDF
         $pdf = Pdf::loadView('nota-dinas.pdf', [
@@ -65,7 +65,7 @@ class NotaDinasController extends Controller
         }
 
         // Load relationships yang diperlukan
-        $notaDinas->load(['participants.user', 'requestingUnit', 'destinationCity', 'destinationDistrict', 'toUser', 'fromUser', 'spt']);
+        $notaDinas->load(['participants.user', 'requestingUnit', 'destinationCity', 'toUser', 'fromUser', 'spt']);
         
         // Generate PDF
         $pdf = Pdf::loadView('nota-dinas.pdf', [

@@ -117,7 +117,7 @@
                                     Tujuan
                                 </label>
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $receipt->sppd->spt?->notaDinas?->destination_display ?? 'N/A' }}{{ $receipt->sppd->spt?->notaDinas?->destinationCity?->province ? ', ' . $receipt->sppd->spt->notaDinas->destinationCity->province->name : '' }}
+                                    {{ $receipt->sppd->spt?->notaDinas?->destinationCity?->name ?? 'N/A' }}, {{ $receipt->sppd->spt?->notaDinas?->destinationCity?->province?->name ?? 'N/A' }}
                                 </div>
                             </div>
                             <div>

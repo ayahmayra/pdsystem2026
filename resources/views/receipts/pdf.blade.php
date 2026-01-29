@@ -55,7 +55,7 @@
 <body>
 @php
   $nd = $receipt->sppd->spt?->notaDinas;
-  $kota = $nd?->destination_display ?? $nd?->destinationCity?->name;
+  $kota = $nd?->destinationCity?->name;
   $prov = $nd?->destinationCity?->province?->name;
   $maksud = $nd?->maksud;
   $tahun = $receipt->receipt_date ? \Carbon\Carbon::parse($receipt->receipt_date)->year : now()->year;

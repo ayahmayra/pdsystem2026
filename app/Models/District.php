@@ -12,6 +12,7 @@ class District extends Model
         'kemendagri_code',
         'city_id',
         'name',
+        'capital_name',
     ];
 
     /**

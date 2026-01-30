@@ -173,7 +173,10 @@
 
         <!-- Dasar Surat Tugas -->
         <div class="closing">
-            <p>Berdasarkan Surat Tugas Nomor: <strong>{{ $tripReport->spt->doc_no ?? '-' }}</strong> Tanggal <strong>{{ $tripReport->spt->start_date ? \Carbon\Carbon::parse($tripReport->spt->start_date)->locale('id')->translatedFormat('d F Y') : '-' }}</strong> melaksanakan Perjalanan Dinas ke <strong>{{ $tripReport->spt->notaDinas->destinationCity->name ?? '-' }}</strong></p>
+            @php
+    $sptDate = $tripReport->spt->spt_date ?? $tripReport->spt->start_date ?? $tripReport->spt->notaDinas?->start_date ?? null;
+@endphp
+            <p>Berdasarkan Surat Tugas Nomor: <strong>{{ $tripReport->spt->doc_no ?? '-' }}</strong> Tanggal <strong>{{ $sptDate ? \Carbon\Carbon::parse($sptDate)->locale('id')->translatedFormat('d F Y') : '-' }}</strong> melaksanakan Perjalanan Dinas ke <strong>{{ $tripReport->spt->notaDinas->destination_display }}</strong></p>
         </div>
 
         <!-- Laporan Pelaksanaan -->
@@ -183,7 +186,7 @@
 
         <!-- Detail Perjalanan -->
         <div class="closing">
-            <p>1. Berangkat dari <strong>{{ $tripReport->spt->notaDinas->originPlace->name ?? '.........' }}</strong> menuju <strong>{{ $tripReport->spt->notaDinas->destinationCity->name ?? '.........' }}</strong> pada tanggal <strong>{{ $tripReport->spt->notaDinas->start_date ? \Carbon\Carbon::parse($tripReport->spt->notaDinas->start_date)->locale('id')->translatedFormat('d F Y') : '.........' }}</strong></p>
+            <p>1. Berangkat dari <strong>{{ $tripReport->spt->notaDinas->originPlace->name ?? '.........' }}</strong> menuju <strong>{{ $tripReport->spt->notaDinas->destination_display }}</strong> pada tanggal <strong>{{ $tripReport->spt->notaDinas->start_date ? \Carbon\Carbon::parse($tripReport->spt->notaDinas->start_date)->locale('id')->translatedFormat('d F Y') : '.........' }}</strong></p>
             
             <p>2. Kegiatan dan Hasil Perjalanan Dinas:</p>
             <div class="activities" style="margin-left: 20px; margin-top: 5px;">

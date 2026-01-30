@@ -16,12 +16,14 @@ class Edit extends Component
     public $kemendagri_code = '';
     public $city_id = '';
     public $name = '';
+    public $capital_name = '';
     public $selected_province_id = '';
 
     protected $rules = [
         'kemendagri_code' => 'required|string|max:10',
         'city_id' => 'required|exists:cities,id',
         'name' => 'required|string|max:120',
+        'capital_name' => 'nullable|string|max:120',
     ];
 
     protected $messages = [
@@ -29,6 +31,7 @@ class Edit extends Component
         'city_id.required' => 'Kota/Kabupaten wajib dipilih',
         'city_id.exists' => 'Kota/Kabupaten yang dipilih tidak valid',
         'name.required' => 'Nama kecamatan wajib diisi',
+        'capital_name.max' => 'Nama ibukota kecamatan maksimal 120 karakter',
     ];
 
     public function mount(District $district)
@@ -42,6 +45,7 @@ class Edit extends Component
         $this->kemendagri_code = $district->kemendagri_code;
         $this->city_id = $district->city_id;
         $this->name = $district->name;
+        $this->capital_name = $district->capital_name ?? '';
         $this->selected_province_id = $district->city->province_id;
     }
 
@@ -79,6 +83,7 @@ class Edit extends Component
             'kemendagri_code' => $this->kemendagri_code,
             'city_id' => $this->city_id,
             'name' => $this->name,
+            'capital_name' => $this->capital_name ?: null,
         ]);
 
         session()->flash('message', 'Kecamatan berhasil diperbarui');

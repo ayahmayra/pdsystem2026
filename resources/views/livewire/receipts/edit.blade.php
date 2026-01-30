@@ -56,7 +56,7 @@
                             </div>
                             <div class="space-y-1">
                                 <span class="font-medium text-gray-700 dark:text-gray-300">Tujuan:</span>
-                                <p class="text-gray-900 dark:text-white">{{ $receipt->sppd->spt->notaDinas->destinationCity->name ?? '-' }}, {{ $receipt->sppd->spt->notaDinas->destinationCity->province->name ?? '-' }}</p>
+                                <p class="text-gray-900 dark:text-white">{{ $receipt->sppd->spt->notaDinas->destination_display }}{{ $receipt->sppd->spt->notaDinas->destinationCity?->province ? ', ' . $receipt->sppd->spt->notaDinas->destinationCity->province->name : '' }}</p>
                             </div>
                             <div class="space-y-1">
                                 <span class="font-medium text-gray-700 dark:text-gray-300">Periode Perjalanan:</span>
@@ -117,7 +117,7 @@
                                     Tujuan
                                 </label>
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $receipt->sppd->spt?->notaDinas?->destinationCity?->name ?? 'N/A' }}, {{ $receipt->sppd->spt?->notaDinas?->destinationCity?->province?->name ?? 'N/A' }}
+                                    {{ $receipt->sppd->spt?->notaDinas?->destination_display ?? 'N/A' }}{{ ($prov = $receipt->sppd->spt?->notaDinas?->destinationCity?->province) ? ', ' . $prov->name : '' }}
                                 </div>
                             </div>
                             <div>

@@ -6,6 +6,7 @@ use App\Models\NotaDinas;
 use App\Models\User;
 use App\Models\Unit;
 use App\Models\City;
+use App\Models\District;
 use App\Models\OrgPlace;
 use App\Services\DocumentNumberService;
 use App\Helpers\PermissionHelper;
@@ -26,6 +27,7 @@ class Create extends Component
     public $from_user_id = '';
     public $custom_signer_title = '';
     public $destination_city_id = '';
+    public $destination_district_id = '';
     public $origin_place_id = '';
     public $sifat = 'Penting';
     public $nd_date = '';
@@ -77,6 +79,7 @@ class Create extends Component
         'from_user_id' => 'required|exists:users,id',
         'custom_signer_title' => 'nullable|string|max:255',
         'destination_city_id' => 'required|exists:cities,id',
+        'destination_district_id' => 'nullable|exists:districts,id',
         'origin_place_id' => 'required|exists:org_places,id',
         'sifat' => 'required|string',
         'nd_date' => 'required|date',
@@ -154,6 +157,19 @@ class Create extends Component
         $this->users = User::with(['position', 'unit'])->orderBy('name')->get();
         $this->cities = City::orderBy('name')->get();
         $this->orgPlaces = OrgPlace::orderBy('name')->get();
+    }
+
+    public function getDistrictsProperty()
+    {
+        if (!$this->destination_city_id) {
+            return collect();
+        }
+        return District::where('city_id', $this->destination_city_id)->orderBy('name')->get();
+    }
+
+    public function updatedDestinationCityId($value)
+    {
+        $this->destination_district_id = '';
     }
 
     public function updatedParticipants()
@@ -244,6 +260,15 @@ class Create extends Component
     {
         $this->validate();
 
+        // Pastikan kecamatan (jika dipilih) berada di kota tujuan
+        if ($this->destination_district_id) {
+            $district = District::find($this->destination_district_id);
+            if (!$district || (string) $district->city_id !== (string) $this->destination_city_id) {
+                $this->addError('destination_district_id', 'Kecamatan harus berada di kota tujuan yang dipilih.');
+                return;
+            }
+        }
+
         // Check for overlaps before saving
         $this->checkParticipantOverlaps();
         
@@ -269,6 +294,7 @@ class Create extends Component
                 'from_user_id' => $this->from_user_id,
                 'custom_signer_title' => $this->custom_signer_title ?: null,
                 'destination_city_id' => $this->destination_city_id,
+                'destination_district_id' => $this->destination_district_id ?: null,
                 'origin_place_id' => $this->origin_place_id,
                 'sifat' => $this->sifat,
                 'nd_date' => $this->nd_date,

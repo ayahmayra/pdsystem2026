@@ -76,17 +76,33 @@ class MainPage extends Component
         // Refresh selected data with proper eager loading
         if ($this->selectedNotaDinasId) {
             $this->selectedNotaDinas = NotaDinas::with(['spt.sppds', 'spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity'])->find($this->selectedNotaDinasId);
+            // Jika Nota Dinas yang dipilih sudah dihapus, kosongkan selection agar tidak ada link ke resource yang 404
+            if (!$this->selectedNotaDinas) {
+                $this->selectedNotaDinasId = null;
+                $this->selectedSptId = null;
+                $this->selectedSppdId = null;
+                $this->selectedSpt = null;
+                $this->selectedSppd = null;
+            }
         }
         if ($this->selectedSptId) {
             $this->selectedSpt = Spt::with(['sppds', 'notaDinas.originPlace', 'notaDinas.destinationCity'])->find($this->selectedSptId);
+            if (!$this->selectedSpt) {
+                $this->selectedSptId = null;
+                $this->selectedSppdId = null;
+                $this->selectedSppd = null;
+            }
         }
         if ($this->selectedSppdId) {
             $this->selectedSppd = Sppd::with(['spt.notaDinas.originPlace', 'spt.notaDinas.destinationCity'])->find($this->selectedSppdId);
+            if (!$this->selectedSppd) {
+                $this->selectedSppdId = null;
+                $this->selectedSppd = null;
+            }
         }
         
         // Force refresh of trip report data to ensure latest data is displayed
         if ($this->selectedSptId) {
-            // This will trigger a re-render of the trip report section
             $this->dispatch('trip-report-refreshed');
         }
     }
@@ -106,21 +122,25 @@ class MainPage extends Component
         $reportUpdated = request()->query('report_updated');
         
         if ($notaDinasId) {
-            $this->selectedNotaDinasId = $notaDinasId;
-            // Load the actual Nota Dinas data
+            // Load the actual Nota Dinas data; hanya set selection jika masih ada (tidak dihapus)
             $this->selectedNotaDinas = NotaDinas::with(['spt.sppds'])->find($notaDinasId);
-            $this->dispatch('loadSpts', $notaDinasId);
-            
-            if ($sptId) {
-                $this->selectedSptId = $sptId;
-                // Load the actual SPT data
-                $this->selectedSpt = Spt::with(['sppds'])->find($sptId);
-                $this->dispatch('loadSppds', $sptId);
+            if ($this->selectedNotaDinas) {
+                $this->selectedNotaDinasId = $notaDinasId;
+                $this->dispatch('loadSpts', $notaDinasId);
                 
-                if ($sppdId) {
-                    $this->selectedSppdId = $sppdId;
-                    // Load the actual SPPD data
-                    $this->selectedSppd = Sppd::find($sppdId);
+                if ($sptId) {
+                    $this->selectedSpt = Spt::with(['sppds'])->find($sptId);
+                    if ($this->selectedSpt) {
+                        $this->selectedSptId = $sptId;
+                        $this->dispatch('loadSppds', $sptId);
+                        
+                        if ($sppdId) {
+                            $this->selectedSppd = Sppd::find($sppdId);
+                            if ($this->selectedSppd) {
+                                $this->selectedSppdId = $sppdId;
+                            }
+                        }
+                    }
                 }
             }
             

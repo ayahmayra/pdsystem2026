@@ -15,12 +15,14 @@ class Create extends Component
     public $kemendagri_code = '';
     public $city_id = '';
     public $name = '';
+    public $capital_name = '';
     public $selected_province_id = '';
 
     protected $rules = [
         'kemendagri_code' => 'required|string|max:10|unique:districts,kemendagri_code',
         'city_id' => 'required|exists:cities,id',
         'name' => 'required|string|max:120',
+        'capital_name' => 'nullable|string|max:120',
     ];
 
     protected $messages = [
@@ -29,6 +31,7 @@ class Create extends Component
         'city_id.required' => 'Kota/Kabupaten wajib dipilih',
         'city_id.exists' => 'Kota/Kabupaten yang dipilih tidak valid',
         'name.required' => 'Nama kecamatan wajib diisi',
+        'capital_name.max' => 'Nama ibukota kecamatan maksimal 120 karakter',
     ];
 
     public function setCityIdProperty($value)
@@ -69,6 +72,7 @@ class Create extends Component
             'kemendagri_code' => $this->kemendagri_code,
             'city_id' => $this->city_id,
             'name' => $this->name,
+            'capital_name' => $this->capital_name ?: null,
         ]);
 
         session()->flash('message', 'Kecamatan berhasil ditambahkan');

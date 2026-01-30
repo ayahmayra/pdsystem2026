@@ -105,9 +105,9 @@
                             <!-- Kota Tujuan -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Kota Tujuan <span class="text-red-500">*</span>
+                                    Kota/Kabupaten Tujuan <span class="text-red-500">*</span>
                                 </label>
-                                <flux:select wire:model="destination_city_id" variant="listbox" searchable placeholder="Pilih Kota...">
+                                <flux:select wire:model.live="destination_city_id" variant="listbox" searchable placeholder="Pilih Kota...">
                                     <flux:select.option value="">Pilih Kota</flux:select.option>
                                     @foreach($cities as $city)
                                         <flux:select.option value="{{ $city->id }}">{{ $city->name }}</flux:select.option>
@@ -116,6 +116,25 @@
                                 @error('destination_city_id') 
                                     <span class="text-red-500 text-sm">{{ $message }}</span> 
                                 @enderror
+                            </div>
+
+                            <!-- Kecamatan Tujuan (opsional) -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Kecamatan Tujuan
+                                </label>
+                                <flux:select wire:model="destination_district_id" variant="listbox" searchable placeholder="Pilih Kecamatan (opsional)...">
+                                    <flux:select.option value="">Pilih Kecamatan (opsional)</flux:select.option>
+                                    @foreach($this->districts as $district)
+                                        <flux:select.option value="{{ $district->id }}">{{ $district->name }}{{ $district->capital_name ? ' - ' . $district->capital_name : '' }}</flux:select.option>
+                                    @endforeach
+                                </flux:select>
+                                @error('destination_district_id') 
+                                    <span class="text-red-500 text-sm">{{ $message }}</span> 
+                                @enderror
+                                @if($destination_city_id && $this->districts->isEmpty())
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Tidak ada data kecamatan untuk kota ini.</p>
+                                @endif
                             </div>
 
                             <!-- Tempat Asal -->

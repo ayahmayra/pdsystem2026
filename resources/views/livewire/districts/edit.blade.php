@@ -29,6 +29,14 @@
                             </div>
 
                             <div>
+                                <label for="capital_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Ibukota Kecamatan</label>
+                                <input type="text" wire:model="capital_name" id="capital_name" 
+                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm"
+                                       placeholder="Contoh: Bengkalis (nama kelurahan/desa ibukota)">
+                                @error('capital_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
                                 <label for="selected_province_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Provinsi</label>
                                 <select wire:model.live="selected_province_id" id="selected_province_id" 
                                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white sm:text-sm">

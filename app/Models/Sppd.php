@@ -38,6 +38,12 @@ class Sppd extends Model
         return $this->spt?->notaDinas?->destinationCity;
     }
 
+    /** Tampilan tempat tujuan (kota + kecamatan jika ada). */
+    public function getDestinationDisplayAttribute(): string
+    {
+        return $this->spt?->notaDinas?->destination_display ?? $this->destinationCity?->name ?? '-';
+    }
+
     // Accessor untuk trip_type (mengambil dari NotaDinas)
     public function getTripTypeAttribute()
     {

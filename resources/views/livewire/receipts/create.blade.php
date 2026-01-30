@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="space-y-1">
                                     <span class="font-medium text-gray-700 dark:text-gray-300">Tujuan:</span>
-                                    <p class="text-gray-900 dark:text-white">{{ $sppd->spt->notaDinas->destinationCity->name ?? '-' }}, {{ $sppd->spt->notaDinas->destinationCity->province->name ?? '-' }}</p>
+                                    <p class="text-gray-900 dark:text-white">{{ $sppd->spt->notaDinas->destination_display }}{{ $sppd->spt->notaDinas->destinationCity?->province ? ', ' . $sppd->spt->notaDinas->destinationCity->province->name : '' }}</p>
                                 </div>
                                 <div class="space-y-1">
                                     <span class="font-medium text-gray-700 dark:text-gray-300">Periode Perjalanan:</span>
